@@ -178,7 +178,7 @@ pub async fn test_erc721_deposit_result(
         .expect("Send to cosmos transaction failed to be included into ethereum side");
 
     let mut grpc_client = grpc_client.clone();
-    check_send_erc721_to_cosmos_attestation(&mut grpc_client, erc721_address, dest, *MINER_ADDRESS).await?;
+    check_send_erc721_to_cosmos_attestation(&mut grpc_client, erc721_address, dest, *MINER_ADDRESS, token_id.clone()).await?;
 
     let start = Instant::now();
     let duration = match timeout {
@@ -211,6 +211,7 @@ async fn check_send_erc721_to_cosmos_attestation(
     erc721_address: EthAddress,
     receiver: CosmosAddress,
     sender: EthAddress,
+    token_id: Uint256,
 ) -> Result<(), GravityError> {
     let start = Instant::now();
     let mut found = false;
@@ -219,7 +220,8 @@ async fn check_send_erc721_to_cosmos_attestation(
             let right_contract = decoded.token_contract == erc721_address.to_string();
             let right_destination = decoded.cosmos_receiver == receiver.to_string();
             let right_sender = decoded.ethereum_sender == sender.to_string();
-            found = right_contract && right_destination && right_sender;
+            let right_token_id = decoded.token_id == token_id.to_string();
+            found = right_contract && right_destination && right_sender && right_token_id;
         })
         .await;
         if found {
@@ -232,7 +234,7 @@ async fn check_send_erc721_to_cosmos_attestation(
         info!("Looking for send_erc721_to_cosmos attestations");
         delay_for(Duration::from_secs(10)).await;
     }
-    info!("Found the expected MsgSendERC721ToCosmosClaim attestation");
+    info!("Found the expected MsgSendERC721ToCosmosClaim attestation with erc721 contract address {} and token id {}", erc721_address, token_id);
     Ok(())
 }
 
