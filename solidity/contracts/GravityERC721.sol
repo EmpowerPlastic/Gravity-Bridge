@@ -2,10 +2,11 @@
 pragma solidity 0.8.10;
 
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
-import "./Gravity.sol";
+import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import { ERC721Holder } from "@openzeppelin/contracts/token/ERC721/utils/ERC721Holder.sol";
-import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
+import "./Gravity.sol";
+import "./CosmosNFT.sol";
 
 
 contract GravityERC721 is ERC721Holder, ReentrancyGuard {
@@ -18,14 +19,18 @@ contract GravityERC721 is ERC721Holder, ReentrancyGuard {
 		address indexed _sender,
 		string _destination,
 		uint256 _tokenId,
-		uint256 _eventNonce
+		uint256 _eventNonce,
+		string _tokenURI
 	);
+
+	event GravityERC721DeployedEvent();
 
 	constructor(
 		// reference gravity.sol for many functions peformed here
 		address _gravitySolAddress
 	) {
 		state_gravitySolAddress = _gravitySolAddress;
+		emit GravityERC721DeployedEvent();
 		}
 
 	function sendERC721ToCosmos(
@@ -34,15 +39,16 @@ contract GravityERC721 is ERC721Holder, ReentrancyGuard {
 		uint256 _tokenId
 	) external nonReentrant {
 		ERC721(_tokenContract).safeTransferFrom(msg.sender, address(this), _tokenId);
-		state_lastERC721EventNonce = state_lastERC721EventNonce + 1;
 
 		emit SendERC721ToCosmosEvent(
 			_tokenContract,
 			msg.sender,
 			_destination,
-			_tokenId, 
-			state_lastERC721EventNonce
+			_tokenId,
+			state_lastERC721EventNonce,
+			ERC721(_tokenContract).tokenURI(_tokenId)
 		);
+		state_lastERC721EventNonce = state_lastERC721EventNonce + 1;
 	}
 
 	function withdrawERC721 (
@@ -55,5 +61,22 @@ contract GravityERC721 is ERC721Holder, ReentrancyGuard {
 			ERC721(_ERC721TokenContract).safeTransferFrom(address(this), _destinations[i], _tokenIds[i]);
 		}
 		state_lastERC721EventNonce = state_lastERC721EventNonce + 1;
+	}
+
+	function deployERC721(
+		string calldata _name,
+		string calldata _symbol,
+	) external {
+		// Deploy an ERC721 and grant ownership to Gravity.sol
+		CosmosERC721 erc721 = new CosmosERC721(_name, _symbol);
+
+		// Fire an event to let the Cosmos module know
+		state_lastEventNonce = state_lastEventNonce + 1;
+		emit ERC721DeployedEvent(
+			address(erc721),
+			_name,
+			_symbol,
+			state_lastEventNonce
+		);
 	}
 }
