@@ -1,0 +1,31 @@
+syntax = "proto3";
+package gravitynft.v1;
+
+import "google/api/annotations.proto";
+
+option go_package = "github.com/Gravity-Bridge/Gravity-Bridge/module/x/gravitynft/types";
+
+// Msg defines the state transitions possible within gravitynft
+service Msg {
+  rpc SendNFTToCosmosClaim(MsgSendNFTToCosmosClaim) returns (MsgSendNFTToCosmosClaimResponse) {
+    option (google.api.http).post = "/gravitynft/v1/send_nft_to_cosmos_claim";
+  }  
+}
+
+// MsgSendNFTToCosmosClaim
+// When more than 66% of the active validator set has
+// claimed to have seen the NFT deposit enter the ethereum blockchain NFT is minted and
+// issued to the Cosmos address in question
+// -------------
+message MsgSendNFTToCosmosClaim {
+    uint64 event_nonce      = 1;
+    uint64 eth_block_height = 2;
+    string token_contract   = 3;
+    string token_id         = 4;
+    string token_uri        = 5;
+    string ethereum_sender  = 6;
+    string cosmos_receiver  = 7;
+    string orchestrator     = 8;
+  }
+  
+  message MsgSendNFTToCosmosClaimResponse {}
