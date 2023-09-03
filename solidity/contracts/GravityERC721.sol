@@ -4,16 +4,41 @@ pragma solidity 0.8.10;
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
+import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
 import { ERC721Holder } from "@openzeppelin/contracts/token/ERC721/utils/ERC721Holder.sol";
-import "./Gravity.sol";
+import "./interfaces/IGravity.sol";
 import "./CosmosNFT.sol";
 
+error InvalidSignature();
+error InsufficientPower(uint256 cumulativePower, uint256 powerThreshold);
 error IncorrectCheckpoint();
 error MalformedCurrentValidatorSet();
 error InvalidWithdrawalNonce(uint256 newNonce, uint256 currentNonce);
 error WithdrawalTimedOut();
 error MintTimedOut();
 
+// This is used purely to avoid stack too deep errors
+// represents everything about a given validator set
+struct ValsetArgs {
+	// the validators in this set, represented by an Ethereum address
+	address[] validators;
+	// the powers of the given validators in the same order as above
+	uint256[] powers;
+	// the nonce of this validator set
+	uint256 valsetNonce;
+	// the reward amount denominated in the below reward token, can be
+	// set to zero
+	uint256 rewardAmount;
+	// the reward token, should be set to the zero address if not being used
+	address rewardToken;
+}
+
+// This represents a validator signature
+struct Signature {
+	uint8 v;
+	bytes32 r;
+	bytes32 s;
+}
 
 contract GravityERC721 is ERC721Holder, ReentrancyGuard {
 	
@@ -36,7 +61,7 @@ contract GravityERC721 is ERC721Holder, ReentrancyGuard {
 	);
 
 	event ERC721WithdrawnEvent(
-		uint256 _withdrawNonce
+		uint256 _withdrawNonce,
 		address indexed _tokenContract,
 		uint256 _eventNonce
 	);
@@ -54,7 +79,7 @@ contract GravityERC721 is ERC721Holder, ReentrancyGuard {
 		uint256 _tokenId,
 		string _tokenURI,
 		uint256 _eventNonce
-	)
+	);
 
 	event GravityERC721DeployedEvent();
 
@@ -89,7 +114,7 @@ contract GravityERC721 is ERC721Holder, ReentrancyGuard {
 	function withdrawERC721 (
 		ValsetArgs calldata _currentValset,
 		Signature[] calldata _sigs,
-		address _ERC721TokenContract,
+		address _tokenContract,
 		uint256[] calldata _tokenIds,
 		address[] calldata _destinations,
 		uint256 _withdrawNonce,
@@ -101,7 +126,7 @@ contract GravityERC721 is ERC721Holder, ReentrancyGuard {
 			// Check that the batch nonce is higher than the last nonce for this token
 			if (_withdrawNonce <= state_lastWithdrawalNonces[_tokenContract]) {
 				revert InvalidWithdrawalNonce({
-					newNonce: _batchNonce,
+					newNonce: _withdrawNonce,
 					currentNonce: state_lastWithdrawalNonces[_tokenContract]
 				});
 			}
@@ -111,7 +136,7 @@ contract GravityERC721 is ERC721Holder, ReentrancyGuard {
 			// bad withdrawal through with uint256 max nonce
 			if (_withdrawNonce > state_lastWithdrawalNonces[_tokenContract] + 1000000) {
 				revert InvalidWithdrawalNonce({
-					newNonce: _batchNonce,
+					newNonce: _withdrawNonce,
 					currentNonce: state_lastWithdrawalNonces[_tokenContract]
 				});
 			}
@@ -122,12 +147,9 @@ contract GravityERC721 is ERC721Holder, ReentrancyGuard {
 			}
 			validateValset(_currentValset, _sigs);
 
-			validateCheckpoint(makeCheckpoint(_currentValset));
+			validateCheckpoint(makeCheckpoint(_currentValset, state_gravityId));
 
-			checkValidatorSignatures(
-				_currentValset,
-				_sigs,
-				keccak256(
+			bytes32 hash = keccak256(
 					abi.encode(
 						state_gravityId,
 						// bytes 32 encoding of "withdrawERC721"
@@ -136,23 +158,27 @@ contract GravityERC721 is ERC721Holder, ReentrancyGuard {
 						_destinations,
 						_withdrawNonce,
 						_withdrawTimeout,
-						_ERC721TokenContract,
+						_tokenContract
 					)
-				),
+				);
+			checkValidatorSignatures(
+				_currentValset,
+				_sigs,
+				hash,
 				constant_powerThreshold
 			);
 		
 			// ACTIONS
 
 			for (uint256 i = 0; i < _tokenIds.length; i++) {
-				ERC721(_ERC721TokenContract).safeTransferFrom(address(this), _destinations[i], _tokenIds[i]);
+				ERC721(_tokenContract).safeTransferFrom(address(this), _destinations[i], _tokenIds[i]);
 			}
 		}
 		{
 			state_lastERC721EventNonce = state_lastERC721EventNonce + 1;
 			emit ERC721WithdrawnEvent(
 				_withdrawNonce,
-				_ERC721TokenContract,
+				_tokenContract,
 				state_lastERC721EventNonce
 			);
 		}
@@ -176,12 +202,9 @@ contract GravityERC721 is ERC721Holder, ReentrancyGuard {
 			}
 			validateValset(_currentValset, _sigs);
 
-			validateCheckpoint(makeCheckpoint(_currentValset));
+			validateCheckpoint(makeCheckpoint(_currentValset, state_gravityId));
 
-			checkValidatorSignatures(
-				_currentValset,
-				_sigs,
-				keccak256(
+			bytes32 hash = keccak256(
 					abi.encode(
 						state_gravityId,
 						// bytes 32 encoding of "mintERC721"
@@ -189,9 +212,13 @@ contract GravityERC721 is ERC721Holder, ReentrancyGuard {
 						_tokenId,
 						_destination,
 						_mintTimeout,
-						_tokenContract,
+						_tokenContract
 					)
-				),
+				);
+			checkValidatorSignatures(
+				_currentValset,
+				_sigs,
+				hash,
 				constant_powerThreshold
 			);
 
@@ -213,7 +240,7 @@ contract GravityERC721 is ERC721Holder, ReentrancyGuard {
 	function deployERC721(
 		string calldata _cosmosClass,
 		string calldata _name,
-		string calldata _symbol,
+		string calldata _symbol
 	) external {
 		// Deploy an ERC721 and grant ownership to Gravity.sol
 		CosmosERC721 erc721 = new CosmosERC721(_name, _symbol);
@@ -231,16 +258,16 @@ contract GravityERC721 is ERC721Holder, ReentrancyGuard {
 
 	function validateCheckpoint(bytes32 checkpoint)
 		private
-		pure
+		view	
 	{
-		if( Gravity(state_gravitySolAddress).state_lastValsetCheckpoint() != checkpoint) {
+		if( IGravity(state_gravitySolAddress).state_lastValsetCheckpoint() != checkpoint) {
 			revert IncorrectCheckpoint();
 		}
 	}
 
-	function makeCheckpoint(ValsetArgs memory _valsetArgs)
+	function makeCheckpoint(ValsetArgs memory _valsetArgs, bytes32 _gravityId)
 		private
-		pure
+		pure	
 		returns (bytes32)
 	{
 		// bytes32 encoding of the string "checkpoint"
@@ -248,7 +275,7 @@ contract GravityERC721 is ERC721Holder, ReentrancyGuard {
 
 		bytes32 checkpoint = keccak256(
 			abi.encode(
-				state_gravityId,
+				_gravityId,
 				methodName,
 				_valsetArgs.valsetNonce,
 				_valsetArgs.validators,
@@ -305,5 +332,17 @@ contract GravityERC721 is ERC721Holder, ReentrancyGuard {
 			revert InsufficientPower(cumulativePower, _powerThreshold);
 		}
 		// Success
+	}
+
+	// Utility function to verify geth style signatures
+	function verifySig(
+		address _signer,
+		bytes32 _theHash,
+		Signature calldata _sig
+	) private pure returns (bool) {
+		bytes32 messageDigest = keccak256(
+			abi.encodePacked("\x19Ethereum Signed Message:\n32", _theHash)
+		);
+		return _signer == ECDSA.recover(messageDigest, _sig.v, _sig.r, _sig.s);
 	}
 }
