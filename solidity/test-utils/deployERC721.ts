@@ -1,9 +1,7 @@
 import { GravityERC721} from "../typechain/GravityERC721";
 import { TestERC721A } from "../typechain/TestERC721A";
 import { ethers } from "hardhat";
-import { getSignerAddresses, ZeroAddress } from "./pure";
 import { Signer } from "ethers";
-import { TestFakeGravity } from "../typechain/TestFakeGravity";
 import { deployContracts } from "./index";
 
 export async function deployContractsERC721(
@@ -14,8 +12,7 @@ export async function deployContractsERC721(
 
   const {
     gravity,
-    testERC20,
-    checkpoint
+    testERC20
   } = await deployContracts(gravityId, validators, powers);
 
   const TestERC721 = await ethers.getContractFactory("TestERC721A");
@@ -26,12 +23,5 @@ export async function deployContractsERC721(
     gravity.address
   )) as GravityERC721;
 
-  const FakeGravity = await ethers.getContractFactory("TestFakeGravity");
-  const fakeGravity= (await FakeGravity.deploy(
-    gravityId,
-    await getSignerAddresses(validators),
-    powers
-  )) as TestFakeGravity;
-
-  return { gravity, gravityERC721, fakeGravity, testERC721,  testERC20, checkpoint };
+  return { gravity, gravityERC721, testERC721,  testERC20 };
 }
