@@ -6,6 +6,7 @@ import (
 	gravitytypes "github.com/Gravity-Bridge/Gravity-Bridge/module/x/gravity/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/errors"
+	"github.com/tendermint/tendermint/crypto/tmhash"
 )
 
 // nolint: exhaustruct
@@ -23,9 +24,8 @@ func (msg *MsgSendNFTToCosmosClaim) ValidateBasic() error {
 	if _, err := sdk.AccAddressFromBech32(msg.Orchestrator); err != nil {
 		return sdkerrors.Wrap(errors.ErrInvalidAddress, "orchestrator")
 	}
-	// TODO: Is this valid here?
 	// note the destination address is intentionally not validated here, since
-	// MsgSendToEth has it's destination as a string many invalid inputs are possible
+	// MsgSendNFTToCosmosClaim has it's destination as a string many invalid inputs are possible
 	// the orchestrator will convert these invalid deposits to simply the string invalid'
 	// this is done because the oracle requires an event be processed on Cosmos for each event
 	// nonce on the Ethereum side, otherwise (A) the oracle will never proceed and (B) the funds
@@ -98,8 +98,8 @@ func (msg *MsgSendNFTToCosmosClaim) GetType() NFTClaimType {
 }
 
 func (msg *MsgSendNFTToCosmosClaim) ClaimHash() ([]byte, error) {
-	//TODO implement me
-	panic("implement me")
+	path := fmt.Sprintf("%d/%d/%s/%s/%s/%s/%s", msg.EventNonce, msg.EthBlockHeight, msg.TokenContract, msg.TokenId, msg.TokenUri, msg.EthereumSender, msg.CosmosReceiver)
+	return tmhash.Sum([]byte(path)), nil
 }
 
 func (msg *MsgSendNFTToCosmosClaim) SetOrchestrator(orchestrator sdk.AccAddress) {
