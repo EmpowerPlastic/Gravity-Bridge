@@ -361,7 +361,7 @@ func (k Keeper) createBatchFees(ctx sdk.Context, maxElements uint) map[string]ty
 func (k Keeper) autoIncrementID(ctx sdk.Context, idKey []byte) uint64 {
 	id := k.getID(ctx, idKey)
 	id += 1
-	k.setID(ctx, id, idKey)
+	k.SetID(ctx, id, idKey)
 	return id
 }
 
@@ -374,7 +374,7 @@ func (k Keeper) getID(ctx sdk.Context, idKey []byte) uint64 {
 }
 
 // sets a generic uint64 counter in the store
-func (k Keeper) setID(ctx sdk.Context, id uint64, idKey []byte) {
+func (k Keeper) SetID(ctx sdk.Context, id uint64, idKey []byte) {
 	store := ctx.KVStore(k.storeKey)
 	bz := sdk.Uint64ToBigEndian(id)
 	store.Set(idKey, bz)

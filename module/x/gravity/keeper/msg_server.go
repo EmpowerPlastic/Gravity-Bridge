@@ -311,27 +311,6 @@ func (k msgServer) ConfirmLogicCall(c context.Context, msg *types.MsgConfirmLogi
 	return nil, nil
 }
 
-// checkOrchestratorValidatorInSet checks that the orchestrator refers to a validator that is
-// currently in the set
-func (k msgServer) checkOrchestratorValidatorInSet(ctx sdk.Context, orchestrator string) error {
-	orchaddr, err := sdk.AccAddressFromBech32(orchestrator)
-	if err != nil {
-		return sdkerrors.Wrap(types.ErrInvalid, "acc address invalid")
-	}
-	validator, found := k.GetOrchestratorValidator(ctx, orchaddr)
-	if !found {
-		return sdkerrors.Wrap(types.ErrUnknown, "validator")
-	}
-
-	// return an error if the validator isn't in the active set
-	val := k.StakingKeeper.Validator(ctx, validator.GetOperator())
-	if val == nil || !val.IsBonded() {
-		return sdkerrors.Wrap(errors.ErrorInvalidSigner, "validator not in active set")
-	}
-
-	return nil
-}
-
 // claimHandlerCommon is an internal function that provides common code for processing claims once they are
 // translated from the message to the Ethereum claim interface
 func (k msgServer) claimHandlerCommon(ctx sdk.Context, msgAny *codectypes.Any, msg types.EthereumClaim) error {
@@ -405,7 +384,7 @@ func (k msgServer) confirmHandlerCommon(ctx sdk.Context, ethAddress string, orch
 func (k msgServer) SendToCosmosClaim(c context.Context, msg *types.MsgSendToCosmosClaim) (*types.MsgSendToCosmosClaimResponse, error) {
 	ctx := sdk.UnwrapSDKContext(c)
 
-	err := k.checkOrchestratorValidatorInSet(ctx, msg.Orchestrator)
+	err := k.CheckOrchestratorValidatorInSet(ctx, msg.Orchestrator)
 	if err != nil {
 		return nil, sdkerrors.Wrap(err, "Could not check orchstrator validator inset")
 	}
@@ -443,7 +422,7 @@ func (k msgServer) ExecuteIbcAutoForwards(c context.Context, msg *types.MsgExecu
 func (k msgServer) BatchSendToEthClaim(c context.Context, msg *types.MsgBatchSendToEthClaim) (*types.MsgBatchSendToEthClaimResponse, error) {
 	ctx := sdk.UnwrapSDKContext(c)
 
-	err := k.checkOrchestratorValidatorInSet(ctx, msg.Orchestrator)
+	err := k.CheckOrchestratorValidatorInSet(ctx, msg.Orchestrator)
 	if err != nil {
 		return nil, sdkerrors.Wrap(err, "Could not check orchestrator validator")
 	}
@@ -490,7 +469,7 @@ func additionalPatchChecks(ctx sdk.Context, k msgServer, msg *types.MsgBatchSend
 func (k msgServer) ERC20DeployedClaim(c context.Context, msg *types.MsgERC20DeployedClaim) (*types.MsgERC20DeployedClaimResponse, error) {
 	ctx := sdk.UnwrapSDKContext(c)
 
-	err := k.checkOrchestratorValidatorInSet(ctx, msg.Orchestrator)
+	err := k.CheckOrchestratorValidatorInSet(ctx, msg.Orchestrator)
 	if err != nil {
 		return nil, sdkerrors.Wrap(err, "Could not check orchestrator validator in set")
 	}
@@ -510,7 +489,7 @@ func (k msgServer) ERC20DeployedClaim(c context.Context, msg *types.MsgERC20Depl
 func (k msgServer) LogicCallExecutedClaim(c context.Context, msg *types.MsgLogicCallExecutedClaim) (*types.MsgLogicCallExecutedClaimResponse, error) {
 	ctx := sdk.UnwrapSDKContext(c)
 
-	err := k.checkOrchestratorValidatorInSet(ctx, msg.Orchestrator)
+	err := k.CheckOrchestratorValidatorInSet(ctx, msg.Orchestrator)
 	if err != nil {
 		return nil, sdkerrors.Wrap(err, "Could not check orchestrator validator in set")
 	}
@@ -530,7 +509,7 @@ func (k msgServer) LogicCallExecutedClaim(c context.Context, msg *types.MsgLogic
 func (k msgServer) ValsetUpdateClaim(c context.Context, msg *types.MsgValsetUpdatedClaim) (*types.MsgValsetUpdatedClaimResponse, error) {
 	ctx := sdk.UnwrapSDKContext(c)
 
-	err := k.checkOrchestratorValidatorInSet(ctx, msg.Orchestrator)
+	err := k.CheckOrchestratorValidatorInSet(ctx, msg.Orchestrator)
 	if err != nil {
 		return nil, sdkerrors.Wrap(err, "Could not check orchestrator validator in set")
 	}

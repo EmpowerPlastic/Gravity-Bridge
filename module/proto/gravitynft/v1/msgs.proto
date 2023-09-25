@@ -28,4 +28,10 @@ message MsgSendNFTToCosmosClaim {
     string orchestrator     = 8;
   }
   
-  message MsgSendNFTToCosmosClaimResponse {}
+message MsgSendNFTToCosmosClaimResponse {}
+
+message EventClaim {
+  string message        = 1;
+  string claim_hash     = 2;
+  string attestation_id = 3;
+}

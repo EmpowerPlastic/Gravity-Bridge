@@ -113,7 +113,7 @@ func (k Keeper) TryAttestation(ctx sdk.Context, att *types.Attestation) {
 				if claim.GetEventNonce() != lastEventNonce+1 {
 					panic("attempting to apply events to state out of order")
 				}
-				k.setLastObservedEventNonce(ctx, claim.GetEventNonce())
+				k.SetLastObservedEventNonce(ctx, claim.GetEventNonce())
 				k.SetLastObservedEthereumBlockHeight(ctx, claim.GetEthBlockHeight())
 
 				att.Observed = true
@@ -399,8 +399,8 @@ func (k Keeper) SetLastObservedValset(ctx sdk.Context, valset types.Valset) {
 	store.Set(types.LastObservedValsetKey, k.cdc.MustMarshal(&valset))
 }
 
-// setLastObservedEventNonce sets the latest observed event nonce
-func (k Keeper) setLastObservedEventNonce(ctx sdk.Context, nonce uint64) {
+// SetLastObservedEventNonce sets the latest observed event nonce
+func (k Keeper) SetLastObservedEventNonce(ctx sdk.Context, nonce uint64) {
 	store := ctx.KVStore(k.storeKey)
 	last := k.GetLastObservedEventNonce(ctx)
 	// event nonce must increase, unless it's zero at which point allow zero to be set
