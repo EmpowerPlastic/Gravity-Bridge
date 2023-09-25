@@ -1,4 +1,4 @@
-package gravity
+package gravitynft
 
 import (
 	"context"
@@ -18,9 +18,9 @@ import (
 	bankkeeper "github.com/cosmos/cosmos-sdk/x/bank/keeper"
 	abci "github.com/tendermint/tendermint/abci/types"
 
-	"github.com/Gravity-Bridge/Gravity-Bridge/module/x/gravity/client/cli"
-	"github.com/Gravity-Bridge/Gravity-Bridge/module/x/gravity/keeper"
-	"github.com/Gravity-Bridge/Gravity-Bridge/module/x/gravity/types"
+	"github.com/Gravity-Bridge/Gravity-Bridge/module/x/gravitynft/client/cli"
+	"github.com/Gravity-Bridge/Gravity-Bridge/module/x/gravitynft/keeper"
+	"github.com/Gravity-Bridge/Gravity-Bridge/module/x/gravitynft/types"
 )
 
 // type check to ensure the interface is properly implemented
@@ -65,7 +65,7 @@ func (AppModuleBasic) GetQueryCmd() *cobra.Command {
 
 // GetTxCmd implements app module basic
 func (AppModuleBasic) GetTxCmd() *cobra.Command {
-	return cli.GetTxCmd(types.StoreKey)
+	return cli.GetTxCmd()
 }
 
 // RegisterGRPCGatewayRoutes registers the gRPC Gateway routes for the distribution module.
@@ -92,7 +92,7 @@ type AppModule struct {
 }
 
 func (am AppModule) ConsensusVersion() uint64 {
-	return 4
+	return 1
 }
 
 // NewAppModule creates a new AppModule Object
@@ -110,35 +110,29 @@ func (AppModule) Name() string {
 }
 
 // RegisterInvariants implements app module
-func (am AppModule) RegisterInvariants(ir sdk.InvariantRegistry) {
-	ir.RegisterRoute(types.ModuleName, "module-balance", keeper.ModuleBalanceInvariant(am.keeper))
-	ir.RegisterRoute(types.ModuleName, "store-validity", keeper.StoreValidityInvariant(am.keeper))
+func (am AppModule) RegisterInvariants(_ sdk.InvariantRegistry) {
+	// TODO: Invariant checks?
 }
 
-// Route implements app module
+// Deprecated: remove in next major Cosmos SDK release
 func (am AppModule) Route() sdk.Route {
-	return sdk.NewRoute(types.RouterKey, NewHandler(am.keeper))
+	return sdk.Route{}
 }
 
-// QuerierRoute implements app module
+// Deprecated: remove in next major Cosmos SDK release
 func (am AppModule) QuerierRoute() string {
 	return types.QuerierRoute
 }
 
 // Deprecated: remove in next major Cosmos SDK release
 func (am AppModule) LegacyQuerierHandler(legacyQuerierCdc *codec.LegacyAmino) sdk.Querier {
-	return keeper.NewQuerier(am.keeper)
+	return nil
 }
 
 // RegisterServices registers module services.
 func (am AppModule) RegisterServices(cfg module.Configurator) {
 	types.RegisterMsgServer(cfg.MsgServer(), keeper.NewMsgServerImpl(am.keeper))
 	types.RegisterQueryServer(cfg.QueryServer(), am.keeper)
-
-	m := keeper.NewMigrator(am.keeper)
-	if err := cfg.RegisterMigration(types.ModuleName, 3, m.Migrate3to4); err != nil {
-		panic(fmt.Sprintf("failed to migrate x/gravity from version 3 to 4: %v", err))
-	}
 }
 
 // InitGenesis initializes the genesis state for this module and implements app module.
