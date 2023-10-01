@@ -8,6 +8,7 @@ require (
 	github.com/cosmos/ibc-go/v5 v5.3.1
 	github.com/evmos/ethermint v0.20.0
 	github.com/tendermint/tendermint v0.34.27
+	github.com/bianjieai/nft-transfer v1.1.2-ibc-v5.0.1
 )
 
 replace (

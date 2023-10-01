@@ -70,6 +70,107 @@ func (k Keeper) Attest(
 	}
 }
 
+// TryAttestation checks if an attestation has enough votes to be applied to the consensus state
+// and has not already been marked Observed, then calls processAttestation to actually apply it to the state,
+// and then marks it Observed and emits an event.
+func (k Keeper) TryAttestation(ctx sdk.Context, att *types.NFTAttestation) {
+	claim, err := k.UnpackAttestationClaim(att)
+	if err != nil {
+		panic("could not cast to claim")
+	}
+	hash, err := claim.ClaimHash()
+	if err != nil {
+		panic("unable to compute claim hash")
+	}
+	// If the attestation has not yet been Observed, sum up the votes and see if it is ready to apply to the state.
+	// This conditional stops the attestation from accidentally being applied twice.
+	if !att.Observed {
+		// Sum the current powers of all validators who have voted and see if it passes the current threshold
+		// TODO: The different integer types and math here needs a careful review
+		totalPower := k.StakingKeeper.GetLastTotalPower(ctx)
+		requiredPower := types.AttestationVotesPowerThreshold.Mul(totalPower).Quo(sdk.NewInt(100))
+		attestationPower := sdk.NewInt(0)
+		for _, validator := range att.Votes {
+			val, err := sdk.ValAddressFromBech32(validator)
+			if err != nil {
+				panic(err)
+			}
+			validatorPower := k.StakingKeeper.GetLastValidatorPower(ctx, val)
+			// Add it to the attestation power's sum
+			attestationPower = attestationPower.Add(sdk.NewInt(validatorPower))
+			// If the power of all the validators that have voted on the attestation is higher or equal to the threshold,
+			// process the attestation, set Observed to true, and break
+			if attestationPower.GT(requiredPower) {
+				lastEventNonce := k.GetLastObservedEventNonce(ctx)
+				// this check is performed at the next level up so this should never panic
+				// outside of programmer error.
+				if claim.GetEventNonce() != lastEventNonce+1 {
+					panic("attempting to apply events to state out of order")
+				}
+				k.SetLastObservedEventNonce(ctx, claim.GetEventNonce())
+				k.SetLastObservedEthereumBlockHeight(ctx, claim.GetEthBlockHeight())
+
+				att.Observed = true
+				k.SetAttestation(ctx, claim.GetEventNonce(), hash, att)
+
+				k.processAttestation(ctx, att, claim)
+				k.emitObservedEvent(ctx, att, claim)
+
+				break
+			}
+		}
+	} else {
+		// We panic here because this should never happen
+		panic("attempting to process observed attestation")
+	}
+}
+
+// processAttestation actually applies the attestation to the consensus state
+func (k Keeper) processAttestation(ctx sdk.Context, att *types.NFTAttestation, claim types.EthereumNFTClaim) {
+	hash, err := claim.ClaimHash()
+	if err != nil {
+		panic("unable to compute claim hash")
+	}
+	// then execute in a new Tx so that we can store state on failure
+	xCtx, commit := ctx.CacheContext()
+	if err := k.AttestationHandler.Handle(xCtx, *att, claim); err != nil { // execute with a transient storage
+		// If the attestation fails, something has gone wrong and we can't recover it. Log and move on
+		// The attestation will still be marked "Observed", allowing the oracle to progress properly
+		k.logger(ctx).Error("attestation failed",
+			"cause", err.Error(),
+			"claim type", claim.GetType(),
+			"id", types.GetAttestationKey(claim.GetEventNonce(), hash),
+			"nonce", fmt.Sprint(claim.GetEventNonce()),
+		)
+	} else {
+		commit() // persist transient storage
+	}
+}
+
+// emitObservedEvent emits an event with information about an attestation that has been applied to
+// consensus state.
+func (k Keeper) emitObservedEvent(ctx sdk.Context, att *types.NFTAttestation, claim types.EthereumNFTClaim) {
+	hash, err := claim.ClaimHash()
+	if err != nil {
+		panic(sdkerrors.Wrap(err, "unable to compute claim hash"))
+	}
+
+	err = ctx.EventManager().EmitTypedEvent(
+		&types.NFTEventObservation{
+			AttestationType: string(claim.GetType()),
+			// TODO: Add Bridge Contract Address
+			// BridgeContract:  k.GetBridgeContractAddress(ctx).GetAddress().Hex(),
+			// TODO: Add Bridge Chain ID
+			// BridgeChainId:   strconv.Itoa(int(k.GetBridgeChainID(ctx))),
+			AttestationId:   string(types.GetAttestationKey(claim.GetEventNonce(), hash)),
+			Nonce:           fmt.Sprint(claim.GetEventNonce()),
+		},
+	)
+	if err != nil {
+		panic(err)
+	}
+}
+
 // SetAttestation sets the attestation in the store
 func (k Keeper) SetAttestation(ctx sdk.Context, eventNonce uint64, claimHash []byte, att *types.NFTAttestation) {
 	store := ctx.KVStore(k.storeKey)
@@ -103,6 +204,53 @@ func (k Keeper) DeleteAttestation(ctx sdk.Context, att types.NFTAttestation) {
 	store := ctx.KVStore(k.storeKey)
 
 	store.Delete(types.GetAttestationKey(claim.GetEventNonce(), hash))
+}
+
+// SetLastObservedEthereumBlockHeight sets the block height in the store.
+func (k Keeper) SetLastObservedEthereumBlockHeight(ctx sdk.Context, ethereumHeight uint64) {
+	store := ctx.KVStore(k.storeKey)
+	previous := k.GetLastObservedEthereumBlockHeight(ctx)
+	if previous.EthereumBlockHeight > ethereumHeight {
+		panic("Attempt to roll back Ethereum block height!")
+	}
+	height := types.LastObservedNFTEthereumBlockHeight{
+		EthereumBlockHeight: ethereumHeight,
+		CosmosBlockHeight:   uint64(ctx.BlockHeight()),
+	}
+	store.Set(types.LastObservedEthereumBlockHeightKey, k.cdc.MustMarshal(&height))
+}
+
+// GetLastObservedEthereumBlockHeight height gets the block height to of the last observed attestation from
+// the store
+func (k Keeper) GetLastObservedEthereumBlockHeight(ctx sdk.Context) types.LastObservedNFTEthereumBlockHeight {
+	store := ctx.KVStore(k.storeKey)
+	bytes := store.Get(types.LastObservedEthereumBlockHeightKey)
+
+	if len(bytes) == 0 {
+		return types.LastObservedNFTEthereumBlockHeight{
+			CosmosBlockHeight:   0,
+			EthereumBlockHeight: 0,
+		}
+	}
+	height := types.LastObservedNFTEthereumBlockHeight{
+		CosmosBlockHeight:   0,
+		EthereumBlockHeight: 0,
+	}
+	k.cdc.MustUnmarshal(bytes, &height)
+	return height
+}
+
+// SetLastObservedEventNonce sets the latest observed event nonce
+func (k Keeper) SetLastObservedEventNonce(ctx sdk.Context, nonce uint64) {
+	store := ctx.KVStore(k.storeKey)
+	last := k.GetLastObservedEventNonce(ctx)
+	// event nonce must increase, unless it's zero at which point allow zero to be set
+	// as many times as needed (genesis test setup etc)
+	zeroCase := last == 0 && nonce == 0
+	if last >= nonce && !zeroCase {
+		panic("Event nonce going backwards or replay!")
+	}
+	store.Set(types.LastObservedEventNonceKey, types.UInt64Bytes(nonce))
 }
 
 // GetLastEventNonceByValidator returns the latest event nonce for a given validator

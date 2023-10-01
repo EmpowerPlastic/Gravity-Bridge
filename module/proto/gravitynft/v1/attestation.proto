@@ -61,17 +61,19 @@ message NFTEventObservation {
 // the address is invalid, the address is black-listed or for whatever other
 // reason it was not possible to send the deposited asset.
 message EventInvalidSendNFTToCosmosReceiver {
-  string amount = 1;
-  string nonce  = 2;
-  string token  = 3;
-  string sender = 4;
+  string contract = 1;
+  string class_id  = 2;
+  string token_id  = 3;
+  string nonce    = 4;
+  string sender   = 5;
 }
 
 // EventSendNFTToCosmos is emitted when a CLAIM_TYPE_SEND_NFT_TO_COSMOS has been processed (observed + handled)
 message EventSendNFTToCosmos {
-  string amount = 1;
-  string nonce  = 2;
-  string token  = 3;
+  string contract = 1;
+  string class_id = 3;
+  string token_id = 4;
+  string nonce    = 5;
 }
 
 // EventSendNFTToCosmosLocal is emitted when NFT has been sent to a local (gravity) address,
@@ -79,8 +81,8 @@ message EventSendNFTToCosmos {
 message EventSendNFTToCosmosLocal {
   string nonce = 1;
   string receiver = 2;
-  string token = 3;
-  string amount = 4;
+  string class_id = 3;
+  string token_id = 4;
 }
 
 // EventSendNFTToCosmosPendingIbcAutoForward is emitted when NFT has been added to the IBC auto forwarding queue.
@@ -88,8 +90,8 @@ message EventSendNFTToCosmosLocal {
 message EventSendNFTToCosmosPendingIbcAutoForward {
   string nonce = 1;
   string receiver = 2;
-  string token = 3;
-  string amount = 4;
+  string class_id = 3;
+  string token_id = 4;
   string channel = 5;
 }
 
@@ -98,8 +100,8 @@ message EventSendNFTToCosmosPendingIbcAutoForward {
 message EventSendNFTToCosmosExecutedIbcAutoForward {
   string nonce = 1;
   string receiver = 2;
-  string token = 3;
-  string amount = 4;
+  string class_id = 3;
+  string token_id = 4;
   string channel = 5;
   string timeout_time = 6;
   string timeout_height = 7;
