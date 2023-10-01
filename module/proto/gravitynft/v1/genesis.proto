@@ -6,15 +6,35 @@ import "gogoproto/gogo.proto";
 option go_package = "github.com/Gravity-Bridge/Gravity-Bridge/module/x/gravitynft/types";
 
 message Params {
-  // TODO: ALL OF THIS
+  option (gogoproto.stringer) = false;
+
+  string gravity_id                     = 1;
+  string contract_source_hash           = 2;
+  string bridge_ethereum_address        = 4;
+  uint64 bridge_chain_id                = 5;
+  uint64 signed_send_nft_to_eth_window  = 6;
+  uint64 target_send_nft_to_eth_timeout = 7;
+  uint64 average_block_time             = 8;
+  uint64 average_ethereum_block_time    = 9;
+  bool bridge_active                    = 10;
+  // addresses on this blacklist are forbidden from depositing or withdrawing
+  // from Ethereum to the bridge
+  repeated string ethereum_blacklist    = 11;
 }
 
 message GenesisState {
-  Params                             params              = 1;
-  GravityNonces                      gravity_nonces      = 2 [(gogoproto.nullable) = false];
-  // TODO: ALL OF THIS
+  Params                              params                        = 1;
+  GravityNonces                       gravity_nonces                = 2 [(gogoproto.nullable) = false];
+  repeated OutgoingSendNFTToEth       send_nft_to_eths              = 3 [(gogoproto.nullable) = false];
+  repeated MsgConfirmSendNFTToEth     send_nft_to_eth_confirms      = 4 [(gogoproto.nullable) = false];
+  repeated NFTAttestation             nft_attestations              = 5 [(gogoproto.nullable) = false];
+  repeated ERC721ToClassId            erc721_to_classids            = 6 [(gogoproto.nullable) = false];
+  repeated PendingNFTIbcAutoForward   pending_nft_ibc_auto_forwards = 7 [(gogoproto.nullable) = false];
 }
 
 message GravityNonces {
-  // TODO: ALL OF THIS
+  // the last observed GravityERC721.sol contract event nonce
+  uint64 last_observed_nft_nonce       = 2;
+  // the last block that NFT send to Eth slashing has completed for
+  uint64 last_slashed_send_nft_to_eth_block = 3;
 }
