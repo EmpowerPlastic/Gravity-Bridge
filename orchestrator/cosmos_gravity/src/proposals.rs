@@ -229,6 +229,9 @@ pub struct MetadataJson {
     pub display: String,
     pub name: String,
     pub symbol: String,
+    pub uri: String,
+    pub uri_hash: String,
+
 }
 impl From<MetadataJson> for Metadata {
     fn from(v: MetadataJson) -> Self {
@@ -239,6 +242,8 @@ impl From<MetadataJson> for Metadata {
             display: v.display,
             name: v.name,
             symbol: v.symbol,
+            uri: v.uri,
+            uri_hash: v.uri_hash,
         }
     }
 }
