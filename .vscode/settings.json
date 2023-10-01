@@ -1,0 +1,5 @@
+{
+    "rust-analyzer.linkedProjects": [
+        "../proto/gravity_proto/Cargo.toml"
+    ]
+}
