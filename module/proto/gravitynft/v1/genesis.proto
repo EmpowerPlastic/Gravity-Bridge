@@ -25,11 +25,10 @@ message Params {
 message GenesisState {
   Params                              params                        = 1;
   GravityNonces                       gravity_nonces                = 2 [(gogoproto.nullable) = false];
-  repeated OutgoingSendNFTToEth       send_nft_to_eths              = 3 [(gogoproto.nullable) = false];
-  repeated MsgConfirmSendNFTToEth     send_nft_to_eth_confirms      = 4 [(gogoproto.nullable) = false];
-  repeated NFTAttestation             nft_attestations              = 5 [(gogoproto.nullable) = false];
-  repeated ERC721ToClassId            erc721_to_classids            = 6 [(gogoproto.nullable) = false];
-  repeated PendingNFTIbcAutoForward   pending_nft_ibc_auto_forwards = 7 [(gogoproto.nullable) = false];
+  repeated OutgoingNFT                outgoing_nfts                 = 3 [(gogoproto.nullable) = false];
+  repeated NFTAttestation             nft_attestations              = 4 [(gogoproto.nullable) = false];
+  repeated ERC721ToClassId            erc721_to_classids            = 5 [(gogoproto.nullable) = false];
+  repeated PendingNFTIbcAutoForward   pending_nft_ibc_auto_forwards = 6 [(gogoproto.nullable) = false];
 }
 
 message GravityNonces {
