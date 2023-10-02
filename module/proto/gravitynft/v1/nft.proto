@@ -1,0 +1,16 @@
+syntax = "proto3";
+package gravitynft.v1;
+
+import "gravitynft/v1/attestation.proto";
+
+option go_package = "github.com/Gravity-Bridge/Gravity-Bridge/module/x/gravitynft/types";
+
+message OutgoingNFT {
+    string contract_address  = 1;
+    uint64 token_id          = 2;
+    string token_uri         = 3;
+    uint64 class_id          = 4;
+    string cosmos_sender     = 5;
+    string ethereum_receiver = 6;
+
+}

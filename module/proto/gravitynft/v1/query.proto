@@ -2,6 +2,7 @@ syntax = "proto3";
 package gravitynft.v1;
 
 import "gravitynft/v1/genesis.proto";
+import "gravitynft/v1/types.proto";
 import "google/api/annotations.proto";
 import "gogoproto/gogo.proto";
 
@@ -10,11 +11,81 @@ option go_package = "github.com/Gravity-Bridge/Gravity-Bridge/module/x/gravitynf
 // Query defines the gRPC querier service
 service Query {
   rpc Params(QueryParamsRequest) returns (QueryParamsResponse) {
-    option (google.api.http).get = "/gravity/v1beta/params";
+    option (google.api.http).get = "/gravitynft/v1beta/params";
+  }
+  rpc LastNFTEventNonceByAddr(QueryLastNFTEventNonceByAddrRequest) returns (QueryLastNFTEventNonceByAddrResponse) {
+    option (google.api.http).get = "/gravitynft/v1beta/oracle/nft_eventnonce/{address}";
+  }
+  rpc OutgoingSendNFTToEths(QueryOutgoingSendNFTToEthsRequest) returns (QueryOutgoingSendNFTToEthsResponse) {
+    option (google.api.http).get = "/gravitynft/v1beta/outgoing_send_to_eths";
+  }
+  rpc GetLastObservedNFTEthBlock(QueryLastObservedNFTEthBlockRequest) returns (QueryLastObservedNFTEthBlockResponse) {
+    option (google.api.http).get = "/gravitynft/v1beta/last_observed_nft_eth_block";
+  }
+  rpc GetLastObservedNFTEthNonce(QueryLastObservedNFTEthNonceRequest) returns (QueryLastObservedNFTEthNonceResponse) {
+    option (google.api.http).get = "/gravitynft/v1beta/last_observed_nft_eth_nonce";
+  }
+  rpc GetNFTAttestations(QueryNFTAttestationsRequest) returns (QueryNFTAttestationsResponse) {
+    option (google.api.http).get = "/gravitynft/v1beta/nft-attestations";
+  }
+  rpc GetPendingNFTIbcAutoForwards(QueryPendingNFTIbcAutoForwardsRequest) returns (QueryPendingNFTIbcAutoForwardsResponse) {
+    option (google.api.http).get = "/gravitynft/v1beta/pending_nft_ibc_auto_forwards";
+  }
+  rpc ERC721ToClassId(QueryERC721ToClassIdRequest) returns (QueryERC721ToClassIdResponse) {
+    option (google.api.http).get = "/gravitynft/v1beta/erc721_to_class_id";
+  }
+  rpc ClassIdToERC721(QueryClassIdToERC721Request) returns (QueryClassIdToERC721Response) {
+    option (google.api.http).get = "/gravitynft/v1beta/class_id_to_erc721";
   }
 }
 
 message QueryParamsRequest {}
 message QueryParamsResponse {
   Params params = 1 [(gogoproto.nullable) = false];
+}
+
+message QueryLastNFTEventNonceByAddrRequest {
+  string address = 1;
+}
+message QueryLastNFTEventNonceByAddrResponse {
+  uint64 last_nft_event_nonce = 1;
+}
+
+message QueryOutgoingSendNFTToEthsRequest {}
+message QueryOutgoingSendNFTToEthsResponse {
+  repeated OutgoingNFT outgoing_nfts = 1 [(gogoproto.nullable) = false];
+}
+
+message QueryLastObservedNFTEthBlockRequest {}
+message QueryLastObservedNFTEthBlockResponse {
+  uint64 last_observed_nft_eth_block = 1;
+}
+
+message QueryLastObservedNFTEthNonceRequest {}
+message QueryLastObservedNFTEthNonceResponse {
+  uint64 last_observed_nft_eth_nonce = 1;
+}
+
+message QueryNFTAttestationsRequest {}
+message QueryNFTAttestationsResponse {
+  repeated NFTAttestation nft_attestations = 1 [(gogoproto.nullable) = false];
+}
+
+message QueryPendingNFTIbcAutoForwardsRequest {}
+message QueryPendingNFTIbcAutoForwardsResponse {
+  repeated PendingNFTIbcAutoForward pending_nft_ibc_auto_forwards = 1;
+}
+
+message QueryERC721ToClassIdRequest {
+  string erc721 = 1;
+}
+message QueryERC721ToClassIdResponse {
+  uint64 class_id = 1;
+}
+
+message QueryClassIdToERC721Request {
+  uint64 class_id = 1;
+}
+message QueryClassIdToERC721Response {
+  string erc721 = 1;
 }
