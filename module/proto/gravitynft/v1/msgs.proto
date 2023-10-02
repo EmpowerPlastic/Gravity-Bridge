@@ -13,7 +13,7 @@ service Msg {
   rpc SendNFTToEth(MsgSendNFTToEth) returns (MsgSendNFTToEthResponse) {
     option (google.api.http).post = "/gravitynft/v1/send_nft_to_eth";
   }
-  rpc ExecuteIbcNFTAutoForwards(MsgExecuteIbcNFTAutoForwardsRequest) returns (MsgExecuteIbcNFTAutoForwardsResponse) {
+  rpc ExecuteIbcNFTAutoForwards(MsgExecuteIbcNFTAutoForwards) returns (MsgExecuteIbcNFTAutoForwardsResponse) {
     option (google.api.http).post = "/gravitynft/v1/execute_ibc_nft_auto_forwards";
   }
   rpc SendNFTToEthClaim(MsgSendNFTToEthClaim) returns (MsgSendNFTToEthClaimResponse) {

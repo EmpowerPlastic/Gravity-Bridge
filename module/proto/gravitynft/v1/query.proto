@@ -1,7 +1,9 @@
 syntax = "proto3";
 package gravitynft.v1;
 
+import "gravitynft/v1/attestation.proto";
 import "gravitynft/v1/genesis.proto";
+import "gravitynft/v1/nft.proto";
 import "gravitynft/v1/types.proto";
 import "google/api/annotations.proto";
 import "gogoproto/gogo.proto";
