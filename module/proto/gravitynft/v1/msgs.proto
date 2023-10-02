@@ -87,9 +87,11 @@ message MsgSendNFTToEthClaimResponse {}
 // MsgERC721DeployedClaim claims that an ERC721 contract has been deployed on Ethereum
 // -------------
 message MsgERC721DeployedClaim {
-    string token_contract     = 1;
-    string class_id           = 2;
-    string orchestrator       = 3;
+    uint64 event_nonce        = 1;
+    uint64 eth_block_height   = 2;
+    string token_contract     = 3;
+    string class_id           = 4;
+    string orchestrator       = 5;
   }
 
 message MsgERC721DeployedClaimResponse {}
