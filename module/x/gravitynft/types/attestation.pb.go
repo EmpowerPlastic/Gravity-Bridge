@@ -33,10 +33,8 @@ const (
 	NFT_CLAIM_TYPE_UNSPECIFIED NFTClaimType = 0
 	// A claim for a SendNFTToCosmos transaction
 	NFT_CLAIM_TYPE_SEND_NFT_TO_COSMOS NFTClaimType = 1
-	// TODO: WILL WE USE THIS?
 	// A claim for when an NFT is sent to Ethereum
 	NFT_CLAIM_TYPE_SEND_NFT_TO_ETH NFTClaimType = 2
-	// TODO: ASK JAKUB ABOUT THIS ONE: IS THIS THE NFT-GRAVITY CONTRACT?
 	// A claim for when an erc721 contract has been deployed
 	NFT_CLAIM_TYPE_ERC721_DEPLOYED NFTClaimType = 3
 )
@@ -228,10 +226,11 @@ func (m *NFTEventObservation) GetNonce() string {
 // the address is invalid, the address is black-listed or for whatever other
 // reason it was not possible to send the deposited asset.
 type EventInvalidSendNFTToCosmosReceiver struct {
-	Amount string `protobuf:"bytes,1,opt,name=amount,proto3" json:"amount,omitempty"`
-	Nonce  string `protobuf:"bytes,2,opt,name=nonce,proto3" json:"nonce,omitempty"`
-	Token  string `protobuf:"bytes,3,opt,name=token,proto3" json:"token,omitempty"`
-	Sender string `protobuf:"bytes,4,opt,name=sender,proto3" json:"sender,omitempty"`
+	Contract string `protobuf:"bytes,1,opt,name=contract,proto3" json:"contract,omitempty"`
+	ClassId  string `protobuf:"bytes,2,opt,name=class_id,json=classId,proto3" json:"class_id,omitempty"`
+	TokenId  string `protobuf:"bytes,3,opt,name=token_id,json=tokenId,proto3" json:"token_id,omitempty"`
+	Nonce    string `protobuf:"bytes,4,opt,name=nonce,proto3" json:"nonce,omitempty"`
+	Sender   string `protobuf:"bytes,5,opt,name=sender,proto3" json:"sender,omitempty"`
 }
 
 func (m *EventInvalidSendNFTToCosmosReceiver) Reset()         { *m = EventInvalidSendNFTToCosmosReceiver{} }
@@ -267,9 +266,23 @@ func (m *EventInvalidSendNFTToCosmosReceiver) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_EventInvalidSendNFTToCosmosReceiver proto.InternalMessageInfo
 
-func (m *EventInvalidSendNFTToCosmosReceiver) GetAmount() string {
+func (m *EventInvalidSendNFTToCosmosReceiver) GetContract() string {
 	if m != nil {
-		return m.Amount
+		return m.Contract
+	}
+	return ""
+}
+
+func (m *EventInvalidSendNFTToCosmosReceiver) GetClassId() string {
+	if m != nil {
+		return m.ClassId
+	}
+	return ""
+}
+
+func (m *EventInvalidSendNFTToCosmosReceiver) GetTokenId() string {
+	if m != nil {
+		return m.TokenId
 	}
 	return ""
 }
@@ -277,13 +290,6 @@ func (m *EventInvalidSendNFTToCosmosReceiver) GetAmount() string {
 func (m *EventInvalidSendNFTToCosmosReceiver) GetNonce() string {
 	if m != nil {
 		return m.Nonce
-	}
-	return ""
-}
-
-func (m *EventInvalidSendNFTToCosmosReceiver) GetToken() string {
-	if m != nil {
-		return m.Token
 	}
 	return ""
 }
@@ -297,9 +303,10 @@ func (m *EventInvalidSendNFTToCosmosReceiver) GetSender() string {
 
 // EventSendNFTToCosmos is emitted when a CLAIM_TYPE_SEND_NFT_TO_COSMOS has been processed (observed + handled)
 type EventSendNFTToCosmos struct {
-	Amount string `protobuf:"bytes,1,opt,name=amount,proto3" json:"amount,omitempty"`
-	Nonce  string `protobuf:"bytes,2,opt,name=nonce,proto3" json:"nonce,omitempty"`
-	Token  string `protobuf:"bytes,3,opt,name=token,proto3" json:"token,omitempty"`
+	Contract string `protobuf:"bytes,1,opt,name=contract,proto3" json:"contract,omitempty"`
+	ClassId  string `protobuf:"bytes,2,opt,name=class_id,json=classId,proto3" json:"class_id,omitempty"`
+	TokenId  string `protobuf:"bytes,3,opt,name=token_id,json=tokenId,proto3" json:"token_id,omitempty"`
+	Nonce    string `protobuf:"bytes,4,opt,name=nonce,proto3" json:"nonce,omitempty"`
 }
 
 func (m *EventSendNFTToCosmos) Reset()         { *m = EventSendNFTToCosmos{} }
@@ -335,9 +342,23 @@ func (m *EventSendNFTToCosmos) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_EventSendNFTToCosmos proto.InternalMessageInfo
 
-func (m *EventSendNFTToCosmos) GetAmount() string {
+func (m *EventSendNFTToCosmos) GetContract() string {
 	if m != nil {
-		return m.Amount
+		return m.Contract
+	}
+	return ""
+}
+
+func (m *EventSendNFTToCosmos) GetClassId() string {
+	if m != nil {
+		return m.ClassId
+	}
+	return ""
+}
+
+func (m *EventSendNFTToCosmos) GetTokenId() string {
+	if m != nil {
+		return m.TokenId
 	}
 	return ""
 }
@@ -349,20 +370,14 @@ func (m *EventSendNFTToCosmos) GetNonce() string {
 	return ""
 }
 
-func (m *EventSendNFTToCosmos) GetToken() string {
-	if m != nil {
-		return m.Token
-	}
-	return ""
-}
-
 // EventSendNFTToCosmosLocal is emitted when NFT has been sent to a local (gravity) address,
 // rather than added to the ibc forwarding queue. This happens as part of the handling of CLAIM_TYPE_SEND_NFT_TO_COSMOS.
 type EventSendNFTToCosmosLocal struct {
-	Nonce    string `protobuf:"bytes,1,opt,name=nonce,proto3" json:"nonce,omitempty"`
-	Receiver string `protobuf:"bytes,2,opt,name=receiver,proto3" json:"receiver,omitempty"`
-	Token    string `protobuf:"bytes,3,opt,name=token,proto3" json:"token,omitempty"`
-	Amount   string `protobuf:"bytes,4,opt,name=amount,proto3" json:"amount,omitempty"`
+	Contract string `protobuf:"bytes,1,opt,name=contract,proto3" json:"contract,omitempty"`
+	ClassId  string `protobuf:"bytes,2,opt,name=class_id,json=classId,proto3" json:"class_id,omitempty"`
+	TokenId  string `protobuf:"bytes,3,opt,name=token_id,json=tokenId,proto3" json:"token_id,omitempty"`
+	Nonce    string `protobuf:"bytes,4,opt,name=nonce,proto3" json:"nonce,omitempty"`
+	Receiver string `protobuf:"bytes,5,opt,name=receiver,proto3" json:"receiver,omitempty"`
 }
 
 func (m *EventSendNFTToCosmosLocal) Reset()         { *m = EventSendNFTToCosmosLocal{} }
@@ -398,6 +413,27 @@ func (m *EventSendNFTToCosmosLocal) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_EventSendNFTToCosmosLocal proto.InternalMessageInfo
 
+func (m *EventSendNFTToCosmosLocal) GetContract() string {
+	if m != nil {
+		return m.Contract
+	}
+	return ""
+}
+
+func (m *EventSendNFTToCosmosLocal) GetClassId() string {
+	if m != nil {
+		return m.ClassId
+	}
+	return ""
+}
+
+func (m *EventSendNFTToCosmosLocal) GetTokenId() string {
+	if m != nil {
+		return m.TokenId
+	}
+	return ""
+}
+
 func (m *EventSendNFTToCosmosLocal) GetNonce() string {
 	if m != nil {
 		return m.Nonce
@@ -412,27 +448,13 @@ func (m *EventSendNFTToCosmosLocal) GetReceiver() string {
 	return ""
 }
 
-func (m *EventSendNFTToCosmosLocal) GetToken() string {
-	if m != nil {
-		return m.Token
-	}
-	return ""
-}
-
-func (m *EventSendNFTToCosmosLocal) GetAmount() string {
-	if m != nil {
-		return m.Amount
-	}
-	return ""
-}
-
 // EventSendNFTToCosmosPendingIbcAutoForward is emitted when NFT has been added to the IBC auto forwarding queue.
 // This happens as part of the handling of CLAIM_TYPE_SEND_NFT_TO_COSMOS.
 type EventSendNFTToCosmosPendingIbcAutoForward struct {
 	Nonce    string `protobuf:"bytes,1,opt,name=nonce,proto3" json:"nonce,omitempty"`
 	Receiver string `protobuf:"bytes,2,opt,name=receiver,proto3" json:"receiver,omitempty"`
-	Token    string `protobuf:"bytes,3,opt,name=token,proto3" json:"token,omitempty"`
-	Amount   string `protobuf:"bytes,4,opt,name=amount,proto3" json:"amount,omitempty"`
+	ClassId  string `protobuf:"bytes,3,opt,name=class_id,json=classId,proto3" json:"class_id,omitempty"`
+	TokenId  string `protobuf:"bytes,4,opt,name=token_id,json=tokenId,proto3" json:"token_id,omitempty"`
 	Channel  string `protobuf:"bytes,5,opt,name=channel,proto3" json:"channel,omitempty"`
 }
 
@@ -487,16 +509,16 @@ func (m *EventSendNFTToCosmosPendingIbcAutoForward) GetReceiver() string {
 	return ""
 }
 
-func (m *EventSendNFTToCosmosPendingIbcAutoForward) GetToken() string {
+func (m *EventSendNFTToCosmosPendingIbcAutoForward) GetClassId() string {
 	if m != nil {
-		return m.Token
+		return m.ClassId
 	}
 	return ""
 }
 
-func (m *EventSendNFTToCosmosPendingIbcAutoForward) GetAmount() string {
+func (m *EventSendNFTToCosmosPendingIbcAutoForward) GetTokenId() string {
 	if m != nil {
-		return m.Amount
+		return m.TokenId
 	}
 	return ""
 }
@@ -513,8 +535,8 @@ func (m *EventSendNFTToCosmosPendingIbcAutoForward) GetChannel() string {
 type EventSendNFTToCosmosExecutedIbcAutoForward struct {
 	Nonce         string `protobuf:"bytes,1,opt,name=nonce,proto3" json:"nonce,omitempty"`
 	Receiver      string `protobuf:"bytes,2,opt,name=receiver,proto3" json:"receiver,omitempty"`
-	Token         string `protobuf:"bytes,3,opt,name=token,proto3" json:"token,omitempty"`
-	Amount        string `protobuf:"bytes,4,opt,name=amount,proto3" json:"amount,omitempty"`
+	ClassId       string `protobuf:"bytes,3,opt,name=class_id,json=classId,proto3" json:"class_id,omitempty"`
+	TokenId       string `protobuf:"bytes,4,opt,name=token_id,json=tokenId,proto3" json:"token_id,omitempty"`
 	Channel       string `protobuf:"bytes,5,opt,name=channel,proto3" json:"channel,omitempty"`
 	TimeoutTime   string `protobuf:"bytes,6,opt,name=timeout_time,json=timeoutTime,proto3" json:"timeout_time,omitempty"`
 	TimeoutHeight string `protobuf:"bytes,7,opt,name=timeout_height,json=timeoutHeight,proto3" json:"timeout_height,omitempty"`
@@ -571,16 +593,16 @@ func (m *EventSendNFTToCosmosExecutedIbcAutoForward) GetReceiver() string {
 	return ""
 }
 
-func (m *EventSendNFTToCosmosExecutedIbcAutoForward) GetToken() string {
+func (m *EventSendNFTToCosmosExecutedIbcAutoForward) GetClassId() string {
 	if m != nil {
-		return m.Token
+		return m.ClassId
 	}
 	return ""
 }
 
-func (m *EventSendNFTToCosmosExecutedIbcAutoForward) GetAmount() string {
+func (m *EventSendNFTToCosmosExecutedIbcAutoForward) GetTokenId() string {
 	if m != nil {
-		return m.Amount
+		return m.TokenId
 	}
 	return ""
 }
@@ -620,50 +642,51 @@ func init() {
 func init() { proto.RegisterFile("gravitynft/v1/attestation.proto", fileDescriptor_168272269e7108d2) }
 
 var fileDescriptor_168272269e7108d2 = []byte{
-	// 675 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xcc, 0x54, 0xcd, 0x6e, 0xd3, 0x4c,
-	0x14, 0xcd, 0xa4, 0xe9, 0x4f, 0xa6, 0x7f, 0x91, 0xbf, 0xe8, 0x93, 0x9b, 0x85, 0x49, 0x8d, 0x0a,
-	0x69, 0x25, 0x62, 0xb5, 0x2c, 0x58, 0xa7, 0x89, 0x43, 0x23, 0xb5, 0x4e, 0xe4, 0x98, 0x45, 0x2b,
-	0x24, 0xcb, 0xb1, 0xa7, 0xce, 0x88, 0x78, 0xa6, 0xb2, 0xc7, 0xa6, 0x11, 0x2b, 0x36, 0x88, 0x25,
-	0xef, 0x50, 0xf1, 0x2e, 0xac, 0x50, 0x97, 0x2c, 0x51, 0xfb, 0x02, 0x3c, 0x02, 0xf2, 0x78, 0xda,
-	0x58, 0x55, 0x60, 0x05, 0x12, 0xab, 0xe4, 0x9c, 0x7b, 0x74, 0xee, 0xb9, 0x23, 0xdf, 0x0b, 0x1f,
-	0xf9, 0xa1, 0x93, 0x60, 0x36, 0x25, 0xe7, 0x4c, 0x4b, 0xf6, 0x35, 0x87, 0x31, 0x14, 0x31, 0x87,
-	0x61, 0x4a, 0x9a, 0x17, 0x21, 0x65, 0x54, 0x5a, 0x9f, 0x09, 0x9a, 0xc9, 0x7e, 0xad, 0xea, 0x53,
-	0x9f, 0xf2, 0x8a, 0x96, 0xfe, 0xcb, 0x44, 0xb5, 0x2d, 0x9f, 0x52, 0x7f, 0x82, 0x34, 0x8e, 0x46,
-	0xf1, 0xb9, 0xe6, 0x90, 0x69, 0x56, 0x52, 0x3f, 0x00, 0xb8, 0x61, 0x74, 0xad, 0xd6, 0xcc, 0x58,
-	0xaa, 0xc1, 0x15, 0x3a, 0x8a, 0x50, 0x98, 0x20, 0x4f, 0x06, 0x75, 0xd0, 0x58, 0x31, 0xef, 0xb1,
-	0x54, 0x85, 0x8b, 0x09, 0x65, 0x28, 0x92, 0x8b, 0xf5, 0x85, 0x46, 0xd9, 0xcc, 0x80, 0xf4, 0x3f,
-	0x5c, 0x1a, 0x23, 0xec, 0x8f, 0x99, 0xbc, 0x50, 0x07, 0x8d, 0x92, 0x29, 0x90, 0xb4, 0x07, 0x17,
-	0xdd, 0x89, 0x83, 0x03, 0xb9, 0x54, 0x07, 0x8d, 0xd5, 0x83, 0x6a, 0x33, 0xcb, 0xd1, 0xbc, 0xcb,
-	0xd1, 0x6c, 0x91, 0xa9, 0x99, 0x49, 0xd4, 0xaf, 0x00, 0xfe, 0x67, 0x74, 0x2d, 0x3d, 0x41, 0x84,
-	0xf5, 0x79, 0xbb, 0x2c, 0xcd, 0x2e, 0xac, 0xe4, 0xa6, 0xb6, 0xd9, 0xf4, 0x02, 0xf1, 0x54, 0x65,
-	0x73, 0x33, 0xc7, 0x5b, 0xd3, 0x0b, 0x24, 0x3d, 0x85, 0x9b, 0xa3, 0x10, 0x7b, 0x3e, 0xb2, 0x5d,
-	0x4a, 0x58, 0xe8, 0xb8, 0x4c, 0x2e, 0x72, 0xe5, 0x46, 0x46, 0xb7, 0x05, 0x2b, 0x3d, 0x99, 0x09,
-	0xc7, 0x0e, 0x26, 0x36, 0xf6, 0x78, 0xf0, 0xb2, 0xb9, 0x2e, 0x84, 0x29, 0xdb, 0xf3, 0xa4, 0x1d,
-	0xb8, 0x91, 0xef, 0x8d, 0x3d, 0x3e, 0x48, 0xd9, 0x5c, 0xcf, 0xb1, 0x3d, 0xfe, 0x28, 0x84, 0x12,
-	0x17, 0xc9, 0x8b, 0xbc, 0x9a, 0x01, 0xf5, 0x3d, 0x80, 0x8f, 0xf9, 0x34, 0x3d, 0x92, 0x38, 0x13,
-	0xec, 0x0d, 0x11, 0xf1, 0x8c, 0xae, 0x65, 0xd1, 0x36, 0x8d, 0x02, 0x1a, 0x99, 0xc8, 0x45, 0x38,
-	0x41, 0x61, 0xfa, 0x78, 0x4e, 0x40, 0x63, 0xc2, 0xc4, 0x58, 0x02, 0xcd, 0x5c, 0x8b, 0x39, 0xd7,
-	0x94, 0x65, 0xf4, 0x0d, 0x22, 0x22, 0x70, 0x06, 0x52, 0x8f, 0x08, 0x11, 0x0f, 0x85, 0x22, 0xa0,
-	0x40, 0xea, 0x19, 0xac, 0xf2, 0x08, 0x0f, 0x7a, 0xff, 0x89, 0x9e, 0xea, 0x3b, 0xb8, 0x35, 0xcf,
-	0xfb, 0x98, 0xba, 0xce, 0x64, 0x66, 0x04, 0xf2, 0x46, 0x35, 0xb8, 0x12, 0x8a, 0xb1, 0x45, 0x87,
-	0x7b, 0xfc, 0xeb, 0xc1, 0x44, 0xd0, 0x52, 0x3e, 0xa8, 0xfa, 0x19, 0xc0, 0xdd, 0x79, 0xdd, 0x07,
-	0x88, 0x78, 0x98, 0xf8, 0xbd, 0x91, 0xdb, 0x8a, 0x19, 0xed, 0xd2, 0xf0, 0xad, 0x13, 0x7a, 0x7f,
-	0x3b, 0x8d, 0x24, 0xc3, 0x65, 0x77, 0xec, 0x10, 0x82, 0x26, 0xe2, 0x13, 0xb8, 0x83, 0xea, 0x0f,
-	0x00, 0xf7, 0xe6, 0xe5, 0xd4, 0x2f, 0x91, 0x1b, 0x33, 0xe4, 0xfd, 0x2b, 0x41, 0xa5, 0x6d, 0xb8,
-	0xc6, 0x70, 0x80, 0x68, 0xcc, 0xec, 0xf4, 0x57, 0x5e, 0xe2, 0xe5, 0x55, 0xc1, 0x59, 0x38, 0x40,
-	0xe9, 0x36, 0xdc, 0x49, 0xc4, 0xb6, 0x2f, 0x67, 0xdb, 0x20, 0xd8, 0x23, 0x4e, 0xee, 0x5d, 0x01,
-	0xb8, 0x66, 0x74, 0xad, 0x76, 0xba, 0xd5, 0x7c, 0x2d, 0x15, 0x58, 0x33, 0xba, 0x96, 0xdd, 0x3e,
-	0x6e, 0xf5, 0x4e, 0x6c, 0xeb, 0x74, 0xa0, 0xdb, 0xaf, 0x8c, 0xe1, 0x40, 0x6f, 0xf7, 0xba, 0x3d,
-	0xbd, 0x53, 0x29, 0x48, 0x3b, 0x70, 0xfb, 0x41, 0x7d, 0xa8, 0x1b, 0x1d, 0x3b, 0xe5, 0xac, 0xbe,
-	0xdd, 0xee, 0x0f, 0x4f, 0xfa, 0xc3, 0x0a, 0x90, 0x54, 0xa8, 0xfc, 0x46, 0xa6, 0x5b, 0x47, 0x95,
-	0xe2, 0x1c, 0x8d, 0x6e, 0xb6, 0x5f, 0x1c, 0xec, 0xdb, 0x1d, 0x7d, 0x70, 0xdc, 0x3f, 0xd5, 0x3b,
-	0x95, 0x85, 0x5a, 0xe9, 0xe3, 0x95, 0x52, 0x38, 0x7c, 0xfd, 0xe5, 0x46, 0x01, 0xd7, 0x37, 0x0a,
-	0xf8, 0x7e, 0xa3, 0x80, 0x4f, 0xb7, 0x4a, 0xe1, 0xfa, 0x56, 0x29, 0x7c, 0xbb, 0x55, 0x0a, 0x67,
-	0x87, 0x3e, 0x66, 0xe3, 0x78, 0xd4, 0x74, 0x69, 0xa0, 0xbd, 0xcc, 0x8e, 0xeb, 0xb3, 0x43, 0x7e,
-	0x16, 0x1e, 0xc2, 0x80, 0x7a, 0xf1, 0x04, 0x69, 0x97, 0x5a, 0xee, 0x48, 0xa7, 0xf7, 0x29, 0x1a,
-	0x2d, 0xf1, 0x0b, 0xf7, 0xfc, 0x67, 0x00, 0x00, 0x00, 0xff, 0xff, 0x52, 0x90, 0x5d, 0x2d, 0xbf,
-	0x05, 0x00, 0x00,
+	// 696 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xcc, 0x95, 0xcf, 0x6e, 0xda, 0x4a,
+	0x14, 0xc6, 0x19, 0x20, 0x01, 0x26, 0xff, 0x90, 0x2f, 0xba, 0x72, 0x58, 0xf8, 0x12, 0x5f, 0xa5,
+	0x25, 0x91, 0x8a, 0x95, 0x74, 0xd1, 0x35, 0x01, 0xd3, 0x58, 0x4a, 0x0c, 0x32, 0xee, 0x22, 0x55,
+	0x25, 0xcb, 0xd8, 0x13, 0x33, 0xaa, 0x99, 0x89, 0xec, 0xc1, 0x0d, 0x9b, 0x2e, 0xab, 0x2e, 0xfb,
+	0x06, 0x5d, 0x44, 0x5d, 0xf6, 0x3d, 0xba, 0xaa, 0xb2, 0xec, 0xb2, 0x4a, 0x5e, 0xa2, 0xcb, 0xca,
+	0x63, 0x87, 0x38, 0x11, 0xe9, 0x32, 0xea, 0x0a, 0xbe, 0xef, 0x7c, 0x9a, 0xf9, 0x9d, 0x63, 0xf9,
+	0x18, 0xfe, 0xe7, 0x05, 0x76, 0x84, 0xd9, 0x8c, 0x9c, 0x32, 0x25, 0xda, 0x53, 0x6c, 0xc6, 0x50,
+	0xc8, 0x6c, 0x86, 0x29, 0x69, 0x9d, 0x05, 0x94, 0x51, 0x61, 0xed, 0x36, 0xd0, 0x8a, 0xf6, 0xea,
+	0x35, 0x8f, 0x7a, 0x94, 0x57, 0x94, 0xf8, 0x5f, 0x12, 0xaa, 0x6f, 0x7a, 0x94, 0x7a, 0x3e, 0x52,
+	0xb8, 0x1a, 0x4d, 0x4f, 0x15, 0x9b, 0xcc, 0x92, 0x92, 0xfc, 0x01, 0xc0, 0x75, 0xbd, 0x67, 0xb6,
+	0x6f, 0x0f, 0x16, 0xea, 0xb0, 0x4c, 0x47, 0x21, 0x0a, 0x22, 0xe4, 0x8a, 0xa0, 0x01, 0x9a, 0x65,
+	0x63, 0xae, 0x85, 0x1a, 0x5c, 0x8a, 0x28, 0x43, 0xa1, 0x98, 0x6f, 0x14, 0x9a, 0x15, 0x23, 0x11,
+	0xc2, 0xbf, 0x70, 0x79, 0x8c, 0xb0, 0x37, 0x66, 0x62, 0xa1, 0x01, 0x9a, 0x45, 0x23, 0x55, 0xc2,
+	0x2e, 0x5c, 0x72, 0x7c, 0x1b, 0x4f, 0xc4, 0x62, 0x03, 0x34, 0x57, 0xf6, 0x6b, 0xad, 0x84, 0xa3,
+	0x75, 0xc3, 0xd1, 0x6a, 0x93, 0x99, 0x91, 0x44, 0xe4, 0xef, 0x00, 0xfe, 0xa3, 0xf7, 0x4c, 0x35,
+	0x42, 0x84, 0xf5, 0xf9, 0x75, 0x09, 0xcd, 0x0e, 0xac, 0x66, 0xba, 0xb6, 0xd8, 0xec, 0x0c, 0x71,
+	0xaa, 0x8a, 0xb1, 0x91, 0xf1, 0xcd, 0xd9, 0x19, 0x12, 0x9e, 0xc2, 0x8d, 0x51, 0x80, 0x5d, 0x0f,
+	0x59, 0x0e, 0x25, 0x2c, 0xb0, 0x1d, 0x26, 0xe6, 0x79, 0x72, 0x3d, 0xb1, 0x3b, 0xa9, 0x2b, 0x3c,
+	0xb9, 0x0d, 0x8e, 0x6d, 0x4c, 0x2c, 0xec, 0x72, 0xf0, 0x8a, 0xb1, 0x96, 0x06, 0x63, 0x57, 0x73,
+	0x85, 0x6d, 0xb8, 0x9e, 0xbd, 0x1b, 0xbb, 0xbc, 0x91, 0x8a, 0xb1, 0x96, 0x71, 0x35, 0x3e, 0x14,
+	0x42, 0x89, 0x83, 0xc4, 0x25, 0x5e, 0x4d, 0x84, 0xfc, 0x05, 0xc0, 0xff, 0x79, 0x37, 0x1a, 0x89,
+	0x6c, 0x1f, 0xbb, 0x43, 0x44, 0x5c, 0xbd, 0x67, 0x9a, 0xb4, 0x43, 0xc3, 0x09, 0x0d, 0x0d, 0xe4,
+	0x20, 0x1c, 0xa1, 0x20, 0x1e, 0xf7, 0x1c, 0x37, 0x69, 0x6c, 0xae, 0x85, 0x4d, 0x58, 0x76, 0x7c,
+	0x3b, 0x0c, 0xe3, 0xab, 0x93, 0x56, 0x4a, 0x5c, 0x6b, 0x6e, 0x5c, 0x62, 0xf4, 0x2d, 0xca, 0xc0,
+	0x97, 0xb8, 0xce, 0xf2, 0x14, 0x33, 0x3c, 0xf1, 0x43, 0x0a, 0x11, 0x71, 0x51, 0x90, 0x62, 0xa6,
+	0x4a, 0x7e, 0x0f, 0x6b, 0x1c, 0xf3, 0x1e, 0xdf, 0x63, 0x71, 0xc9, 0x9f, 0x01, 0xdc, 0x5c, 0x04,
+	0x70, 0x44, 0x1d, 0xdb, 0x7f, 0xb4, 0xe9, 0xd4, 0x61, 0x39, 0x48, 0x9f, 0x48, 0x3a, 0x9f, 0xb9,
+	0x96, 0xbf, 0x02, 0xb8, 0xb3, 0x88, 0x70, 0x80, 0x88, 0x8b, 0x89, 0xa7, 0x8d, 0x9c, 0xf6, 0x94,
+	0xd1, 0x1e, 0x0d, 0xde, 0xd9, 0x41, 0xe6, 0x7c, 0xf0, 0xd0, 0xf9, 0xf9, 0xbb, 0xe7, 0xdf, 0xe9,
+	0xa3, 0xf0, 0x70, 0x1f, 0xc5, 0xbb, 0x7d, 0x88, 0xb0, 0xe4, 0x8c, 0x6d, 0x42, 0x90, 0x9f, 0x02,
+	0xdf, 0x48, 0xf9, 0x17, 0x80, 0xbb, 0x8b, 0x78, 0xd5, 0x73, 0xe4, 0x4c, 0x19, 0x72, 0xff, 0x36,
+	0x60, 0x61, 0x0b, 0xae, 0x32, 0x3c, 0x41, 0x74, 0xca, 0xac, 0xf8, 0x57, 0x5c, 0xe6, 0xe5, 0x95,
+	0xd4, 0x33, 0xf1, 0x04, 0xc5, 0xaf, 0xe2, 0x4d, 0x24, 0x5d, 0x35, 0xa5, 0xe4, 0x55, 0x4c, 0xdd,
+	0x43, 0x6e, 0xee, 0x5e, 0x00, 0xb8, 0xaa, 0xf7, 0xcc, 0x4e, 0xbc, 0x52, 0xf8, 0x4e, 0x90, 0x60,
+	0x5d, 0xef, 0x99, 0x56, 0xe7, 0xa8, 0xad, 0x1d, 0x5b, 0xe6, 0xc9, 0x40, 0xb5, 0x5e, 0xe9, 0xc3,
+	0x81, 0xda, 0xd1, 0x7a, 0x9a, 0xda, 0xad, 0xe6, 0x84, 0x6d, 0xb8, 0x75, 0xaf, 0x3e, 0x54, 0xf5,
+	0xae, 0x15, 0x7b, 0x66, 0xdf, 0xea, 0xf4, 0x87, 0xc7, 0xfd, 0x61, 0x15, 0x08, 0x32, 0x94, 0xfe,
+	0x10, 0x53, 0xcd, 0xc3, 0x6a, 0x7e, 0x41, 0x46, 0x35, 0x3a, 0x2f, 0xf6, 0xf7, 0xac, 0xae, 0x3a,
+	0x38, 0xea, 0x9f, 0xa8, 0xdd, 0x6a, 0xa1, 0x5e, 0xfc, 0x78, 0x21, 0xe5, 0x0e, 0xde, 0x7c, 0xbb,
+	0x92, 0xc0, 0xe5, 0x95, 0x04, 0x7e, 0x5e, 0x49, 0xe0, 0xd3, 0xb5, 0x94, 0xbb, 0xbc, 0x96, 0x72,
+	0x3f, 0xae, 0xa5, 0xdc, 0xeb, 0x03, 0x0f, 0xb3, 0xf1, 0x74, 0xd4, 0x72, 0xe8, 0x44, 0x79, 0x99,
+	0x6c, 0xf6, 0x67, 0x07, 0x7c, 0x27, 0xdd, 0x97, 0x13, 0xea, 0x4e, 0x7d, 0xa4, 0x9c, 0x2b, 0x99,
+	0x2f, 0x44, 0xbc, 0x1c, 0xc3, 0xd1, 0x32, 0x5f, 0xaf, 0xcf, 0x7f, 0x07, 0x00, 0x00, 0xff, 0xff,
+	0x58, 0x17, 0xdd, 0x4f, 0x3c, 0x06, 0x00, 0x00,
 }
 
 func (m *NFTAttestation) Marshal() (dAtA []byte, err error) {
@@ -808,26 +831,33 @@ func (m *EventInvalidSendNFTToCosmosReceiver) MarshalToSizedBuffer(dAtA []byte) 
 		copy(dAtA[i:], m.Sender)
 		i = encodeVarintAttestation(dAtA, i, uint64(len(m.Sender)))
 		i--
-		dAtA[i] = 0x22
-	}
-	if len(m.Token) > 0 {
-		i -= len(m.Token)
-		copy(dAtA[i:], m.Token)
-		i = encodeVarintAttestation(dAtA, i, uint64(len(m.Token)))
-		i--
-		dAtA[i] = 0x1a
+		dAtA[i] = 0x2a
 	}
 	if len(m.Nonce) > 0 {
 		i -= len(m.Nonce)
 		copy(dAtA[i:], m.Nonce)
 		i = encodeVarintAttestation(dAtA, i, uint64(len(m.Nonce)))
 		i--
+		dAtA[i] = 0x22
+	}
+	if len(m.TokenId) > 0 {
+		i -= len(m.TokenId)
+		copy(dAtA[i:], m.TokenId)
+		i = encodeVarintAttestation(dAtA, i, uint64(len(m.TokenId)))
+		i--
+		dAtA[i] = 0x1a
+	}
+	if len(m.ClassId) > 0 {
+		i -= len(m.ClassId)
+		copy(dAtA[i:], m.ClassId)
+		i = encodeVarintAttestation(dAtA, i, uint64(len(m.ClassId)))
+		i--
 		dAtA[i] = 0x12
 	}
-	if len(m.Amount) > 0 {
-		i -= len(m.Amount)
-		copy(dAtA[i:], m.Amount)
-		i = encodeVarintAttestation(dAtA, i, uint64(len(m.Amount)))
+	if len(m.Contract) > 0 {
+		i -= len(m.Contract)
+		copy(dAtA[i:], m.Contract)
+		i = encodeVarintAttestation(dAtA, i, uint64(len(m.Contract)))
 		i--
 		dAtA[i] = 0xa
 	}
@@ -854,24 +884,31 @@ func (m *EventSendNFTToCosmos) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	_ = i
 	var l int
 	_ = l
-	if len(m.Token) > 0 {
-		i -= len(m.Token)
-		copy(dAtA[i:], m.Token)
-		i = encodeVarintAttestation(dAtA, i, uint64(len(m.Token)))
-		i--
-		dAtA[i] = 0x1a
-	}
 	if len(m.Nonce) > 0 {
 		i -= len(m.Nonce)
 		copy(dAtA[i:], m.Nonce)
 		i = encodeVarintAttestation(dAtA, i, uint64(len(m.Nonce)))
 		i--
+		dAtA[i] = 0x22
+	}
+	if len(m.TokenId) > 0 {
+		i -= len(m.TokenId)
+		copy(dAtA[i:], m.TokenId)
+		i = encodeVarintAttestation(dAtA, i, uint64(len(m.TokenId)))
+		i--
+		dAtA[i] = 0x1a
+	}
+	if len(m.ClassId) > 0 {
+		i -= len(m.ClassId)
+		copy(dAtA[i:], m.ClassId)
+		i = encodeVarintAttestation(dAtA, i, uint64(len(m.ClassId)))
+		i--
 		dAtA[i] = 0x12
 	}
-	if len(m.Amount) > 0 {
-		i -= len(m.Amount)
-		copy(dAtA[i:], m.Amount)
-		i = encodeVarintAttestation(dAtA, i, uint64(len(m.Amount)))
+	if len(m.Contract) > 0 {
+		i -= len(m.Contract)
+		copy(dAtA[i:], m.Contract)
+		i = encodeVarintAttestation(dAtA, i, uint64(len(m.Contract)))
 		i--
 		dAtA[i] = 0xa
 	}
@@ -898,31 +935,38 @@ func (m *EventSendNFTToCosmosLocal) MarshalToSizedBuffer(dAtA []byte) (int, erro
 	_ = i
 	var l int
 	_ = l
-	if len(m.Amount) > 0 {
-		i -= len(m.Amount)
-		copy(dAtA[i:], m.Amount)
-		i = encodeVarintAttestation(dAtA, i, uint64(len(m.Amount)))
-		i--
-		dAtA[i] = 0x22
-	}
-	if len(m.Token) > 0 {
-		i -= len(m.Token)
-		copy(dAtA[i:], m.Token)
-		i = encodeVarintAttestation(dAtA, i, uint64(len(m.Token)))
-		i--
-		dAtA[i] = 0x1a
-	}
 	if len(m.Receiver) > 0 {
 		i -= len(m.Receiver)
 		copy(dAtA[i:], m.Receiver)
 		i = encodeVarintAttestation(dAtA, i, uint64(len(m.Receiver)))
 		i--
-		dAtA[i] = 0x12
+		dAtA[i] = 0x2a
 	}
 	if len(m.Nonce) > 0 {
 		i -= len(m.Nonce)
 		copy(dAtA[i:], m.Nonce)
 		i = encodeVarintAttestation(dAtA, i, uint64(len(m.Nonce)))
+		i--
+		dAtA[i] = 0x22
+	}
+	if len(m.TokenId) > 0 {
+		i -= len(m.TokenId)
+		copy(dAtA[i:], m.TokenId)
+		i = encodeVarintAttestation(dAtA, i, uint64(len(m.TokenId)))
+		i--
+		dAtA[i] = 0x1a
+	}
+	if len(m.ClassId) > 0 {
+		i -= len(m.ClassId)
+		copy(dAtA[i:], m.ClassId)
+		i = encodeVarintAttestation(dAtA, i, uint64(len(m.ClassId)))
+		i--
+		dAtA[i] = 0x12
+	}
+	if len(m.Contract) > 0 {
+		i -= len(m.Contract)
+		copy(dAtA[i:], m.Contract)
+		i = encodeVarintAttestation(dAtA, i, uint64(len(m.Contract)))
 		i--
 		dAtA[i] = 0xa
 	}
@@ -956,17 +1000,17 @@ func (m *EventSendNFTToCosmosPendingIbcAutoForward) MarshalToSizedBuffer(dAtA []
 		i--
 		dAtA[i] = 0x2a
 	}
-	if len(m.Amount) > 0 {
-		i -= len(m.Amount)
-		copy(dAtA[i:], m.Amount)
-		i = encodeVarintAttestation(dAtA, i, uint64(len(m.Amount)))
+	if len(m.TokenId) > 0 {
+		i -= len(m.TokenId)
+		copy(dAtA[i:], m.TokenId)
+		i = encodeVarintAttestation(dAtA, i, uint64(len(m.TokenId)))
 		i--
 		dAtA[i] = 0x22
 	}
-	if len(m.Token) > 0 {
-		i -= len(m.Token)
-		copy(dAtA[i:], m.Token)
-		i = encodeVarintAttestation(dAtA, i, uint64(len(m.Token)))
+	if len(m.ClassId) > 0 {
+		i -= len(m.ClassId)
+		copy(dAtA[i:], m.ClassId)
+		i = encodeVarintAttestation(dAtA, i, uint64(len(m.ClassId)))
 		i--
 		dAtA[i] = 0x1a
 	}
@@ -1028,17 +1072,17 @@ func (m *EventSendNFTToCosmosExecutedIbcAutoForward) MarshalToSizedBuffer(dAtA [
 		i--
 		dAtA[i] = 0x2a
 	}
-	if len(m.Amount) > 0 {
-		i -= len(m.Amount)
-		copy(dAtA[i:], m.Amount)
-		i = encodeVarintAttestation(dAtA, i, uint64(len(m.Amount)))
+	if len(m.TokenId) > 0 {
+		i -= len(m.TokenId)
+		copy(dAtA[i:], m.TokenId)
+		i = encodeVarintAttestation(dAtA, i, uint64(len(m.TokenId)))
 		i--
 		dAtA[i] = 0x22
 	}
-	if len(m.Token) > 0 {
-		i -= len(m.Token)
-		copy(dAtA[i:], m.Token)
-		i = encodeVarintAttestation(dAtA, i, uint64(len(m.Token)))
+	if len(m.ClassId) > 0 {
+		i -= len(m.ClassId)
+		copy(dAtA[i:], m.ClassId)
+		i = encodeVarintAttestation(dAtA, i, uint64(len(m.ClassId)))
 		i--
 		dAtA[i] = 0x1a
 	}
@@ -1130,15 +1174,19 @@ func (m *EventInvalidSendNFTToCosmosReceiver) Size() (n int) {
 	}
 	var l int
 	_ = l
-	l = len(m.Amount)
+	l = len(m.Contract)
+	if l > 0 {
+		n += 1 + l + sovAttestation(uint64(l))
+	}
+	l = len(m.ClassId)
+	if l > 0 {
+		n += 1 + l + sovAttestation(uint64(l))
+	}
+	l = len(m.TokenId)
 	if l > 0 {
 		n += 1 + l + sovAttestation(uint64(l))
 	}
 	l = len(m.Nonce)
-	if l > 0 {
-		n += 1 + l + sovAttestation(uint64(l))
-	}
-	l = len(m.Token)
 	if l > 0 {
 		n += 1 + l + sovAttestation(uint64(l))
 	}
@@ -1155,15 +1203,19 @@ func (m *EventSendNFTToCosmos) Size() (n int) {
 	}
 	var l int
 	_ = l
-	l = len(m.Amount)
+	l = len(m.Contract)
+	if l > 0 {
+		n += 1 + l + sovAttestation(uint64(l))
+	}
+	l = len(m.ClassId)
+	if l > 0 {
+		n += 1 + l + sovAttestation(uint64(l))
+	}
+	l = len(m.TokenId)
 	if l > 0 {
 		n += 1 + l + sovAttestation(uint64(l))
 	}
 	l = len(m.Nonce)
-	if l > 0 {
-		n += 1 + l + sovAttestation(uint64(l))
-	}
-	l = len(m.Token)
 	if l > 0 {
 		n += 1 + l + sovAttestation(uint64(l))
 	}
@@ -1176,19 +1228,23 @@ func (m *EventSendNFTToCosmosLocal) Size() (n int) {
 	}
 	var l int
 	_ = l
+	l = len(m.Contract)
+	if l > 0 {
+		n += 1 + l + sovAttestation(uint64(l))
+	}
+	l = len(m.ClassId)
+	if l > 0 {
+		n += 1 + l + sovAttestation(uint64(l))
+	}
+	l = len(m.TokenId)
+	if l > 0 {
+		n += 1 + l + sovAttestation(uint64(l))
+	}
 	l = len(m.Nonce)
 	if l > 0 {
 		n += 1 + l + sovAttestation(uint64(l))
 	}
 	l = len(m.Receiver)
-	if l > 0 {
-		n += 1 + l + sovAttestation(uint64(l))
-	}
-	l = len(m.Token)
-	if l > 0 {
-		n += 1 + l + sovAttestation(uint64(l))
-	}
-	l = len(m.Amount)
 	if l > 0 {
 		n += 1 + l + sovAttestation(uint64(l))
 	}
@@ -1209,11 +1265,11 @@ func (m *EventSendNFTToCosmosPendingIbcAutoForward) Size() (n int) {
 	if l > 0 {
 		n += 1 + l + sovAttestation(uint64(l))
 	}
-	l = len(m.Token)
+	l = len(m.ClassId)
 	if l > 0 {
 		n += 1 + l + sovAttestation(uint64(l))
 	}
-	l = len(m.Amount)
+	l = len(m.TokenId)
 	if l > 0 {
 		n += 1 + l + sovAttestation(uint64(l))
 	}
@@ -1238,11 +1294,11 @@ func (m *EventSendNFTToCosmosExecutedIbcAutoForward) Size() (n int) {
 	if l > 0 {
 		n += 1 + l + sovAttestation(uint64(l))
 	}
-	l = len(m.Token)
+	l = len(m.ClassId)
 	if l > 0 {
 		n += 1 + l + sovAttestation(uint64(l))
 	}
-	l = len(m.Amount)
+	l = len(m.TokenId)
 	if l > 0 {
 		n += 1 + l + sovAttestation(uint64(l))
 	}
@@ -1665,7 +1721,7 @@ func (m *EventInvalidSendNFTToCosmosReceiver) Unmarshal(dAtA []byte) error {
 		switch fieldNum {
 		case 1:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Amount", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field Contract", wireType)
 			}
 			var stringLen uint64
 			for shift := uint(0); ; shift += 7 {
@@ -1693,9 +1749,73 @@ func (m *EventInvalidSendNFTToCosmosReceiver) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.Amount = string(dAtA[iNdEx:postIndex])
+			m.Contract = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
 		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ClassId", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowAttestation
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthAttestation
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthAttestation
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.ClassId = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 3:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field TokenId", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowAttestation
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthAttestation
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthAttestation
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.TokenId = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 4:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Nonce", wireType)
 			}
@@ -1727,39 +1847,7 @@ func (m *EventInvalidSendNFTToCosmosReceiver) Unmarshal(dAtA []byte) error {
 			}
 			m.Nonce = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
-		case 3:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Token", wireType)
-			}
-			var stringLen uint64
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowAttestation
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				stringLen |= uint64(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			intStringLen := int(stringLen)
-			if intStringLen < 0 {
-				return ErrInvalidLengthAttestation
-			}
-			postIndex := iNdEx + intStringLen
-			if postIndex < 0 {
-				return ErrInvalidLengthAttestation
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.Token = string(dAtA[iNdEx:postIndex])
-			iNdEx = postIndex
-		case 4:
+		case 5:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Sender", wireType)
 			}
@@ -1843,7 +1931,7 @@ func (m *EventSendNFTToCosmos) Unmarshal(dAtA []byte) error {
 		switch fieldNum {
 		case 1:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Amount", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field Contract", wireType)
 			}
 			var stringLen uint64
 			for shift := uint(0); ; shift += 7 {
@@ -1871,9 +1959,73 @@ func (m *EventSendNFTToCosmos) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.Amount = string(dAtA[iNdEx:postIndex])
+			m.Contract = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
 		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ClassId", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowAttestation
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthAttestation
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthAttestation
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.ClassId = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 3:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field TokenId", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowAttestation
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthAttestation
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthAttestation
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.TokenId = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 4:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Nonce", wireType)
 			}
@@ -1904,38 +2056,6 @@ func (m *EventSendNFTToCosmos) Unmarshal(dAtA []byte) error {
 				return io.ErrUnexpectedEOF
 			}
 			m.Nonce = string(dAtA[iNdEx:postIndex])
-			iNdEx = postIndex
-		case 3:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Token", wireType)
-			}
-			var stringLen uint64
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowAttestation
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				stringLen |= uint64(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			intStringLen := int(stringLen)
-			if intStringLen < 0 {
-				return ErrInvalidLengthAttestation
-			}
-			postIndex := iNdEx + intStringLen
-			if postIndex < 0 {
-				return ErrInvalidLengthAttestation
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.Token = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
 		default:
 			iNdEx = preIndex
@@ -1989,6 +2109,102 @@ func (m *EventSendNFTToCosmosLocal) Unmarshal(dAtA []byte) error {
 		switch fieldNum {
 		case 1:
 			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Contract", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowAttestation
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthAttestation
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthAttestation
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Contract = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ClassId", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowAttestation
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthAttestation
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthAttestation
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.ClassId = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 3:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field TokenId", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowAttestation
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthAttestation
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthAttestation
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.TokenId = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 4:
+			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Nonce", wireType)
 			}
 			var stringLen uint64
@@ -2019,7 +2235,7 @@ func (m *EventSendNFTToCosmosLocal) Unmarshal(dAtA []byte) error {
 			}
 			m.Nonce = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
-		case 2:
+		case 5:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Receiver", wireType)
 			}
@@ -2050,70 +2266,6 @@ func (m *EventSendNFTToCosmosLocal) Unmarshal(dAtA []byte) error {
 				return io.ErrUnexpectedEOF
 			}
 			m.Receiver = string(dAtA[iNdEx:postIndex])
-			iNdEx = postIndex
-		case 3:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Token", wireType)
-			}
-			var stringLen uint64
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowAttestation
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				stringLen |= uint64(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			intStringLen := int(stringLen)
-			if intStringLen < 0 {
-				return ErrInvalidLengthAttestation
-			}
-			postIndex := iNdEx + intStringLen
-			if postIndex < 0 {
-				return ErrInvalidLengthAttestation
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.Token = string(dAtA[iNdEx:postIndex])
-			iNdEx = postIndex
-		case 4:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Amount", wireType)
-			}
-			var stringLen uint64
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowAttestation
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				stringLen |= uint64(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			intStringLen := int(stringLen)
-			if intStringLen < 0 {
-				return ErrInvalidLengthAttestation
-			}
-			postIndex := iNdEx + intStringLen
-			if postIndex < 0 {
-				return ErrInvalidLengthAttestation
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.Amount = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
 		default:
 			iNdEx = preIndex
@@ -2231,7 +2383,7 @@ func (m *EventSendNFTToCosmosPendingIbcAutoForward) Unmarshal(dAtA []byte) error
 			iNdEx = postIndex
 		case 3:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Token", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field ClassId", wireType)
 			}
 			var stringLen uint64
 			for shift := uint(0); ; shift += 7 {
@@ -2259,11 +2411,11 @@ func (m *EventSendNFTToCosmosPendingIbcAutoForward) Unmarshal(dAtA []byte) error
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.Token = string(dAtA[iNdEx:postIndex])
+			m.ClassId = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
 		case 4:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Amount", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field TokenId", wireType)
 			}
 			var stringLen uint64
 			for shift := uint(0); ; shift += 7 {
@@ -2291,7 +2443,7 @@ func (m *EventSendNFTToCosmosPendingIbcAutoForward) Unmarshal(dAtA []byte) error
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.Amount = string(dAtA[iNdEx:postIndex])
+			m.TokenId = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
 		case 5:
 			if wireType != 2 {
@@ -2441,7 +2593,7 @@ func (m *EventSendNFTToCosmosExecutedIbcAutoForward) Unmarshal(dAtA []byte) erro
 			iNdEx = postIndex
 		case 3:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Token", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field ClassId", wireType)
 			}
 			var stringLen uint64
 			for shift := uint(0); ; shift += 7 {
@@ -2469,11 +2621,11 @@ func (m *EventSendNFTToCosmosExecutedIbcAutoForward) Unmarshal(dAtA []byte) erro
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.Token = string(dAtA[iNdEx:postIndex])
+			m.ClassId = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
 		case 4:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Amount", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field TokenId", wireType)
 			}
 			var stringLen uint64
 			for shift := uint(0); ; shift += 7 {
@@ -2501,7 +2653,7 @@ func (m *EventSendNFTToCosmosExecutedIbcAutoForward) Unmarshal(dAtA []byte) erro
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.Amount = string(dAtA[iNdEx:postIndex])
+			m.TokenId = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
 		case 5:
 			if wireType != 2 {
