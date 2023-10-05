@@ -2303,6 +2303,7 @@ dependencies = [
  "actix-rt",
  "clarity",
  "cosmos_gravity",
+ "cosmos_gravitynft",
  "deep_space",
  "docopt",
  "env_logger",
