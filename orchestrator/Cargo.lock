@@ -767,6 +767,33 @@ dependencies = [
 ]
 
 [[package]]
+name = "cosmos_gravitynft"
+version = "0.1.0"
+dependencies = [
+ "actix",
+ "bytes",
+ "clarity",
+ "deep_space",
+ "env_logger",
+ "ethereum_gravity",
+ "gravity_proto",
+ "gravity_utils",
+ "log",
+ "num",
+ "num256",
+ "prost 0.12.1",
+ "prost-types 0.12.1",
+ "rand",
+ "serde",
+ "serde_derive",
+ "serde_json",
+ "sha3",
+ "tokio",
+ "tonic 0.10.2",
+ "web30",
+]
+
+[[package]]
 name = "cpufeatures"
 version = "0.2.8"
 source = "registry+https://github.com/rust-lang/crates.io-index"
