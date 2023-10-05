@@ -217,33 +217,6 @@ pub async fn send_logic_call_confirm(
         .await
 }
 
-pub async fn send_erc721_claims(
-    contact: &Contact,
-    our_cosmos_key: impl PrivateKey,
-    erc721_deposits: Vec<SendERC721ToCosmosEvent>,
-    fee: Coin,
-) -> Result<TxResponse, CosmosGrpcError> {
-    let our_cosmos_address = our_cosmos_key.to_address(&contact.get_prefix()).unwrap();
-
-    let mut erc721_deposit_nonces_msgs: Vec<(u64, Msg)> =
-        create_claim_msgs(erc721_deposits, our_cosmos_address);
-
-    erc721_deposit_nonces_msgs.sort_unstable_by(|a, b| a.0.cmp(&b.0));
-
-    const MAX_ORACLE_MESSAGES: usize = 1000;
-    while erc721_deposit_nonces_msgs.len() > MAX_ORACLE_MESSAGES {
-        // pops messages off of the end
-        erc721_deposit_nonces_msgs.pop();
-    }
-    let mut msgs = Vec::new();
-    for i in erc721_deposit_nonces_msgs {
-        msgs.push(i.1);
-    }
-    contact
-        .send_message(&msgs, None, &[fee], None, Some(TIMEOUT), our_cosmos_key)
-        .await
-}
-
 /// Creates and submits Ethereum event claims from the input EthereumEvent collections
 #[allow(clippy::too_many_arguments)]
 pub async fn send_ethereum_claims(

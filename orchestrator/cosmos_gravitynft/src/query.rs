@@ -1,9 +1,9 @@
-use std::convert::TryFrom;
 
-use clarity::Address as EthAddress;
+
+
 use deep_space::address::Address;
-use deep_space::error::CosmosGrpcError;
-use deep_space::Contact;
+
+
 use gravity_proto::gravitynft::QueryNftAttestationsRequest;
 use gravity_proto::gravitynft::QueryLastNftEventNonceByAddrRequest;
 use gravity_proto::gravitynft::query_client::QueryClient as GravityNftQueryClient;
@@ -12,7 +12,7 @@ use gravity_proto::cosmos_sdk_proto::cosmos::nft::v1beta1::QueryOwnerResponse;
 use gravity_proto::cosmos_sdk_proto::cosmos::nft::v1beta1::query_client::QueryClient as NftQueryClient;
 use gravity_proto::gravitynft::{NftAttestation, PendingNftIbcAutoForward, QueryPendingNftIbcAutoForwardsRequest};
 use gravity_utils::error::GravityError;
-use gravity_utils::types::*;
+
 use tonic::transport::Channel;
 
 
@@ -56,7 +56,7 @@ pub async fn get_nft_owner(
 ) -> Result<QueryOwnerResponse, GravityError> {
     let request = client
         .owner(QueryOwnerRequest {
-            class_id: class_id,
+            class_id,
             id: token_id,
         })
         .await?;

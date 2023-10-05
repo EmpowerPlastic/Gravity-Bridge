@@ -1,25 +1,19 @@
-use clarity::Address as EthAddress;
-use clarity::{PrivateKey as EthPrivateKey, Signature};
+
+
 use deep_space::address::Address as CosmosAddress;
 use deep_space::error::CosmosGrpcError;
 use deep_space::private_key::PrivateKey;
 use deep_space::Contact;
 use deep_space::Msg;
-use deep_space::{coin::Coin, utils::bytes_to_hex_str};
-use ethereum_gravity::message_signatures::{
-    encode_logic_call_confirm, encode_tx_batch_confirm, encode_valset_confirm,
-};
+use deep_space::{coin::Coin};
+
 use gravity_proto::cosmos_sdk_proto::cosmos::base::abci::v1beta1::TxResponse;
 
-use gravity_proto::gravity::{
-    MsgCancelSendToEth, MsgConfirmBatch, MsgConfirmLogicCall, MsgExecuteIbcAutoForwards,
-    MsgRequestBatch, MsgSendToEth, MsgSetOrchestratorAddress, MsgSubmitBadSignatureEvidence,
-    MsgValsetConfirm,
-};
+
 
 use gravity_utils::types::*;
 
-use std::{collections::HashMap, time::Duration};
+use std::{time::Duration};
 
 pub const TIMEOUT: Duration = Duration::from_secs(60);
 
