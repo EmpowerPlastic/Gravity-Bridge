@@ -1,23 +1,8 @@
 use crate::query::{get_last_erc721_event_nonce_for_validator};
-
-
-
 use deep_space::{Address as CosmosAddress};
-
 use gravity_proto::gravitynft::query_client::QueryClient as GravityNftQueryClient;
-
-
-
 use gravity_utils::get_with_retry::RETRY_TIME;
-
-
-
-
-
-
-
 use tokio::time::sleep;
-
 use tonic::transport::Channel;
 
 

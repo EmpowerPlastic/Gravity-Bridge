@@ -13,6 +13,7 @@ pub use valsets::*;
 mod batches;
 mod config;
 mod ethereum_events;
+mod ethereum_nft_events;
 pub mod event_signatures;
 mod logic_call;
 mod signatures;

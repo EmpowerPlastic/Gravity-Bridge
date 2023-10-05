@@ -1167,6 +1167,21 @@ dependencies = [
 ]
 
 [[package]]
+name = "ethereum_gravitynft"
+version = "0.1.0"
+dependencies = [
+ "actix",
+ "clarity",
+ "deep_space",
+ "gravity_utils",
+ "log",
+ "num256",
+ "rand",
+ "sha3",
+ "web30",
+]
+
+[[package]]
 name = "eyre"
 version = "0.6.8"
 source = "registry+https://github.com/rust-lang/crates.io-index"

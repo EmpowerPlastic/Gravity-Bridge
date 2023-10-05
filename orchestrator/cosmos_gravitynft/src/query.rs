@@ -1,9 +1,4 @@
-
-
-
 use deep_space::address::Address;
-
-
 use gravity_proto::gravitynft::QueryNftAttestationsRequest;
 use gravity_proto::gravitynft::QueryLastNftEventNonceByAddrRequest;
 use gravity_proto::gravitynft::query_client::QueryClient as GravityNftQueryClient;

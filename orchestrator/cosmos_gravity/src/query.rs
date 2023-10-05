@@ -5,8 +5,6 @@ use deep_space::address::Address;
 use deep_space::error::CosmosGrpcError;
 use deep_space::Contact;
 use gravity_proto::gravity::query_client::QueryClient as GravityQueryClient;
-use gravity_proto::cosmos_sdk_proto::cosmos::nft::v1beta1::QueryOwnerRequest;
-use gravity_proto::cosmos_sdk_proto::cosmos::nft::v1beta1::QueryOwnerResponse;
 use gravity_proto::gravity::Params;
 use gravity_proto::gravity::QueryAttestationsRequest;
 use gravity_proto::gravity::QueryBatchConfirmsRequest;

@@ -1,18 +1,12 @@
 
-
 use deep_space::address::Address as CosmosAddress;
 use deep_space::error::CosmosGrpcError;
 use deep_space::private_key::PrivateKey;
 use deep_space::Contact;
 use deep_space::Msg;
 use deep_space::{coin::Coin};
-
 use gravity_proto::cosmos_sdk_proto::cosmos::base::abci::v1beta1::TxResponse;
-
-
-
 use gravity_utils::types::*;
-
 use std::{time::Duration};
 
 pub const TIMEOUT: Duration = Duration::from_secs(60);
