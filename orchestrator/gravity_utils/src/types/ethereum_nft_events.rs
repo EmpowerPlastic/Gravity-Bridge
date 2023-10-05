@@ -7,10 +7,8 @@
 // TODO this file needs static assertions that prevent it from compiling on 16 bit systems.
 // we assume a system bit width of at least 32
 
-use super::ValsetMember;
 use crate::error::GravityError;
 use crate::num_conversion::downcast_uint256;
-use clarity::constants::zero_address;
 use clarity::Address as EthAddress;
 use deep_space::utils::bytes_to_hex_str;
 use deep_space::{Address as CosmosAddress, Address, Msg};
@@ -18,7 +16,6 @@ use gravity_proto::gravitynft::{
     MsgSendNftToCosmosClaim
 };
 use num256::Uint256;
-use std::unimplemented;
 use web30::types::Log;
 use super::ethereum_events::EthereumEvent;
 

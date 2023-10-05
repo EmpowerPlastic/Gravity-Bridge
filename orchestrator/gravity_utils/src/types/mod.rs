@@ -6,6 +6,7 @@ use std::convert::TryFrom;
 pub use batches::*;
 pub use config::*;
 pub use ethereum_events::*;
+pub use ethereum_nft_events::*;
 pub use logic_call::*;
 pub use signatures::*;
 pub use valsets::*;
