@@ -26,7 +26,7 @@ use crate::oracle_resync::{BLOCKS_TO_SEARCH};
 
 
 #[allow(clippy::too_many_arguments)]
-pub async fn check_for_events(
+pub async fn check_for_events_nft(
     web3: &Web3,
     contact: &Contact,
     grpc_client: &mut GravityNftQueryClient<Channel>,
