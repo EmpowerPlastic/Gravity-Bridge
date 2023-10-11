@@ -2,7 +2,6 @@ package app
 
 import (
 	"fmt"
-	"github.com/Gravity-Bridge/Gravity-Bridge/module/x/internft"
 	"io"
 	"net/http"
 	"os"
@@ -67,15 +66,15 @@ import (
 	"github.com/cosmos/cosmos-sdk/x/gov"
 	govclient "github.com/cosmos/cosmos-sdk/x/gov/client"
 	govkeeper "github.com/cosmos/cosmos-sdk/x/gov/keeper"
-	nfttypes "github.com/cosmos/cosmos-sdk/x/nft"
-	nftkeeper "github.com/cosmos/cosmos-sdk/x/nft/keeper"
-	nftmodule "github.com/cosmos/cosmos-sdk/x/nft/module"
 	govtypes "github.com/cosmos/cosmos-sdk/x/gov/types"
 	govtypesv1 "github.com/cosmos/cosmos-sdk/x/gov/types/v1"
 	govtypesv1beta1 "github.com/cosmos/cosmos-sdk/x/gov/types/v1beta1"
 	"github.com/cosmos/cosmos-sdk/x/mint"
 	mintkeeper "github.com/cosmos/cosmos-sdk/x/mint/keeper"
 	minttypes "github.com/cosmos/cosmos-sdk/x/mint/types"
+	nfttypes "github.com/cosmos/cosmos-sdk/x/nft"
+	nftkeeper "github.com/cosmos/cosmos-sdk/x/nft/keeper"
+	nftmodule "github.com/cosmos/cosmos-sdk/x/nft/module"
 	"github.com/cosmos/cosmos-sdk/x/params"
 	paramsclient "github.com/cosmos/cosmos-sdk/x/params/client"
 	paramskeeper "github.com/cosmos/cosmos-sdk/x/params/keeper"
@@ -114,7 +113,6 @@ import (
 	ibcnfttransferkeeper "github.com/bianjieai/nft-transfer/keeper"
 	ibcnfttransfertypes "github.com/bianjieai/nft-transfer/types"
 
-
 	// Bech32-IBC (The Althea fork)
 	"github.com/althea-net/bech32-ibc/x/bech32ibc"
 	bech32ibckeeper "github.com/althea-net/bech32-ibc/x/bech32ibc/keeper"
@@ -134,6 +132,10 @@ import (
 	"github.com/Gravity-Bridge/Gravity-Bridge/module/x/gravity"
 	"github.com/Gravity-Bridge/Gravity-Bridge/module/x/gravity/keeper"
 	gravitytypes "github.com/Gravity-Bridge/Gravity-Bridge/module/x/gravity/types"
+	"github.com/Gravity-Bridge/Gravity-Bridge/module/x/gravitynft"
+	gravitynftkeeper "github.com/Gravity-Bridge/Gravity-Bridge/module/x/gravitynft/keeper"
+	gravitynfttypes "github.com/Gravity-Bridge/Gravity-Bridge/module/x/gravitynft/types"
+	"github.com/Gravity-Bridge/Gravity-Bridge/module/x/internft"
 )
 
 const appName = "app"
@@ -178,6 +180,7 @@ var (
 		ica.AppModuleBasic{},
 		nftmodule.AppModuleBasic{},
 		nfttransfer.AppModuleBasic{},
+		gravitynft.AppModuleBasic{},
 	)
 
 	// module account permissions
@@ -256,6 +259,7 @@ type Gravity struct {
 	icaHostKeeper     *icahostkeeper.Keeper
 	nftKeeper            *nftkeeper.Keeper
 	ibcnftTransferKeeper *ibcnfttransferkeeper.Keeper
+	gravitynftKeeper *gravitynftkeeper.Keeper
 
 	// make scoped keepers public for test purposes
 	// NOTE: If you add anything to this struct, add a nil check to ValidateMembers below!
@@ -341,6 +345,9 @@ func (app Gravity) ValidateMembers() {
 	if app.ibcnftTransferKeeper == nil {
 		panic("Nil ibcnftTransferKeeper!")
 	}
+	if app.gravitynftKeeper == nil {
+		panic("Nil gravitynftKeeper!")
+	}
 
 	// scoped keepers
 	if app.ScopedIBCKeeper == nil {
@@ -397,7 +404,7 @@ func NewGravityApp(
 		ibctransfertypes.StoreKey, capabilitytypes.StoreKey,
 		gravitytypes.StoreKey, bech32ibctypes.StoreKey,
 		icahosttypes.StoreKey, nfttypes.StoreKey,
-		ibcnfttransfertypes.StoreKey,
+		ibcnfttransfertypes.StoreKey, gravitynfttypes.StoreKey,
 	)
 	tKeys := sdk.NewTransientStoreKeys(paramstypes.TStoreKey)
 	memKeys := sdk.NewMemoryStoreKeys(capabilitytypes.MemStoreKey)
@@ -570,12 +577,24 @@ func NewGravityApp(
 	)
 	app.gravityKeeper = &gravityKeeper
 
+	gravitynftKeeper := gravitynftkeeper.NewKeeper(
+		keys[gravitynfttypes.StoreKey],
+		appCodec,
+		&gravityKeeper,
+		&stakingKeeper,
+		&accountKeeper,
+		&bech32IbcKeeper,
+		&nftKeeper,
+		&ibcnftTransferKeeper)
+	app.gravitynftKeeper = &gravitynftKeeper
+
 	// Add the staking hooks from distribution, slashing, and gravity to staking
 	stakingKeeper.SetHooks(
 		stakingtypes.NewMultiStakingHooks(
 			distrKeeper.Hooks(),
 			slashingKeeper.Hooks(),
 			gravityKeeper.Hooks(),
+			// TODO: should gravitynftKeeper have hooks?
 		),
 	)
 
@@ -609,6 +628,7 @@ func NewGravityApp(
 		AddRoute(ibcclienttypes.RouterKey, ibcclient.NewClientProposalHandler(ibcKeeper.ClientKeeper)).
 		AddRoute(gravitytypes.RouterKey, keeper.NewGravityProposalHandler(gravityKeeper)).
 		AddRoute(bech32ibctypes.RouterKey, bech32ibc.NewBech32IBCProposalHandler(*app.bech32IbcKeeper))
+	// TODO: Should the gravitynft module use the new proposal flow? If not, add route here
 
 	govConfig := govtypes.DefaultConfig()
 	/*
@@ -736,6 +756,7 @@ func NewGravityApp(
 		icaAppModule,
 		nftmodule.NewAppModule(appCodec, nftKeeper, app.accountKeeper, app.bankKeeper, app.interfaceRegistry),
 		ibcnftTransferAppModule,
+		gravitynft.NewAppModule(gravitynftKeeper),
 	)
 	app.mm = &mm
 
@@ -763,6 +784,7 @@ func NewGravityApp(
 		icatypes.ModuleName,
 		nfttypes.ModuleName,
 		ibcnfttransfertypes.ModuleName,
+		gravitynfttypes.ModuleName,
 	)
 	mm.SetOrderEndBlockers(
 		crisistypes.ModuleName,
@@ -770,6 +792,7 @@ func NewGravityApp(
 		stakingtypes.ModuleName,
 		icatypes.ModuleName,
 		gravitytypes.ModuleName,
+		gravitynfttypes.ModuleName,
 		upgradetypes.ModuleName,
 		capabilitytypes.ModuleName,
 		minttypes.ModuleName,
@@ -811,6 +834,7 @@ func NewGravityApp(
 		icatypes.ModuleName,
 		nfttypes.ModuleName,
 		ibcnfttransfertypes.ModuleName,
+		gravitynfttypes.ModuleName,
 	)
 
 	mm.RegisterInvariants(&crisisKeeper)
