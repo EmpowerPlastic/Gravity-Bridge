@@ -508,10 +508,29 @@ func (a AttestationHandler) sendCoinToCosmosAccount(
 				"Unregistered foreign prefix, send via x/bank",
 			)
 		}
+		if hrpIbcRecord.FungibleSourceChannel == "" {
+			hash, er := claim.ClaimHash()
+			if er != nil {
+				return false, sdkerrors.Wrapf(er, "Unable to log error %v, could not compute ClaimHash for claim %v: %v", err, claim, er)
+			}
+
+			a.keeper.logger(ctx).Error("Foreign prefix without fungible source channel",
+				"address", receiver,
+				"claim type", claim.GetType(),
+				"id", types.GetAttestationKey(claim.GetEventNonce(), hash),
+				"nonce", fmt.Sprint(claim.GetEventNonce()),
+			)
+
+			// Fall back to sending tokens to native account
+			return false, sdkerrors.Wrap(
+				a.sendCoinToLocalAddress(ctx, claim, receiver, coin),
+				"Foreign prefix without fungible source channel, send via x/bank",
+			)
+		}
 
 		// Add the SendToCosmos to the Pending IBC Auto-Forward Queue, which when processed will send the funds to a
 		// local address before sending via IBC
-		err = a.addToIbcAutoForwardQueue(ctx, receiver, accountPrefix, coin, hrpIbcRecord.SourceChannel, claim)
+		err = a.addToIbcAutoForwardQueue(ctx, receiver, accountPrefix, coin, hrpIbcRecord.FungibleSourceChannel, claim)
 
 		if err != nil {
 			a.keeper.logger(ctx).Error(

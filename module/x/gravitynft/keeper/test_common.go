@@ -7,8 +7,11 @@ import (
 	gravitykeeper "github.com/Gravity-Bridge/Gravity-Bridge/module/x/gravity/keeper"
 	gravitytypes "github.com/Gravity-Bridge/Gravity-Bridge/module/x/gravity/types"
 	"github.com/Gravity-Bridge/Gravity-Bridge/module/x/gravitynft/types"
+	"github.com/Gravity-Bridge/Gravity-Bridge/module/x/internft"
 	bech32ibckeeper "github.com/althea-net/bech32-ibc/x/bech32ibc/keeper"
 	bech32ibctypes "github.com/althea-net/bech32-ibc/x/bech32ibc/types"
+	ibcnfttransferkeeper "github.com/bianjieai/nft-transfer/keeper"
+	ibcnfttransfertypes "github.com/bianjieai/nft-transfer/types"
 	"github.com/cosmos/cosmos-sdk/baseapp"
 	"github.com/cosmos/cosmos-sdk/codec"
 	codectypes "github.com/cosmos/cosmos-sdk/codec/types"
@@ -45,6 +48,8 @@ import (
 	govtypesv1 "github.com/cosmos/cosmos-sdk/x/gov/types/v1"
 	govtypesv1beta1 "github.com/cosmos/cosmos-sdk/x/gov/types/v1beta1"
 	"github.com/cosmos/cosmos-sdk/x/mint"
+	nfttypes "github.com/cosmos/cosmos-sdk/x/nft"
+	nftkeeper "github.com/cosmos/cosmos-sdk/x/nft/keeper"
 	"github.com/cosmos/cosmos-sdk/x/params"
 	paramsclient "github.com/cosmos/cosmos-sdk/x/params/client"
 	paramskeeper "github.com/cosmos/cosmos-sdk/x/params/keeper"
@@ -272,6 +277,8 @@ func CreateTestEnv(t *testing.T) TestInput {
 	keyIbc := sdk.NewKVStoreKey(ibchost.StoreKey)
 	keyIbcTransfer := sdk.NewKVStoreKey(ibctransfertypes.StoreKey)
 	keyBech32Ibc := sdk.NewKVStoreKey(bech32ibctypes.StoreKey)
+	keyNft := sdk.NewKVStoreKey(nfttypes.StoreKey)
+	keyIbcNftTransfer := sdk.NewKVStoreKey(ibcnfttransfertypes.StoreKey)
 
 	// Initialize memory database and mount stores on it
 	db := dbm.NewMemDB()
@@ -291,6 +298,8 @@ func CreateTestEnv(t *testing.T) TestInput {
 	ms.MountStoreWithDB(keyIbc, sdkstore.StoreTypeIAVL, db)
 	ms.MountStoreWithDB(keyIbcTransfer, sdkstore.StoreTypeIAVL, db)
 	ms.MountStoreWithDB(keyBech32Ibc, sdkstore.StoreTypeIAVL, db)
+	ms.MountStoreWithDB(keyNft, sdkstore.StoreTypeIAVL, db)
+	ms.MountStoreWithDB(keyIbcNftTransfer, sdkstore.StoreTypeIAVL, db)
 	err := ms.LoadLatestVersion()
 	require.Nil(t, err)
 
@@ -347,6 +356,7 @@ func CreateTestEnv(t *testing.T) TestInput {
 		govtypes.ModuleName:            {authtypes.Burner},
 		gravitytypes.ModuleName:        {authtypes.Minter, authtypes.Burner},
 		ibctransfertypes.ModuleName:    {authtypes.Minter, authtypes.Burner},
+		nfttypes.ModuleName:            nil,
 	}
 
 	accountKeeper := authkeeper.NewAccountKeeper(
@@ -467,9 +477,19 @@ func CreateTestEnv(t *testing.T) TestInput {
 		accountKeeper, bankKeeper, scopedTransferKeeper,
 	)
 
+	nftKeeper := nftkeeper.NewKeeper(
+		keyNft, marshaler, accountKeeper, bankKeeper,
+	)
+
+	scopedNFTTransferKeeper := capabilityKeeper.ScopeToModule(ibcnfttransfertypes.ModuleName)
+	nftTransferKeeper := ibcnfttransferkeeper.NewKeeper(
+		marshaler, keyIbcNftTransfer, authtypes.NewModuleAddress(govtypes.ModuleName).String(),
+		ibcKeeper.ChannelKeeper, ibcKeeper.ChannelKeeper, &ibcKeeper.PortKeeper, accountKeeper,
+		internft.NewInterNftKeeperWrapper(&nftKeeper), scopedNFTTransferKeeper)
+
 	bech32IbcKeeper := *bech32ibckeeper.NewKeeper(
 		ibcKeeper.ChannelKeeper, marshaler, keyBech32Ibc,
-		ibcTransferKeeper,
+		ibcTransferKeeper, nftTransferKeeper,
 	)
 	// Set the native prefix to the "gravity" value we like in module/config/config.go
 	err = bech32IbcKeeper.SetNativeHrp(ctx, sdk.GetConfig().GetBech32AccountAddrPrefix())
@@ -499,7 +519,8 @@ func CreateTestEnv(t *testing.T) TestInput {
 
 	gravityKeeper.SetParams(ctx, TestingGravityParams)
 
-	gravityNFTKeeper := NewKeeper(gravityNFTKey, marshaler, &gravityKeeper)
+	gravityNFTKeeper := NewKeeper(gravityNFTKey, marshaler, &gravityKeeper, &stakingKeeper, &accountKeeper,
+		&bech32IbcKeeper, &nftKeeper, &nftTransferKeeper)
 	// TODO: Set params and any other genesis stuffs
 
 	testInput := TestInput{

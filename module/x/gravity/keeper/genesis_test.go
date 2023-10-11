@@ -144,9 +144,7 @@ func TestBatchAndTxImportExport(t *testing.T) {
 	sourceChannel := "channel-0"
 	rec := bech32ibctypes.HrpIbcRecord{
 		Hrp:               foreignHrp,
-		SourceChannel:     sourceChannel,
-		IcsToHeightOffset: 1000,
-		IcsToTimeOffset:   1000,
+		FungibleSourceChannel:     sourceChannel,
 	}
 	input.GravityKeeper.bech32IbcKeeper.SetHrpIbcRecords(ctx, []bech32ibctypes.HrpIbcRecord{rec})
 	hrpRecords := input.GravityKeeper.bech32IbcKeeper.GetHrpIbcRecords(ctx)

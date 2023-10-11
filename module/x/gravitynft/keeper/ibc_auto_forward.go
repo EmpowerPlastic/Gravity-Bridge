@@ -1,12 +1,12 @@
 package keeper
 
 import (
-	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"fmt"
 	"github.com/Gravity-Bridge/Gravity-Bridge/module/x/gravitynft/types"
 	bech32ibctypes "github.com/althea-net/bech32-ibc/x/bech32ibc/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/bech32"
+	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 )
 
 func (k Keeper) AddPendingNFTPendingIbcAutoForward(ctx sdk.Context, forward types.PendingNFTIbcAutoForward) error {
@@ -54,13 +54,11 @@ func (k Keeper) ValidatePendingERC721IbcAutoForward(ctx sdk.Context, forward typ
 	if err != nil { // Covered by ValidateBasic, but check anyway to avoid linter issues
 		return sdkerrors.Wrapf(err, "ForeignReceiver %s is not a valid bech32 address", forward.ForeignReceiver)
 	}
-	// TODO: Fix this after we have updated the bech32ibc module
-	hrpPrefix := types.AccountPrefixForERC721Hrp(prefix)
-	hrpRecord, err := k.bech32IbcKeeper.GetHrpIbcRecord(ctx, hrpPrefix)
+	hrpRecord, err := k.bech32IbcKeeper.GetHrpIbcRecord(ctx, prefix)
 	if err != nil {
-		return sdkerrors.Wrapf(bech32ibctypes.ErrInvalidHRP, "ForeignReciever %s has an invalid or unregistered prefix: %s", forward.ForeignReceiver, hrpPrefix)
+		return sdkerrors.Wrapf(bech32ibctypes.ErrInvalidHRP, "ForeignReciever %s has an invalid or unregistered prefix: %s", forward.ForeignReceiver, prefix)
 	}
-	if forward.IbcChannel != hrpRecord.SourceChannel {
+	if forward.IbcChannel != hrpRecord.NftSourceChannel {
 		return sdkerrors.Wrapf(types.ErrMismatched, "IbcChannel %s does not match the registered prefix's IBC channel %v",
 			forward.IbcChannel, hrpRecord.String(),
 		)
@@ -69,7 +67,7 @@ func (k Keeper) ValidatePendingERC721IbcAutoForward(ctx sdk.Context, forward typ
 	owner := k.nftKeeper.GetOwner(ctx, forward.ClassId, forward.TokenId)
 	if !owner.Equals(modAcc) {
 		return sdkerrors.Wrapf(
-			sdkerrors.ErrInsufficientFunds, "Gravity Module account does not have nft token %s from class id %s",
+			sdkerrors.ErrInsufficientFunds, "gravitynft module account does not have nft token %s from class id %s",
 			forward.TokenId, forward.ClassId,
 		)
 	}

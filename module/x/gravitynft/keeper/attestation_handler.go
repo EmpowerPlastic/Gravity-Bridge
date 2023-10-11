@@ -209,7 +209,7 @@ func (a AttestationHandler) mintEthereumOriginatedNFTVouchers(
 				"id", types.GetAttestationKey(claim.GetEventNonce(), hash),
 				"nonce", fmt.Sprint(claim.GetEventNonce()),
 			)
-			return sdkerrors.Wrapf(err, "mint vouchers NFT: %s s", nftToken.ClassId, nftToken.Id)
+			return sdkerrors.Wrapf(err, "mint vouchers NFT: %s %s", nftToken.ClassId, nftToken.Id)
 		}
 	}
 
@@ -224,7 +224,7 @@ func (a AttestationHandler) mintEthereumOriginatedNFTVouchers(
 			"id", types.GetAttestationKey(claim.GetEventNonce(), hash),
 			"nonce", fmt.Sprint(claim.GetEventNonce()),
 		)
-		return sdkerrors.Wrapf(err, "mint vouchers NFT: %s s", nftToken.ClassId, nftToken.Id)
+		return sdkerrors.Wrapf(err, "mint vouchers NFT: %s %s", nftToken.ClassId, nftToken.Id)
 	}
 
 	return nil
@@ -253,19 +253,30 @@ func (a AttestationHandler) sendNFTToCosmosAccount(ctx sdk.Context, claim types.
 	if accountPrefix == nativePrefix { // Send to a native gravity account
 		return false, a.sendNFTToLocalAddress(ctx, claim, receiver, nftToken)
 	} else { // Try to send tokens to IBC chain, fall back to native send on errors
-		// TODO: Implement this properly as soon as we have fixed the bech32-ibc implementation
-		// panic("not implemented just yet! need to figure out if I can skip that pesky ibc-forwarding queue crap")
-		// The hrp hack here is ugly as shit, but the hrp thing doesn't seem to allow more than one ibc channel per account prefix...
-		// stars... -> IBC channel ICS20
-		// nftstars -> IBC channel ICS721
-		hrpPrefix := types.AccountPrefixForERC721Hrp(accountPrefix)
-		hrpIbcRecord, err := a.keeper.bech32IbcKeeper.GetHrpIbcRecord(ctx, hrpPrefix)
+		hrpIbcRecord, err := a.keeper.bech32IbcKeeper.GetHrpIbcRecord(ctx, accountPrefix)
 		if err != nil {
 			hash, _ := claim.ClaimHash()
 			a.keeper.logger(ctx).Error("Unregistered foreign prefix",
 				"cause", err.Error(),
 				"address", receiver,
-				"hrp prefix", hrpPrefix,
+				"hrp prefix", accountPrefix,
+				"claim type", claim.GetType(),
+				"id", types.GetAttestationKey(claim.GetEventNonce(), hash),
+				"nonce", fmt.Sprint(claim.GetEventNonce()),
+			)
+
+			// Fall back to sending tokens to native account
+			return false, sdkerrors.Wrap(
+				a.sendNFTToLocalAddress(ctx, claim, receiver, nftToken),
+				"Unregistered foreign prefix, send via x/nft",
+			)
+		}
+		if hrpIbcRecord.NftSourceChannel == "" {
+			hash, _ := claim.ClaimHash()
+			a.keeper.logger(ctx).Error("Foreign prefix without nft source channel",
+				"cause", err.Error(),
+				"address", receiver,
+				"hrp prefix", accountPrefix,
 				"claim type", claim.GetType(),
 				"id", types.GetAttestationKey(claim.GetEventNonce(), hash),
 				"nonce", fmt.Sprint(claim.GetEventNonce()),
@@ -280,7 +291,7 @@ func (a AttestationHandler) sendNFTToCosmosAccount(ctx sdk.Context, claim types.
 
 		// Add the SendERC721ToCosmos to the Pending IBC Auto-Forward Queue, which when processed will send the funds to a
 		// local address before sending via IBC
-		err = a.addERC721ToIbcAutoForwardQueue(ctx, receiver, accountPrefix, nftToken, hrpIbcRecord.SourceChannel, claim)
+		err = a.addERC721ToIbcAutoForwardQueue(ctx, receiver, accountPrefix, nftToken, hrpIbcRecord.NftSourceChannel, claim)
 
 		if err != nil {
 			a.keeper.logger(ctx).Error(
