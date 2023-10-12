@@ -31,6 +31,7 @@ use gravity_proto::cosmos_sdk_proto::cosmos::staking::v1beta1::{
 };
 use gravity_proto::cosmos_sdk_proto::cosmos::upgrade::v1beta1::{Plan, SoftwareUpgradeProposal};
 use gravity_proto::gravity::query_client::QueryClient as GravityQueryClient;
+use gravity_proto::gravitynft::query_client::QueryClient as GravityNftQueryClient;
 use gravity_proto::gravity::MsgSendToCosmosClaim;
 use gravity_utils::types::BatchRelayingMode;
 use gravity_utils::types::BatchRequestMode;
@@ -322,6 +323,7 @@ pub struct ValidatorKeys {
 pub async fn start_orchestrators(
     keys: Vec<ValidatorKeys>,
     gravity_address: EthAddress,
+    gravityerc721_address: EthAddress,
     validator_out: bool,
     orchestrator_config: GravityBridgeToolsConfig,
 ) {
@@ -340,6 +342,9 @@ pub async fn start_orchestrators(
             get_operator_address(k.validator_key),
         );
         let mut grpc_client = GravityQueryClient::connect(COSMOS_NODE_GRPC.as_str())
+            .await
+            .unwrap();
+        let mut grpc_nft_client = GravityNftQueryClient::connect(COSMOS_NODE_GRPC.as_str())
             .await
             .unwrap();
         let params = get_gravity_params(&mut grpc_client)
@@ -362,7 +367,9 @@ pub async fn start_orchestrators(
                 web30,
                 contact,
                 grpc_client,
+                grpc_nft_client,
                 gravity_address,
+                gravityerc721_address,
                 params.gravity_id,
                 get_fee(None),
                 config,
