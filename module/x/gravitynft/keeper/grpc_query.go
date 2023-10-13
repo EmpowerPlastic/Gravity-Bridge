@@ -2,12 +2,17 @@ package keeper
 
 import (
 	"context"
+	sdkerrors "cosmossdk.io/errors"
 	"github.com/Gravity-Bridge/Gravity-Bridge/module/x/gravitynft/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/cosmos/cosmos-sdk/types/errors"
+	"strings"
 )
 
 // nolint: exhaustruct
 var _ types.QueryServer = Keeper{}
+
+const queryAttentionsLimit uint64 = 1000
 
 // Params queries the params of the gravity module
 func (k Keeper) Params(c context.Context, _ *types.QueryParamsRequest) (*types.QueryParamsResponse, error) {
@@ -16,7 +21,7 @@ func (k Keeper) Params(c context.Context, _ *types.QueryParamsRequest) (*types.Q
 	return &types.QueryParamsResponse{Params: params}, nil
 }
 
-func (k Keeper) GetLastObservedNFTEthBlock(c context.Context, msg *types.QueryLastObservedNFTEthBlockRequest) (*types.QueryLastObservedNFTEthBlockResponse, error) {
+func (k Keeper) GetLastObservedNFTEthBlock(c context.Context, req *types.QueryLastObservedNFTEthBlockRequest) (*types.QueryLastObservedNFTEthBlockResponse, error) {
 	//TODO implement me
 	panic("implement me")
 }
@@ -26,12 +31,70 @@ func (k Keeper) GetLastObservedNFTEthNonce(c context.Context, msg *types.QueryLa
 	panic("implement me")
 }
 
-func (k Keeper) GetNFTAttestations(c context.Context, msg *types.QueryNFTAttestationsRequest) (*types.QueryNFTAttestationsResponse, error) {
-	//TODO implement me
-	panic("implement me")
+func (k Keeper) GetNFTAttestations(c context.Context, req *types.QueryNFTAttestationsRequest) (*types.QueryNFTAttestationsResponse, error) {
+	ctx := sdk.UnwrapSDKContext(c)
+
+	iterator := k.IterateAttestations
+
+	limit := req.Limit
+	if limit == 0 || limit > queryAttentionsLimit {
+		limit = queryAttentionsLimit
+	}
+
+	var (
+		attestations []types.NFTAttestation
+		count        uint64
+		iterErr      error
+	)
+
+	reverse := strings.EqualFold(req.OrderBy, "desc")
+	filter := req.Height > 0 || req.Nonce > 0 || req.ClaimType != ""
+
+	iterator(ctx, reverse, func(_ []byte, att types.NFTAttestation) (abort bool) {
+		claim, err := k.UnpackAttestationClaim(&att)
+		if err != nil {
+			iterErr = sdkerrors.Wrap(errors.ErrUnpackAny, "failed to unmarshal Ethereum claim")
+			return true
+		}
+
+		var match bool
+		switch {
+		case filter && claim.GetEthBlockHeight() == req.Height:
+			attestations = append(attestations, att)
+			match = true
+
+		case filter && claim.GetEventNonce() == req.Nonce:
+			attestations = append(attestations, att)
+			match = true
+
+		case filter && claim.GetType().String() == req.ClaimType:
+			attestations = append(attestations, att)
+			match = true
+
+		case !filter:
+			// No filter provided, so we include the attestation. This is equivalent
+			// to providing no query params or just limit and/or order_by.
+			attestations = append(attestations, att)
+			match = true
+		}
+
+		if match {
+			count++
+			if count >= limit {
+				return true
+			}
+		}
+
+		return false
+	})
+	if iterErr != nil {
+		return nil, iterErr
+	}
+
+	return &types.QueryNFTAttestationsResponse{Attestations: attestations}, nil
 }
 
-func (k Keeper) GetPendingNFTIbcAutoForwards(c context.Context, msg *types.QueryPendingNFTIbcAutoForwards) (*types.QueryPendingNFTIbcAutoForwardsResponse, error) {
+func (k Keeper) GetPendingNFTIbcAutoForwards(c context.Context, req *types.QueryPendingNFTIbcAutoForwards) (*types.QueryPendingNFTIbcAutoForwardsResponse, error) {
 	//TODO implement me
 	panic("implement me")
 }
