@@ -22,13 +22,15 @@ func (k Keeper) Params(c context.Context, _ *types.QueryParamsRequest) (*types.Q
 }
 
 func (k Keeper) GetLastObservedNFTEthBlock(c context.Context, req *types.QueryLastObservedNFTEthBlockRequest) (*types.QueryLastObservedNFTEthBlockResponse, error) {
-	//TODO implement me
-	panic("implement me")
+	ctx := sdk.UnwrapSDKContext(c)
+	ethHeight := k.GetLastObservedEthereumBlockHeight(ctx)
+	return &types.QueryLastObservedNFTEthBlockResponse{Block: ethHeight.EthereumBlockHeight}, nil
 }
 
 func (k Keeper) GetLastObservedNFTEthNonce(c context.Context, msg *types.QueryLastObservedNFTEthNonceRequest) (*types.QueryLastObservedNFTEthNonceResponse, error) {
-	//TODO implement me
-	panic("implement me")
+	ctx := sdk.UnwrapSDKContext(c)
+	nonce := k.GetLastObservedEventNonce(ctx)
+	return &types.QueryLastObservedNFTEthNonceResponse{Nonce: nonce}, nil
 }
 
 func (k Keeper) GetNFTAttestations(c context.Context, req *types.QueryNFTAttestationsRequest) (*types.QueryNFTAttestationsResponse, error) {

@@ -30,6 +30,8 @@ func GetQueryCmd() *cobra.Command {
 		GetCmdQueryParams(),
 		CmdGetNFTAttestations(),
 		GetCmdPendingNFTIbcAutoForwards(),
+		CmdGetLastObservedNFTEthBlock(),
+		CmdGetLastObservedNFTEthNonce(),
 	}...)
 
 	return gravitynftQueryCmd
@@ -159,6 +161,72 @@ func GetCmdPendingNFTIbcAutoForwards() *cobra.Command {
 
 			req := &types.QueryPendingNFTIbcAutoForwards{Limit: limit}
 			res, err := queryClient.GetPendingNFTIbcAutoForwards(cmd.Context(), req)
+			if err != nil {
+				return err
+			}
+
+			return clientCtx.PrintProto(res)
+		},
+	}
+	flags.AddQueryFlagsToCmd(cmd)
+	return cmd
+}
+
+// CmdGetLastObservedNFTEthBlock fetches the Ethereum block height for the most recent "observed" Attestation, indicating
+// the state of Cosmos consensus on the submitted Ethereum events
+// nolint: dupl
+func CmdGetLastObservedNFTEthBlock() *cobra.Command {
+	short := "Query the last observed NFT Ethereum block height"
+	long := short + "\n\n" +
+		"This value is expected to lag the actual Ethereum block height significantly due to 1. Ethereum Finality and 2. Consensus mirroring the state on Ethereum"
+	// nolint: exhaustruct
+	cmd := &cobra.Command{
+		Use:   "last-observed-nft-eth-block",
+		Short: short,
+		Long:  long,
+		Args:  cobra.NoArgs,
+		RunE: func(cmd *cobra.Command, args []string) error {
+			clientCtx, err := client.GetClientQueryContext(cmd)
+			if err != nil {
+				return err
+			}
+			queryClient := types.NewQueryClient(clientCtx)
+
+			req := &types.QueryLastObservedNFTEthBlockRequest{}
+			res, err := queryClient.GetLastObservedNFTEthBlock(cmd.Context(), req)
+			if err != nil {
+				return err
+			}
+
+			return clientCtx.PrintProto(res)
+		},
+	}
+	flags.AddQueryFlagsToCmd(cmd)
+	return cmd
+}
+
+// CmdGetLastObservedNFTEthNonce fetches the Ethereum event nonce for the most recent "observed" Attestation, indicating
+// // the state of Cosmos consensus on the submitted Ethereum events
+// nolint: dupl
+func CmdGetLastObservedNFTEthNonce() *cobra.Command {
+	short := "Query the last observed NFT Ethereum event nonce"
+	long := short + "\n\n" +
+		"This this is likely to lag the last executed event a little due to 1. Ethereum Finality and 2. Consensus mirroring the Ethereum state"
+	// nolint: exhaustruct
+	cmd := &cobra.Command{
+		Use:   "last-observed-nft-eth-nonce",
+		Short: short,
+		Long:  long,
+		Args:  cobra.NoArgs,
+		RunE: func(cmd *cobra.Command, args []string) error {
+			clientCtx, err := client.GetClientQueryContext(cmd)
+			if err != nil {
+				return err
+			}
+			queryClient := types.NewQueryClient(clientCtx)
+
+			req := &types.QueryLastObservedNFTEthNonceRequest{}
+			res, err := queryClient.GetLastObservedNFTEthNonce(cmd.Context(), req)
 			if err != nil {
 				return err
 			}
