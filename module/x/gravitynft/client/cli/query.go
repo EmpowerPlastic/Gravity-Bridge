@@ -4,6 +4,7 @@ import (
 	"github.com/Gravity-Bridge/Gravity-Bridge/module/x/gravitynft/types"
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
+	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/spf13/cobra"
 	"strconv"
 )
@@ -27,7 +28,8 @@ func GetQueryCmd() *cobra.Command {
 
 	gravitynftQueryCmd.AddCommand([]*cobra.Command{
 		GetCmdQueryParams(),
-		CmdGetAttestations(),
+		CmdGetNFTAttestations(),
+		GetCmdPendingNFTIbcAutoForwards(),
 	}...)
 
 	return gravitynftQueryCmd
@@ -60,9 +62,9 @@ func GetCmdQueryParams() *cobra.Command {
 	return cmd
 }
 
-// CmdGetAttestations fetches the most recently created Attestations in the store (only the most recent 1000 are available)
+// CmdGetNFTAttestations fetches the most recently created Attestations in the store (only the most recent 1000 are available)
 // up to an optional limit
-func CmdGetAttestations() *cobra.Command {
+func CmdGetNFTAttestations() *cobra.Command {
 	short := "Query gravity current and historical attestations (only the most recent 1000 are stored)"
 	long := short + "\n\n" + "Optionally provide a limit to reduce the number of attestations returned"
 	// nolint: exhaustruct
@@ -129,5 +131,41 @@ func CmdGetAttestations() *cobra.Command {
 	cmd.Flags().Uint64(FlagNonce, 0, "the exact nonce to find, 0 for any")
 	cmd.Flags().Uint64(FlagEthHeight, 0, "the exact ethereum block height an event happened at, 0 for any")
 
+	return cmd
+}
+
+// GetCmdPendingNFTIbcAutoForwards fetches the next NFT IBC auto forwards to be executed, up to an optional limit
+func GetCmdPendingNFTIbcAutoForwards() *cobra.Command {
+	// nolint: exhaustruct
+	cmd := &cobra.Command{
+		Use:   "pending-nft-ibc-auto-forwards [optional limit]",
+		Short: "Query SendNFTToCosmos transactions waiting to be forwarded over IBC",
+		Args:  cobra.MaximumNArgs(1),
+		RunE: func(cmd *cobra.Command, args []string) error {
+			clientCtx, err := client.GetClientQueryContext(cmd)
+			if err != nil {
+				return err
+			}
+			queryClient := types.NewQueryClient(clientCtx)
+
+			var limit uint64 = 0
+			if args[0] != "" {
+				var err error
+				limit, err = strconv.ParseUint(args[0], 10, 0)
+				if err != nil {
+					return sdkerrors.Wrapf(err, "Unable to parse limit from %v", args[0])
+				}
+			}
+
+			req := &types.QueryPendingNFTIbcAutoForwards{Limit: limit}
+			res, err := queryClient.GetPendingNFTIbcAutoForwards(cmd.Context(), req)
+			if err != nil {
+				return err
+			}
+
+			return clientCtx.PrintProto(res)
+		},
+	}
+	flags.AddQueryFlagsToCmd(cmd)
 	return cmd
 }

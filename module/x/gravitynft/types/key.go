@@ -47,8 +47,8 @@ var (
 	ERC721ToDenomKey = HashString("ERC721ToDenomKey")
 
 	// PendingNFTIbcAutoForwards indexes pending SendNFTToCosmos sends via IBC, queued by event nonce
-	// [bbe244784132579f2e9b3b8577b57ad3]
-	PendingNFTIbcAutoForwards = HashString("IbcNFTAutoForwardQueue")
+	// [67b20bb5f0a19693de3469e155ef5352]
+	PendingNFTIbcAutoForwards = HashString("NFTIbcAutoForwardQueue")
 
 	// ParamsKey indexes the parameters of the module
 	// [4e2242f221531924f77b7250660af487]

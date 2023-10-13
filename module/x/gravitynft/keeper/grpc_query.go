@@ -95,6 +95,7 @@ func (k Keeper) GetNFTAttestations(c context.Context, req *types.QueryNFTAttesta
 }
 
 func (k Keeper) GetPendingNFTIbcAutoForwards(c context.Context, req *types.QueryPendingNFTIbcAutoForwards) (*types.QueryPendingNFTIbcAutoForwardsResponse, error) {
-	//TODO implement me
-	panic("implement me")
+	ctx := sdk.UnwrapSDKContext(c)
+	pendingForwards := k.PendingNFTIbcAutoForwards(ctx, req.Limit)
+	return &types.QueryPendingNFTIbcAutoForwardsResponse{PendingIbcAutoForwards: pendingForwards}, nil
 }

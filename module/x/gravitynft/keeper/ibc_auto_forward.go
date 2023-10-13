@@ -4,10 +4,43 @@ import (
 	"fmt"
 	"github.com/Gravity-Bridge/Gravity-Bridge/module/x/gravitynft/types"
 	bech32ibctypes "github.com/althea-net/bech32-ibc/x/bech32ibc/types"
+	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/bech32"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 )
+
+// PendingIbcAutoForwards returns an ordered slice of the queued IBC Auto-Forward sends to IBC-enabled chains
+func (k Keeper) PendingNFTIbcAutoForwards(ctx sdk.Context, limit uint64) []*types.PendingNFTIbcAutoForward {
+	forwards := make([]*types.PendingNFTIbcAutoForward, 0)
+
+	k.IteratePendingNFTIbcAutoForwards(ctx, func(key []byte, forward *types.PendingNFTIbcAutoForward) (stop bool) {
+		forwards = append(forwards, forward)
+		if limit != 0 && uint64(len(forwards)) >= limit {
+			return true
+		}
+		return false
+	})
+
+	return forwards
+}
+
+// IteratePendingNFTIbcAutoForwards executes the given callback on each PendingIbcAutoForward in the store
+// cb should return true to stop iteration, false to continue
+func (k Keeper) IteratePendingNFTIbcAutoForwards(ctx sdk.Context, cb func(key []byte, forward *types.PendingNFTIbcAutoForward) (stop bool)) {
+	store := ctx.KVStore(k.storeKey)
+	prefixStore := prefix.NewStore(store, types.PendingNFTIbcAutoForwards)
+	iter := prefixStore.Iterator(nil, nil)
+	defer iter.Close()
+	for ; iter.Valid(); iter.Next() {
+		forward := new(types.PendingNFTIbcAutoForward)
+		k.cdc.MustUnmarshal(iter.Value(), forward)
+
+		if cb(iter.Key(), forward) {
+			break
+		}
+	}
+}
 
 func (k Keeper) AddPendingNFTPendingIbcAutoForward(ctx sdk.Context, forward types.PendingNFTIbcAutoForward) error {
 	if err := k.ValidatePendingERC721IbcAutoForward(ctx, forward); err != nil {
