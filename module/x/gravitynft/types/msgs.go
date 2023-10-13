@@ -11,8 +11,29 @@ import (
 
 // nolint: exhaustruct
 var (
+	_ sdk.Msg = &MsgUpdateParams{}
 	_ sdk.Msg = &MsgSendNFTToCosmosClaim{}
 )
+
+func (msg *MsgUpdateParams) ValidateBasic() error {
+	if _, err := sdk.AccAddressFromBech32(msg.Authority); err != nil {
+		return sdkerrors.Wrap(errors.ErrInvalidAddress, "authority")
+	}
+
+	if err := msg.Params.Validate(); err != nil {
+		return sdkerrors.Wrap(err, "params")
+	}
+	return nil
+}
+
+func (msg *MsgUpdateParams) GetSigners() []sdk.AccAddress {
+	acc, err := sdk.AccAddressFromBech32(msg.Authority)
+	if err != nil {
+		panic(err)
+	}
+
+	return []sdk.AccAddress{acc}
+}
 
 func (msg *MsgSendNFTToCosmosClaim) ValidateBasic() error {
 	if err := gravitytypes.ValidateEthAddress(msg.EthereumSender); err != nil {

@@ -6,6 +6,11 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
+func (p Params) Validate() error {
+	// TODO: When we have some real params to work with add validation
+	return nil
+}
+
 // UInt64FromBytesUnsafe create uint from binary big endian representation
 // Note: This is unsafe because the function will panic if provided over 8 bytes
 func UInt64FromBytesUnsafe(s []byte) uint64 {

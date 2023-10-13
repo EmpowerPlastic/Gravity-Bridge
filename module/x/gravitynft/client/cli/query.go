@@ -3,6 +3,7 @@ package cli
 import (
 	"github.com/Gravity-Bridge/Gravity-Bridge/module/x/gravitynft/types"
 	"github.com/cosmos/cosmos-sdk/client"
+	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/spf13/cobra"
 )
 
@@ -17,8 +18,35 @@ func GetQueryCmd() *cobra.Command {
 	}
 
 	gravitynftQueryCmd.AddCommand([]*cobra.Command{
-		// TODO: Add query Cmds
+		GetCmdQueryParams(),
 	}...)
 
 	return gravitynftQueryCmd
+}
+
+// GetCmdQueryParams fetches the current Gravity module params
+func GetCmdQueryParams() *cobra.Command {
+	// nolint: exhaustruct
+	cmd := &cobra.Command{
+		Use:   "params",
+		Args:  cobra.NoArgs,
+		Short: "Query gravitynft params",
+		RunE: func(cmd *cobra.Command, _ []string) error {
+			clientCtx, err := client.GetClientQueryContext(cmd)
+			if err != nil {
+				return err
+			}
+			queryClient := types.NewQueryClient(clientCtx)
+
+			res, err := queryClient.Params(cmd.Context(), &types.QueryParamsRequest{})
+			if err != nil {
+				return err
+			}
+
+			return clientCtx.PrintProto(&res.Params)
+		},
+	}
+
+	flags.AddQueryFlagsToCmd(cmd)
+	return cmd
 }

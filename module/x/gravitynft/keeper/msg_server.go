@@ -2,10 +2,11 @@ package keeper
 
 import (
 	"context"
-	sdkerrors "cosmossdk.io/errors"
+	"cosmossdk.io/errors"
 	"github.com/Gravity-Bridge/Gravity-Bridge/module/x/gravitynft/types"
 	codectypes "github.com/cosmos/cosmos-sdk/codec/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 )
 
 type msgServer struct {
@@ -21,6 +22,20 @@ func NewMsgServerImpl(keeper Keeper) types.MsgServer {
 	return &msgServer{Keeper: keeper}
 }
 
+func (k msgServer) UpdateParams(c context.Context, msg *types.MsgUpdateParams) (*types.MsgUpdateParamsResponse, error) {
+	if k.authority != msg.Authority {
+		return nil, errors.Wrapf(sdkerrors.ErrUnauthorized, "invalid authority; expected %s, got %s", k.authority, msg.Authority)
+	}
+
+	ctx := sdk.UnwrapSDKContext(c)
+
+	if err := k.setParams(ctx, msg.Params); err != nil {
+		return nil, err
+	}
+
+	return &types.MsgUpdateParamsResponse{}, nil
+}
+
 func (k msgServer) SendNFTToCosmosClaim(c context.Context, msg *types.MsgSendNFTToCosmosClaim) (*types.MsgSendNFTToCosmosClaimResponse, error) {
 	ctx := sdk.UnwrapSDKContext(c)
 
@@ -29,7 +44,7 @@ func (k msgServer) SendNFTToCosmosClaim(c context.Context, msg *types.MsgSendNFT
 	}
 	any, err := codectypes.NewAnyWithValue(msg)
 	if err != nil {
-		return nil, sdkerrors.Wrap(err, "Could not check Any value")
+		return nil, errors.Wrap(err, "Could not check Any value")
 	}
 
 	err = k.claimHandlerCommon(ctx, any, msg)
@@ -46,11 +61,11 @@ func (k msgServer) claimHandlerCommon(ctx sdk.Context, msgAny *codectypes.Any, m
 	// Add the claim to the store
 	_, err := k.Attest(ctx, msg, msgAny)
 	if err != nil {
-		return sdkerrors.Wrap(err, "create attestation")
+		return errors.Wrap(err, "create attestation")
 	}
 	hash, err := msg.ClaimHash()
 	if err != nil {
-		return sdkerrors.Wrap(err, "unable to compute claim hash")
+		return errors.Wrap(err, "unable to compute claim hash")
 	}
 
 	// Emit the handle message event

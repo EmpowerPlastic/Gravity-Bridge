@@ -3,11 +3,35 @@ package keeper
 import (
 	gravitytypes "github.com/Gravity-Bridge/Gravity-Bridge/module/x/gravity/types"
 	"github.com/Gravity-Bridge/Gravity-Bridge/module/x/gravitynft/types"
+	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
+	govtypes "github.com/cosmos/cosmos-sdk/x/gov/types"
 	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"testing"
 )
+
+func TestUpdateParams(t *testing.T) {
+	input, ctx := SetupFiveValChain(t)
+
+	sv := msgServer{input.GravityNFTKeeper}
+	msg := &types.MsgUpdateParams{
+		Authority: AccAddrs[0].String(),
+		Params: types.Params{
+			// TODO: ADD REAL PARAMS
+		},
+	}
+	_, err := sv.UpdateParams(ctx, msg)
+	assert.ErrorContains(t, err, "invalid authority")
+
+	msg.Authority = authtypes.NewModuleAddress(govtypes.ModuleName).String()
+	_, err = sv.UpdateParams(ctx, msg)
+	assert.NoError(t, err)
+
+	params := input.GravityNFTKeeper.GetParams(ctx)
+	_ = params
+	// TODO: CHECK THE PARAMS ARE WHAT WE EXPECT
+}
 
 func TestSendNFTToCosmosClaim(t *testing.T) {
 	input, ctx := SetupFiveValChain(t)

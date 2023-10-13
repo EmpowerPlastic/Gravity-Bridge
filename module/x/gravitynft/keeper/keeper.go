@@ -33,6 +33,10 @@ type Keeper struct {
 	ibcNftTransferKeeper *ibcnfttransferkeeper.Keeper
 	// TODO: Add stuffs
 
+	// the address capable of executing a MsgUpdateParams message. Typically, this
+	// should be the x/gov module account.
+	authority string
+
 	AttestationHandler interface {
 		Handle(sdk.Context, types.NFTAttestation, types.EthereumNFTClaim) error
 	}
@@ -72,6 +76,7 @@ func NewKeeper(
 	bech32IbcKeeper *bech32ibckeeper.Keeper,
 	nftKeeper *nftkeeper.Keeper,
 	ibcNftTransferKeeper *ibcnfttransferkeeper.Keeper,
+	authority string,
 ) Keeper {
 	k := Keeper{
 		storeKey:             storeKey,
@@ -82,6 +87,7 @@ func NewKeeper(
 		bech32IbcKeeper:      bech32IbcKeeper,
 		nftKeeper:            nftKeeper,
 		ibcNftTransferKeeper: ibcNftTransferKeeper,
+		authority:            authority,
 	}
 	attestationHandler := AttestationHandler{keeper: &k}
 	attestationHandler.ValidateMembers()

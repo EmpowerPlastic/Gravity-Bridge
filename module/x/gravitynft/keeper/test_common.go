@@ -520,7 +520,7 @@ func CreateTestEnv(t *testing.T) TestInput {
 	gravityKeeper.SetParams(ctx, TestingGravityParams)
 
 	gravityNFTKeeper := NewKeeper(gravityNFTKey, marshaler, &gravityKeeper, &stakingKeeper, &accountKeeper,
-		&bech32IbcKeeper, &nftKeeper, &nftTransferKeeper)
+		&bech32IbcKeeper, &nftKeeper, &nftTransferKeeper, authtypes.NewModuleAddress(govtypes.ModuleName).String())
 	// TODO: Set params and any other genesis stuffs
 
 	testInput := TestInput{
