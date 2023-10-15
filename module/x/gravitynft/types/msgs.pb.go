@@ -6,8 +6,10 @@ package types
 import (
 	context "context"
 	fmt "fmt"
+	_ "github.com/gogo/protobuf/gogoproto"
 	grpc1 "github.com/gogo/protobuf/grpc"
 	proto "github.com/gogo/protobuf/proto"
+	_ "github.com/regen-network/cosmos-proto"
 	_ "google.golang.org/genproto/googleapis/api/annotations"
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
@@ -27,6 +29,98 @@ var _ = math.Inf
 // A compilation error at this line likely means your copy of the
 // proto package needs to be updated.
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
+
+type MsgUpdateParams struct {
+	// authority is the address that controls the module (defaults to x/gov).
+	Authority string `protobuf:"bytes,1,opt,name=authority,proto3" json:"authority,omitempty"`
+	// params defines the x/gravitynft parameters to update.
+	//
+	// NOTE: All parameters must be supplied.
+	Params Params `protobuf:"bytes,2,opt,name=params,proto3" json:"params"`
+}
+
+func (m *MsgUpdateParams) Reset()         { *m = MsgUpdateParams{} }
+func (m *MsgUpdateParams) String() string { return proto.CompactTextString(m) }
+func (*MsgUpdateParams) ProtoMessage()    {}
+func (*MsgUpdateParams) Descriptor() ([]byte, []int) {
+	return fileDescriptor_15bd2f46fa3ae18d, []int{0}
+}
+func (m *MsgUpdateParams) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *MsgUpdateParams) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_MsgUpdateParams.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *MsgUpdateParams) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgUpdateParams.Merge(m, src)
+}
+func (m *MsgUpdateParams) XXX_Size() int {
+	return m.Size()
+}
+func (m *MsgUpdateParams) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgUpdateParams.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_MsgUpdateParams proto.InternalMessageInfo
+
+func (m *MsgUpdateParams) GetAuthority() string {
+	if m != nil {
+		return m.Authority
+	}
+	return ""
+}
+
+func (m *MsgUpdateParams) GetParams() Params {
+	if m != nil {
+		return m.Params
+	}
+	return Params{}
+}
+
+type MsgUpdateParamsResponse struct {
+}
+
+func (m *MsgUpdateParamsResponse) Reset()         { *m = MsgUpdateParamsResponse{} }
+func (m *MsgUpdateParamsResponse) String() string { return proto.CompactTextString(m) }
+func (*MsgUpdateParamsResponse) ProtoMessage()    {}
+func (*MsgUpdateParamsResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_15bd2f46fa3ae18d, []int{1}
+}
+func (m *MsgUpdateParamsResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *MsgUpdateParamsResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_MsgUpdateParamsResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *MsgUpdateParamsResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgUpdateParamsResponse.Merge(m, src)
+}
+func (m *MsgUpdateParamsResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *MsgUpdateParamsResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgUpdateParamsResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_MsgUpdateParamsResponse proto.InternalMessageInfo
 
 // MsgSendNFTToCosmosClaim
 // When more than 66% of the active validator set has
@@ -48,7 +142,7 @@ func (m *MsgSendNFTToCosmosClaim) Reset()         { *m = MsgSendNFTToCosmosClaim
 func (m *MsgSendNFTToCosmosClaim) String() string { return proto.CompactTextString(m) }
 func (*MsgSendNFTToCosmosClaim) ProtoMessage()    {}
 func (*MsgSendNFTToCosmosClaim) Descriptor() ([]byte, []int) {
-	return fileDescriptor_15bd2f46fa3ae18d, []int{0}
+	return fileDescriptor_15bd2f46fa3ae18d, []int{2}
 }
 func (m *MsgSendNFTToCosmosClaim) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -140,7 +234,7 @@ func (m *MsgSendNFTToCosmosClaimResponse) Reset()         { *m = MsgSendNFTToCos
 func (m *MsgSendNFTToCosmosClaimResponse) String() string { return proto.CompactTextString(m) }
 func (*MsgSendNFTToCosmosClaimResponse) ProtoMessage()    {}
 func (*MsgSendNFTToCosmosClaimResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_15bd2f46fa3ae18d, []int{1}
+	return fileDescriptor_15bd2f46fa3ae18d, []int{3}
 }
 func (m *MsgSendNFTToCosmosClaimResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -169,6 +263,66 @@ func (m *MsgSendNFTToCosmosClaimResponse) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_MsgSendNFTToCosmosClaimResponse proto.InternalMessageInfo
 
+type EventClaim struct {
+	Message       string `protobuf:"bytes,1,opt,name=message,proto3" json:"message,omitempty"`
+	ClaimHash     string `protobuf:"bytes,2,opt,name=claim_hash,json=claimHash,proto3" json:"claim_hash,omitempty"`
+	AttestationId string `protobuf:"bytes,3,opt,name=attestation_id,json=attestationId,proto3" json:"attestation_id,omitempty"`
+}
+
+func (m *EventClaim) Reset()         { *m = EventClaim{} }
+func (m *EventClaim) String() string { return proto.CompactTextString(m) }
+func (*EventClaim) ProtoMessage()    {}
+func (*EventClaim) Descriptor() ([]byte, []int) {
+	return fileDescriptor_15bd2f46fa3ae18d, []int{4}
+}
+func (m *EventClaim) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *EventClaim) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_EventClaim.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *EventClaim) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_EventClaim.Merge(m, src)
+}
+func (m *EventClaim) XXX_Size() int {
+	return m.Size()
+}
+func (m *EventClaim) XXX_DiscardUnknown() {
+	xxx_messageInfo_EventClaim.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_EventClaim proto.InternalMessageInfo
+
+func (m *EventClaim) GetMessage() string {
+	if m != nil {
+		return m.Message
+	}
+	return ""
+}
+
+func (m *EventClaim) GetClaimHash() string {
+	if m != nil {
+		return m.ClaimHash
+	}
+	return ""
+}
+
+func (m *EventClaim) GetAttestationId() string {
+	if m != nil {
+		return m.AttestationId
+	}
+	return ""
+}
+
 // MsgSendNFTToEth
 // When a user wants to send an NFT to Ethereum they must first call this function
 // -------------
@@ -184,7 +338,7 @@ func (m *MsgSendNFTToEth) Reset()         { *m = MsgSendNFTToEth{} }
 func (m *MsgSendNFTToEth) String() string { return proto.CompactTextString(m) }
 func (*MsgSendNFTToEth) ProtoMessage()    {}
 func (*MsgSendNFTToEth) Descriptor() ([]byte, []int) {
-	return fileDescriptor_15bd2f46fa3ae18d, []int{2}
+	return fileDescriptor_15bd2f46fa3ae18d, []int{5}
 }
 func (m *MsgSendNFTToEth) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -255,7 +409,7 @@ func (m *MsgSendNFTToEthResponse) Reset()         { *m = MsgSendNFTToEthResponse
 func (m *MsgSendNFTToEthResponse) String() string { return proto.CompactTextString(m) }
 func (*MsgSendNFTToEthResponse) ProtoMessage()    {}
 func (*MsgSendNFTToEthResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_15bd2f46fa3ae18d, []int{3}
+	return fileDescriptor_15bd2f46fa3ae18d, []int{6}
 }
 func (m *MsgSendNFTToEthResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -298,7 +452,7 @@ func (m *MsgExecuteIbcNFTAutoForwards) Reset()         { *m = MsgExecuteIbcNFTAu
 func (m *MsgExecuteIbcNFTAutoForwards) String() string { return proto.CompactTextString(m) }
 func (*MsgExecuteIbcNFTAutoForwards) ProtoMessage()    {}
 func (*MsgExecuteIbcNFTAutoForwards) Descriptor() ([]byte, []int) {
-	return fileDescriptor_15bd2f46fa3ae18d, []int{4}
+	return fileDescriptor_15bd2f46fa3ae18d, []int{7}
 }
 func (m *MsgExecuteIbcNFTAutoForwards) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -348,7 +502,7 @@ func (m *MsgExecuteIbcNFTAutoForwardsResponse) Reset()         { *m = MsgExecute
 func (m *MsgExecuteIbcNFTAutoForwardsResponse) String() string { return proto.CompactTextString(m) }
 func (*MsgExecuteIbcNFTAutoForwardsResponse) ProtoMessage()    {}
 func (*MsgExecuteIbcNFTAutoForwardsResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_15bd2f46fa3ae18d, []int{5}
+	return fileDescriptor_15bd2f46fa3ae18d, []int{8}
 }
 func (m *MsgExecuteIbcNFTAutoForwardsResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -393,7 +547,7 @@ func (m *MsgSendNFTToEthClaim) Reset()         { *m = MsgSendNFTToEthClaim{} }
 func (m *MsgSendNFTToEthClaim) String() string { return proto.CompactTextString(m) }
 func (*MsgSendNFTToEthClaim) ProtoMessage()    {}
 func (*MsgSendNFTToEthClaim) Descriptor() ([]byte, []int) {
-	return fileDescriptor_15bd2f46fa3ae18d, []int{6}
+	return fileDescriptor_15bd2f46fa3ae18d, []int{9}
 }
 func (m *MsgSendNFTToEthClaim) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -478,7 +632,7 @@ func (m *MsgSendNFTToEthClaimResponse) Reset()         { *m = MsgSendNFTToEthCla
 func (m *MsgSendNFTToEthClaimResponse) String() string { return proto.CompactTextString(m) }
 func (*MsgSendNFTToEthClaimResponse) ProtoMessage()    {}
 func (*MsgSendNFTToEthClaimResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_15bd2f46fa3ae18d, []int{7}
+	return fileDescriptor_15bd2f46fa3ae18d, []int{10}
 }
 func (m *MsgSendNFTToEthClaimResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -521,7 +675,7 @@ func (m *MsgERC721DeployedClaim) Reset()         { *m = MsgERC721DeployedClaim{}
 func (m *MsgERC721DeployedClaim) String() string { return proto.CompactTextString(m) }
 func (*MsgERC721DeployedClaim) ProtoMessage()    {}
 func (*MsgERC721DeployedClaim) Descriptor() ([]byte, []int) {
-	return fileDescriptor_15bd2f46fa3ae18d, []int{8}
+	return fileDescriptor_15bd2f46fa3ae18d, []int{11}
 }
 func (m *MsgERC721DeployedClaim) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -592,7 +746,7 @@ func (m *MsgERC721DeployedClaimResponse) Reset()         { *m = MsgERC721Deploye
 func (m *MsgERC721DeployedClaimResponse) String() string { return proto.CompactTextString(m) }
 func (*MsgERC721DeployedClaimResponse) ProtoMessage()    {}
 func (*MsgERC721DeployedClaimResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_15bd2f46fa3ae18d, []int{9}
+	return fileDescriptor_15bd2f46fa3ae18d, []int{12}
 }
 func (m *MsgERC721DeployedClaimResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -632,7 +786,7 @@ func (m *MsgCancelSendNFTToEth) Reset()         { *m = MsgCancelSendNFTToEth{} }
 func (m *MsgCancelSendNFTToEth) String() string { return proto.CompactTextString(m) }
 func (*MsgCancelSendNFTToEth) ProtoMessage()    {}
 func (*MsgCancelSendNFTToEth) Descriptor() ([]byte, []int) {
-	return fileDescriptor_15bd2f46fa3ae18d, []int{10}
+	return fileDescriptor_15bd2f46fa3ae18d, []int{13}
 }
 func (m *MsgCancelSendNFTToEth) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -682,7 +836,7 @@ func (m *MsgCancelSendNFTToEthResponse) Reset()         { *m = MsgCancelSendNFTT
 func (m *MsgCancelSendNFTToEthResponse) String() string { return proto.CompactTextString(m) }
 func (*MsgCancelSendNFTToEthResponse) ProtoMessage()    {}
 func (*MsgCancelSendNFTToEthResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_15bd2f46fa3ae18d, []int{11}
+	return fileDescriptor_15bd2f46fa3ae18d, []int{14}
 }
 func (m *MsgCancelSendNFTToEthResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -712,8 +866,11 @@ func (m *MsgCancelSendNFTToEthResponse) XXX_DiscardUnknown() {
 var xxx_messageInfo_MsgCancelSendNFTToEthResponse proto.InternalMessageInfo
 
 func init() {
+	proto.RegisterType((*MsgUpdateParams)(nil), "gravitynft.v1.MsgUpdateParams")
+	proto.RegisterType((*MsgUpdateParamsResponse)(nil), "gravitynft.v1.MsgUpdateParamsResponse")
 	proto.RegisterType((*MsgSendNFTToCosmosClaim)(nil), "gravitynft.v1.MsgSendNFTToCosmosClaim")
 	proto.RegisterType((*MsgSendNFTToCosmosClaimResponse)(nil), "gravitynft.v1.MsgSendNFTToCosmosClaimResponse")
+	proto.RegisterType((*EventClaim)(nil), "gravitynft.v1.EventClaim")
 	proto.RegisterType((*MsgSendNFTToEth)(nil), "gravitynft.v1.MsgSendNFTToEth")
 	proto.RegisterType((*MsgSendNFTToEthResponse)(nil), "gravitynft.v1.MsgSendNFTToEthResponse")
 	proto.RegisterType((*MsgExecuteIbcNFTAutoForwards)(nil), "gravitynft.v1.MsgExecuteIbcNFTAutoForwards")
@@ -729,59 +886,70 @@ func init() {
 func init() { proto.RegisterFile("gravitynft/v1/msgs.proto", fileDescriptor_15bd2f46fa3ae18d) }
 
 var fileDescriptor_15bd2f46fa3ae18d = []byte{
-	// 827 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xcc, 0x56, 0x3d, 0x53, 0xeb, 0x46,
-	0x14, 0x45, 0xe6, 0xc3, 0xb0, 0xe1, 0x53, 0x21, 0x89, 0x70, 0x88, 0x70, 0x04, 0x18, 0x12, 0xc0,
-	0x1a, 0x43, 0x66, 0xa8, 0x63, 0xc7, 0x24, 0x14, 0xa6, 0x30, 0x4e, 0x93, 0x61, 0x46, 0x23, 0xaf,
-	0xae, 0x25, 0x0d, 0xb2, 0xd6, 0xb3, 0xbb, 0x76, 0xa0, 0x49, 0x91, 0x5f, 0x90, 0x19, 0x8a, 0x0c,
-	0x55, 0xea, 0xd4, 0xa9, 0x52, 0xa4, 0x4f, 0x3a, 0x66, 0xd2, 0xa4, 0xcc, 0xc0, 0xfb, 0x21, 0x6f,
-	0xb4, 0x92, 0xf5, 0x90, 0x2d, 0x1b, 0xbf, 0xea, 0xbd, 0x8e, 0x3d, 0x7b, 0xb4, 0xf7, 0x9c, 0xb3,
-	0x77, 0x2f, 0x46, 0x8a, 0x4d, 0xcd, 0x9e, 0xcb, 0x6f, 0xfd, 0x16, 0xd7, 0x7b, 0x25, 0xbd, 0xcd,
-	0x6c, 0x56, 0xec, 0x50, 0xc2, 0x89, 0xbc, 0xf4, 0x66, 0xa7, 0xd8, 0x2b, 0xe5, 0x36, 0x6d, 0x42,
-	0x6c, 0x0f, 0x74, 0xb3, 0xe3, 0xea, 0xa6, 0xef, 0x13, 0x6e, 0x72, 0x97, 0xf8, 0x11, 0x59, 0xfb,
-	0x33, 0x83, 0x3e, 0xa9, 0x31, 0xfb, 0x12, 0x7c, 0xeb, 0xe2, 0xac, 0xd1, 0x20, 0x15, 0xc2, 0xda,
-	0x84, 0x55, 0x3c, 0xd3, 0x6d, 0xcb, 0x5b, 0xe8, 0x03, 0xe8, 0x81, 0xcf, 0x0d, 0x9f, 0xf8, 0x18,
-	0x14, 0x29, 0x2f, 0xed, 0xcf, 0xd4, 0x91, 0x80, 0x2e, 0x02, 0x44, 0xde, 0x47, 0xab, 0xc0, 0x1d,
-	0xa3, 0xe9, 0x11, 0x7c, 0x6d, 0x38, 0xe0, 0xda, 0x0e, 0x57, 0x32, 0x82, 0xb5, 0x0c, 0xdc, 0x29,
-	0x07, 0xf0, 0x77, 0x02, 0x95, 0x77, 0xd1, 0x32, 0x27, 0xd7, 0xe0, 0x1b, 0x98, 0xf8, 0x9c, 0x9a,
-	0x98, 0x2b, 0xd3, 0x79, 0x69, 0x7f, 0xa1, 0xbe, 0x24, 0xd0, 0x4a, 0x04, 0xca, 0x1b, 0x68, 0x3e,
-	0xa4, 0xb9, 0x96, 0x32, 0x23, 0x08, 0x59, 0xb1, 0x3e, 0xb7, 0xe4, 0x4f, 0xd1, 0x42, 0xb8, 0xd5,
-	0xa5, 0xae, 0x32, 0x2b, 0xf6, 0x42, 0xee, 0xf7, 0xd4, 0x95, 0xf7, 0xd0, 0x0a, 0x70, 0x07, 0x28,
-	0x74, 0xdb, 0x06, 0x03, 0xdf, 0x02, 0xaa, 0xcc, 0x09, 0xca, 0x72, 0x1f, 0xbe, 0x14, 0x68, 0x40,
-	0xc4, 0xc2, 0xa1, 0x41, 0x01, 0x83, 0xdb, 0x03, 0xaa, 0x64, 0x43, 0x62, 0x08, 0xd7, 0x23, 0x54,
-	0xd6, 0xd0, 0x22, 0xa1, 0xd8, 0x01, 0xc6, 0xa9, 0xc9, 0x09, 0x55, 0xe6, 0x05, 0x2b, 0x81, 0x69,
-	0x9f, 0xa3, 0xad, 0x11, 0xd1, 0xd5, 0x81, 0x75, 0x88, 0xcf, 0x40, 0xfb, 0x4b, 0x42, 0x2b, 0xcf,
-	0x39, 0x55, 0xee, 0x04, 0x26, 0xb1, 0x67, 0x32, 0x16, 0x98, 0x94, 0x42, 0x93, 0x62, 0x7d, 0x6e,
-	0x25, 0xfc, 0x67, 0x92, 0xfe, 0xb7, 0xd1, 0x52, 0xa4, 0x3c, 0x32, 0x18, 0x06, 0xb8, 0x18, 0x82,
-	0x91, 0xbd, 0x03, 0xb4, 0x16, 0xe7, 0x10, 0x1b, 0x0c, 0x83, 0x5c, 0xed, 0x6f, 0x8c, 0xb4, 0x38,
-	0x9b, 0x62, 0x71, 0x23, 0xd9, 0x1d, 0x55, 0xee, 0xc4, 0xd6, 0x5a, 0x68, 0xb3, 0xc6, 0xec, 0xea,
-	0x0d, 0xe0, 0x2e, 0x87, 0xf3, 0x26, 0xbe, 0x38, 0x6b, 0x7c, 0xdd, 0xe5, 0xe4, 0x8c, 0xd0, 0x1f,
-	0x4d, 0x6a, 0x31, 0xf9, 0x4b, 0xb4, 0xd6, 0x8a, 0xfe, 0x36, 0x38, 0x31, 0xb0, 0x07, 0x26, 0x8d,
-	0x7a, 0x68, 0xa5, 0xbf, 0xd1, 0x20, 0x95, 0x00, 0x96, 0x73, 0x68, 0x1e, 0xc4, 0x41, 0x84, 0x46,
-	0xbe, 0xe3, 0xb5, 0x56, 0x40, 0x3b, 0xe3, 0xea, 0xc4, 0x7a, 0xee, 0x33, 0x68, 0x7d, 0x40, 0xeb,
-	0x7b, 0xd8, 0xc6, 0x43, 0xd7, 0x38, 0x37, 0xe9, 0x35, 0x66, 0x27, 0xbc, 0xc6, 0xb4, 0x4e, 0x55,
-	0xc5, 0x5d, 0x0d, 0x45, 0x13, 0x67, 0xf7, 0x8f, 0x84, 0x3e, 0x0e, 0x42, 0xae, 0x57, 0x4e, 0x8f,
-	0x4b, 0xdf, 0x40, 0xc7, 0x23, 0xb7, 0x60, 0xbd, 0xc3, 0xf4, 0xe2, 0xf7, 0x31, 0x93, 0x7c, 0x1f,
-	0x93, 0xb4, 0x6c, 0x1e, 0xa9, 0xe9, 0x56, 0x62, 0xb7, 0x57, 0xe8, 0xa3, 0x1a, 0xb3, 0x2b, 0xa6,
-	0x8f, 0xc1, 0x4b, 0xbc, 0xcc, 0x17, 0xbd, 0x0e, 0xd6, 0xcf, 0xa4, 0xd4, 0xdf, 0x42, 0x9f, 0xa5,
-	0x9e, 0xde, 0x2f, 0x7f, 0xfc, 0x7b, 0x16, 0x4d, 0xd7, 0x98, 0x2d, 0xff, 0x26, 0xa1, 0xf5, 0xd4,
-	0xb9, 0x5b, 0x28, 0x26, 0x26, 0x78, 0x71, 0xc4, 0x90, 0xc9, 0x15, 0x27, 0xe3, 0xc5, 0xbe, 0xf5,
-	0x9f, 0xff, 0x7d, 0x75, 0x97, 0xf9, 0x42, 0xdb, 0xd3, 0x93, 0xff, 0x3b, 0x82, 0x4e, 0x34, 0xfc,
-	0x16, 0x17, 0xcf, 0x34, 0x6c, 0x4e, 0x2c, 0x84, 0xfc, 0x84, 0x16, 0x13, 0xf9, 0xa8, 0x63, 0x0a,
-	0x56, 0xb9, 0x93, 0x2b, 0x8c, 0xdf, 0x8f, 0x85, 0x14, 0x84, 0x90, 0xbc, 0xa6, 0x8e, 0x11, 0x02,
-	0xdc, 0x91, 0xff, 0x90, 0xd0, 0xc6, 0xe8, 0x01, 0x73, 0x30, 0x5c, 0x6d, 0x24, 0x39, 0x77, 0xf2,
-	0x16, 0xe4, 0x58, 0xe7, 0x57, 0x42, 0x67, 0x51, 0x3b, 0x1c, 0xd0, 0x19, 0xce, 0x26, 0x30, 0xdc,
-	0x26, 0x16, 0x72, 0xcd, 0x2e, 0x27, 0x46, 0x7f, 0xa6, 0xc9, 0x77, 0x12, 0x5a, 0x1b, 0x9e, 0x42,
-	0xdb, 0xe3, 0xb3, 0x09, 0x6f, 0xf4, 0x60, 0x02, 0x52, 0xac, 0xee, 0x50, 0xa8, 0x2b, 0x68, 0x3b,
-	0xe3, 0x53, 0x8c, 0xee, 0xf2, 0x5e, 0x42, 0x1f, 0xa6, 0xbd, 0xef, 0xdd, 0x94, 0x60, 0x86, 0x69,
-	0xb9, 0xa3, 0x89, 0x68, 0x2f, 0x6a, 0x03, 0x8a, 0x4f, 0x8f, 0x4b, 0x86, 0x15, 0x7d, 0x14, 0x69,
-	0xfb, 0x55, 0x42, 0x72, 0xca, 0x73, 0xdc, 0x19, 0xae, 0x39, 0xcc, 0xca, 0x1d, 0x4e, 0xc2, 0x8a,
-	0x85, 0x1d, 0x09, 0x61, 0x7b, 0xda, 0xee, 0x80, 0x30, 0x2c, 0x3e, 0x31, 0x06, 0xb2, 0x2b, 0x5f,
-	0xfd, 0xfd, 0xa8, 0x4a, 0x0f, 0x8f, 0xaa, 0xf4, 0xff, 0xa3, 0x2a, 0xfd, 0xf2, 0xa4, 0x4e, 0x3d,
-	0x3c, 0xa9, 0x53, 0xff, 0x3d, 0xa9, 0x53, 0x3f, 0x94, 0x6d, 0x97, 0x3b, 0xdd, 0x66, 0x11, 0x93,
-	0xb6, 0xfe, 0x6d, 0x78, 0xd4, 0x51, 0x99, 0xba, 0x96, 0x0d, 0x83, 0xcb, 0x36, 0xb1, 0xba, 0x1e,
-	0xe8, 0x37, 0xcf, 0x2b, 0xf2, 0xdb, 0x0e, 0xb0, 0xe6, 0x9c, 0xf8, 0x0d, 0x76, 0xf2, 0x3a, 0x00,
-	0x00, 0xff, 0xff, 0xa4, 0x8a, 0x32, 0x5f, 0xcc, 0x09, 0x00, 0x00,
+	// 1002 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xcc, 0x56, 0x4f, 0x6f, 0xdb, 0xc6,
+	0x13, 0x35, 0x15, 0xc5, 0xb6, 0x26, 0xfe, 0x13, 0xf3, 0xe7, 0xfc, 0x4a, 0x29, 0x0e, 0xed, 0x32,
+	0xb6, 0xec, 0xd6, 0xb6, 0x04, 0xdb, 0x05, 0x72, 0xae, 0x54, 0xb9, 0xf1, 0xc1, 0x46, 0xa1, 0x38,
+	0x97, 0x22, 0x00, 0xb1, 0x22, 0xc7, 0x24, 0x11, 0x89, 0x2b, 0xec, 0xae, 0xd4, 0x18, 0x28, 0x7a,
+	0xe8, 0x27, 0x28, 0x90, 0x43, 0x91, 0x53, 0x8f, 0xfd, 0x00, 0x3d, 0xf5, 0xd0, 0x7b, 0x7a, 0x0b,
+	0xd0, 0x4b, 0x4f, 0x45, 0x61, 0xf7, 0x83, 0x14, 0xdc, 0xa5, 0x98, 0x90, 0xa2, 0x15, 0xf5, 0xd4,
+	0xde, 0xb4, 0x6f, 0xde, 0x72, 0xde, 0xbe, 0xd9, 0x99, 0x15, 0x18, 0x1e, 0x23, 0xc3, 0x40, 0x5c,
+	0x86, 0x17, 0xa2, 0x3e, 0x3c, 0xa8, 0xf7, 0xb8, 0xc7, 0x6b, 0x7d, 0x46, 0x05, 0xd5, 0x17, 0xdf,
+	0x46, 0x6a, 0xc3, 0x83, 0x4a, 0xd9, 0xa1, 0xbc, 0x47, 0xb9, 0x2d, 0x83, 0x75, 0xb5, 0x50, 0xcc,
+	0xca, 0x9a, 0x47, 0xa9, 0xd7, 0xc5, 0x3a, 0xe9, 0x07, 0x75, 0x12, 0x86, 0x54, 0x10, 0x11, 0xd0,
+	0x70, 0x14, 0x5d, 0xf5, 0xa8, 0x47, 0xd5, 0xae, 0xe8, 0x57, 0x8c, 0xde, 0x4f, 0xe7, 0xf5, 0x30,
+	0x44, 0x1e, 0xc4, 0x5b, 0x2c, 0x17, 0x96, 0x4f, 0xb9, 0xf7, 0xb4, 0xef, 0x12, 0x81, 0x5f, 0x10,
+	0x46, 0x7a, 0x5c, 0x5f, 0x83, 0x12, 0x19, 0x08, 0x9f, 0xb2, 0x40, 0x5c, 0x1a, 0xda, 0x86, 0xb6,
+	0x53, 0x6a, 0xbf, 0x05, 0xf4, 0x23, 0x98, 0xed, 0x4b, 0x9e, 0x51, 0xd8, 0xd0, 0x76, 0xee, 0x1c,
+	0xde, 0xab, 0xa5, 0xc4, 0xd7, 0xd4, 0x47, 0x1a, 0xc5, 0xd7, 0x7f, 0xac, 0xcf, 0xb4, 0x63, 0xaa,
+	0x55, 0x86, 0x0f, 0x32, 0x59, 0xda, 0xc8, 0xfb, 0x34, 0xe4, 0x68, 0xfd, 0x5c, 0x90, 0xb1, 0x27,
+	0x18, 0xba, 0x67, 0xc7, 0xe7, 0xe7, 0xb4, 0x29, 0x8f, 0xdb, 0xec, 0x92, 0xa0, 0xa7, 0xaf, 0xc3,
+	0x1d, 0x1c, 0x62, 0x28, 0xec, 0x90, 0x86, 0x0e, 0x4a, 0x2d, 0xc5, 0x36, 0x48, 0xe8, 0x2c, 0x42,
+	0xf4, 0x1d, 0xb8, 0x8b, 0xc2, 0xb7, 0x3b, 0x5d, 0xea, 0x3c, 0xb7, 0x7d, 0x0c, 0x3c, 0x5f, 0x48,
+	0x59, 0xc5, 0xf6, 0x12, 0x0a, 0xbf, 0x11, 0xc1, 0x8f, 0x25, 0xaa, 0x6f, 0xc1, 0x92, 0xa0, 0xcf,
+	0x31, 0xb4, 0x1d, 0x1a, 0x0a, 0x46, 0x1c, 0x61, 0xdc, 0x92, 0x27, 0x5b, 0x94, 0x68, 0x33, 0x06,
+	0xf5, 0x32, 0xcc, 0x2b, 0x5a, 0xe0, 0x1a, 0x45, 0x49, 0x98, 0x93, 0xeb, 0x13, 0x57, 0xbf, 0x0f,
+	0x25, 0x15, 0x1a, 0xb0, 0xc0, 0xb8, 0x2d, 0x63, 0x8a, 0xfb, 0x94, 0x05, 0xfa, 0x36, 0x2c, 0xa3,
+	0xf0, 0x91, 0xe1, 0xa0, 0x67, 0x73, 0x0c, 0x5d, 0x64, 0xc6, 0xac, 0xa4, 0x2c, 0x8d, 0xe0, 0x27,
+	0x12, 0x8d, 0x88, 0x71, 0x75, 0x19, 0x3a, 0x18, 0x0c, 0x91, 0x19, 0x73, 0x8a, 0xa8, 0xe0, 0x76,
+	0x8c, 0xea, 0x16, 0x2c, 0x50, 0xe6, 0xf8, 0xc8, 0x05, 0x23, 0x82, 0x32, 0x63, 0x5e, 0xb2, 0x52,
+	0x98, 0xf5, 0x21, 0xac, 0xdf, 0x60, 0x5d, 0x62, 0x6f, 0x17, 0xa0, 0x15, 0xf9, 0xa5, 0x0c, 0x35,
+	0x60, 0xae, 0x87, 0x9c, 0x13, 0x0f, 0xe3, 0xc2, 0x8e, 0x96, 0xfa, 0x03, 0x00, 0x27, 0xa2, 0xd8,
+	0x3e, 0xe1, 0xbe, 0xf4, 0xb0, 0xd4, 0x2e, 0x49, 0xe4, 0x31, 0xe1, 0x7e, 0x64, 0x1f, 0x11, 0x02,
+	0xb9, 0xba, 0x6f, 0x91, 0x3b, 0xb1, 0x7d, 0xef, 0xa0, 0x27, 0xae, 0xf5, 0x8b, 0x26, 0xaf, 0x53,
+	0xa2, 0xa8, 0x25, 0xfc, 0xc8, 0x52, 0xa7, 0x4b, 0x38, 0x8f, 0x36, 0xc5, 0x49, 0xe5, 0xfa, 0xc4,
+	0x4d, 0xb9, 0x5d, 0x48, 0xbb, 0xfd, 0x10, 0x16, 0x63, 0x9f, 0x62, 0x3b, 0x55, 0xbe, 0x05, 0x05,
+	0xc6, 0x66, 0xee, 0xc2, 0x4a, 0xe2, 0x7a, 0x62, 0xa7, 0x2a, 0xdb, 0xdd, 0x51, 0xe0, 0x46, 0x43,
+	0x6f, 0xe7, 0x18, 0x5a, 0x4e, 0xdf, 0xc5, 0x96, 0xf0, 0x13, 0x23, 0x2f, 0x60, 0xed, 0x94, 0x7b,
+	0xad, 0x17, 0xe8, 0x0c, 0x04, 0x9e, 0x74, 0x9c, 0xb3, 0xe3, 0xf3, 0x4f, 0x07, 0x82, 0x1e, 0x53,
+	0xf6, 0x15, 0x61, 0x2e, 0xd7, 0x3f, 0x86, 0x95, 0x8b, 0xf8, 0xb7, 0x2d, 0xa8, 0xed, 0x74, 0x91,
+	0xb0, 0xf8, 0xc6, 0x2e, 0x8f, 0x02, 0xe7, 0xb4, 0x19, 0xc1, 0x7a, 0x05, 0xe6, 0x51, 0x7e, 0x88,
+	0xb2, 0xf8, 0xdc, 0xc9, 0xda, 0xaa, 0xc2, 0xe6, 0xa4, 0x3c, 0x89, 0x9e, 0x57, 0x05, 0x58, 0xcd,
+	0x68, 0xfd, 0x0f, 0x36, 0xcd, 0x58, 0x19, 0x67, 0xa7, 0x2d, 0xe3, 0xdc, 0x94, 0x65, 0xcc, 0xeb,
+	0x0b, 0x53, 0xd6, 0x6a, 0xcc, 0x9a, 0xc4, 0xbb, 0x5f, 0x35, 0xf8, 0x7f, 0x64, 0x72, 0xbb, 0xf9,
+	0xe8, 0xf0, 0xe0, 0x33, 0xec, 0x77, 0xe9, 0x25, 0xba, 0xff, 0xa2, 0x7b, 0x49, 0x7f, 0x14, 0xd3,
+	0xfd, 0x31, 0xcd, 0x95, 0xdd, 0x00, 0x33, 0xff, 0x28, 0xc9, 0x69, 0x9f, 0xc1, 0xbd, 0x53, 0xee,
+	0x35, 0x49, 0xe8, 0x60, 0x37, 0xd5, 0x99, 0xef, 0x3d, 0x6b, 0x36, 0x7f, 0x21, 0x27, 0xff, 0x3a,
+	0x3c, 0xc8, 0xfd, 0xfa, 0x28, 0xfd, 0xe1, 0x8f, 0xf3, 0x70, 0xeb, 0x94, 0x7b, 0xfa, 0xd7, 0xb0,
+	0x90, 0x7a, 0x66, 0xcc, 0xcc, 0xc3, 0x91, 0x79, 0x20, 0x2a, 0xd5, 0xc9, 0xf1, 0xe4, 0x78, 0x9b,
+	0xdf, 0xfe, 0xf6, 0xd7, 0xcb, 0x82, 0x69, 0xad, 0xd5, 0xd3, 0xef, 0xdc, 0x40, 0x92, 0x6d, 0xf5,
+	0x02, 0xe9, 0x3f, 0x68, 0xb0, 0x9a, 0xfb, 0xc6, 0xe4, 0xa4, 0xc9, 0xe3, 0x55, 0x6a, 0xd3, 0xf1,
+	0x12, 0x59, 0x75, 0x29, 0xeb, 0x23, 0x6b, 0x3b, 0x23, 0x2b, 0xea, 0x03, 0x3b, 0xbc, 0x10, 0x72,
+	0x48, 0xa8, 0xd6, 0x90, 0x63, 0x56, 0xff, 0x06, 0x16, 0x52, 0xd5, 0x31, 0x27, 0x24, 0x6c, 0x09,
+	0xbf, 0x52, 0x9d, 0x1c, 0x4f, 0x84, 0x54, 0xa5, 0x90, 0x0d, 0xcb, 0x9c, 0x20, 0x04, 0x85, 0xaf,
+	0xff, 0xa4, 0x41, 0xf9, 0xe6, 0xf1, 0xb6, 0x3b, 0x9e, 0xed, 0x46, 0x72, 0xe5, 0xe8, 0x1f, 0x90,
+	0x13, 0x9d, 0x9f, 0x48, 0x9d, 0x35, 0x6b, 0x2f, 0xa3, 0x53, 0x4d, 0x46, 0xb4, 0x83, 0x8e, 0x23,
+	0xe5, 0x92, 0x81, 0xa0, 0xf6, 0x68, 0xa2, 0xea, 0x2f, 0x35, 0x58, 0x19, 0x9f, 0x81, 0x0f, 0x27,
+	0x7b, 0xa3, 0x2a, 0xba, 0x3b, 0x05, 0x29, 0x51, 0xb7, 0x27, 0xd5, 0x55, 0xad, 0xcd, 0xc9, 0x2e,
+	0xc6, 0xb5, 0x7c, 0xa5, 0xc1, 0xff, 0xf2, 0xa6, 0xcb, 0x56, 0x8e, 0x31, 0xe3, 0xb4, 0xca, 0xfe,
+	0x54, 0xb4, 0xf7, 0x6a, 0x43, 0xe6, 0x3c, 0x3a, 0x3c, 0xb0, 0xdd, 0x78, 0x53, 0xac, 0xed, 0x7b,
+	0x0d, 0xf4, 0x9c, 0x61, 0xb0, 0x39, 0x9e, 0x73, 0x9c, 0x55, 0xd9, 0x9b, 0x86, 0x95, 0x08, 0xdb,
+	0x97, 0xc2, 0xb6, 0xad, 0xad, 0x8c, 0x30, 0x47, 0x6e, 0xb1, 0x33, 0xde, 0x35, 0x9e, 0xbd, 0xbe,
+	0x32, 0xb5, 0x37, 0x57, 0xa6, 0xf6, 0xe7, 0x95, 0xa9, 0x7d, 0x77, 0x6d, 0xce, 0xbc, 0xb9, 0x36,
+	0x67, 0x7e, 0xbf, 0x36, 0x67, 0xbe, 0x6c, 0x78, 0x81, 0xf0, 0x07, 0x9d, 0x9a, 0x43, 0x7b, 0xf5,
+	0xcf, 0xd5, 0xa7, 0xf6, 0x1b, 0x2c, 0x70, 0x3d, 0xcc, 0x2e, 0x7b, 0xd4, 0x1d, 0x74, 0xb1, 0xfe,
+	0xe2, 0xdd, 0x8c, 0xe2, 0xb2, 0x8f, 0xbc, 0x33, 0x2b, 0xff, 0xf0, 0x1e, 0xfd, 0x1d, 0x00, 0x00,
+	0xff, 0xff, 0x0d, 0x4f, 0xfc, 0x83, 0x87, 0x0b, 0x00, 0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -796,6 +964,9 @@ const _ = grpc.SupportPackageIsVersion4
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
 type MsgClient interface {
+	// UpdateParams defines a governance operation for updating the x/gravitynft module parameters.
+	// The authority is defined in the keeper.
+	UpdateParams(ctx context.Context, in *MsgUpdateParams, opts ...grpc.CallOption) (*MsgUpdateParamsResponse, error)
 	SendNFTToCosmosClaim(ctx context.Context, in *MsgSendNFTToCosmosClaim, opts ...grpc.CallOption) (*MsgSendNFTToCosmosClaimResponse, error)
 	SendNFTToEth(ctx context.Context, in *MsgSendNFTToEth, opts ...grpc.CallOption) (*MsgSendNFTToEthResponse, error)
 	ExecuteIbcNFTAutoForwards(ctx context.Context, in *MsgExecuteIbcNFTAutoForwards, opts ...grpc.CallOption) (*MsgExecuteIbcNFTAutoForwardsResponse, error)
@@ -810,6 +981,15 @@ type msgClient struct {
 
 func NewMsgClient(cc grpc1.ClientConn) MsgClient {
 	return &msgClient{cc}
+}
+
+func (c *msgClient) UpdateParams(ctx context.Context, in *MsgUpdateParams, opts ...grpc.CallOption) (*MsgUpdateParamsResponse, error) {
+	out := new(MsgUpdateParamsResponse)
+	err := c.cc.Invoke(ctx, "/gravitynft.v1.Msg/UpdateParams", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
 }
 
 func (c *msgClient) SendNFTToCosmosClaim(ctx context.Context, in *MsgSendNFTToCosmosClaim, opts ...grpc.CallOption) (*MsgSendNFTToCosmosClaimResponse, error) {
@@ -868,6 +1048,9 @@ func (c *msgClient) CancelSendNFTToEth(ctx context.Context, in *MsgCancelSendNFT
 
 // MsgServer is the server API for Msg service.
 type MsgServer interface {
+	// UpdateParams defines a governance operation for updating the x/gravitynft module parameters.
+	// The authority is defined in the keeper.
+	UpdateParams(context.Context, *MsgUpdateParams) (*MsgUpdateParamsResponse, error)
 	SendNFTToCosmosClaim(context.Context, *MsgSendNFTToCosmosClaim) (*MsgSendNFTToCosmosClaimResponse, error)
 	SendNFTToEth(context.Context, *MsgSendNFTToEth) (*MsgSendNFTToEthResponse, error)
 	ExecuteIbcNFTAutoForwards(context.Context, *MsgExecuteIbcNFTAutoForwards) (*MsgExecuteIbcNFTAutoForwardsResponse, error)
@@ -880,6 +1063,9 @@ type MsgServer interface {
 type UnimplementedMsgServer struct {
 }
 
+func (*UnimplementedMsgServer) UpdateParams(ctx context.Context, req *MsgUpdateParams) (*MsgUpdateParamsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateParams not implemented")
+}
 func (*UnimplementedMsgServer) SendNFTToCosmosClaim(ctx context.Context, req *MsgSendNFTToCosmosClaim) (*MsgSendNFTToCosmosClaimResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SendNFTToCosmosClaim not implemented")
 }
@@ -901,6 +1087,24 @@ func (*UnimplementedMsgServer) CancelSendNFTToEth(ctx context.Context, req *MsgC
 
 func RegisterMsgServer(s grpc1.Server, srv MsgServer) {
 	s.RegisterService(&_Msg_serviceDesc, srv)
+}
+
+func _Msg_UpdateParams_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MsgUpdateParams)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MsgServer).UpdateParams(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/gravitynft.v1.Msg/UpdateParams",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MsgServer).UpdateParams(ctx, req.(*MsgUpdateParams))
+	}
+	return interceptor(ctx, in, info, handler)
 }
 
 func _Msg_SendNFTToCosmosClaim_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -1016,6 +1220,10 @@ var _Msg_serviceDesc = grpc.ServiceDesc{
 	HandlerType: (*MsgServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
+			MethodName: "UpdateParams",
+			Handler:    _Msg_UpdateParams_Handler,
+		},
+		{
 			MethodName: "SendNFTToCosmosClaim",
 			Handler:    _Msg_SendNFTToCosmosClaim_Handler,
 		},
@@ -1042,6 +1250,69 @@ var _Msg_serviceDesc = grpc.ServiceDesc{
 	},
 	Streams:  []grpc.StreamDesc{},
 	Metadata: "gravitynft/v1/msgs.proto",
+}
+
+func (m *MsgUpdateParams) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *MsgUpdateParams) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *MsgUpdateParams) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	{
+		size, err := m.Params.MarshalToSizedBuffer(dAtA[:i])
+		if err != nil {
+			return 0, err
+		}
+		i -= size
+		i = encodeVarintMsgs(dAtA, i, uint64(size))
+	}
+	i--
+	dAtA[i] = 0x12
+	if len(m.Authority) > 0 {
+		i -= len(m.Authority)
+		copy(dAtA[i:], m.Authority)
+		i = encodeVarintMsgs(dAtA, i, uint64(len(m.Authority)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *MsgUpdateParamsResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *MsgUpdateParamsResponse) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *MsgUpdateParamsResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	return len(dAtA) - i, nil
 }
 
 func (m *MsgSendNFTToCosmosClaim) Marshal() (dAtA []byte, err error) {
@@ -1139,6 +1410,50 @@ func (m *MsgSendNFTToCosmosClaimResponse) MarshalToSizedBuffer(dAtA []byte) (int
 	_ = i
 	var l int
 	_ = l
+	return len(dAtA) - i, nil
+}
+
+func (m *EventClaim) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *EventClaim) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *EventClaim) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if len(m.AttestationId) > 0 {
+		i -= len(m.AttestationId)
+		copy(dAtA[i:], m.AttestationId)
+		i = encodeVarintMsgs(dAtA, i, uint64(len(m.AttestationId)))
+		i--
+		dAtA[i] = 0x1a
+	}
+	if len(m.ClaimHash) > 0 {
+		i -= len(m.ClaimHash)
+		copy(dAtA[i:], m.ClaimHash)
+		i = encodeVarintMsgs(dAtA, i, uint64(len(m.ClaimHash)))
+		i--
+		dAtA[i] = 0x12
+	}
+	if len(m.Message) > 0 {
+		i -= len(m.Message)
+		copy(dAtA[i:], m.Message)
+		i = encodeVarintMsgs(dAtA, i, uint64(len(m.Message)))
+		i--
+		dAtA[i] = 0xa
+	}
 	return len(dAtA) - i, nil
 }
 
@@ -1518,6 +1833,30 @@ func encodeVarintMsgs(dAtA []byte, offset int, v uint64) int {
 	dAtA[offset] = uint8(v)
 	return base
 }
+func (m *MsgUpdateParams) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.Authority)
+	if l > 0 {
+		n += 1 + l + sovMsgs(uint64(l))
+	}
+	l = m.Params.Size()
+	n += 1 + l + sovMsgs(uint64(l))
+	return n
+}
+
+func (m *MsgUpdateParamsResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	return n
+}
+
 func (m *MsgSendNFTToCosmosClaim) Size() (n int) {
 	if m == nil {
 		return 0
@@ -1563,6 +1902,27 @@ func (m *MsgSendNFTToCosmosClaimResponse) Size() (n int) {
 	}
 	var l int
 	_ = l
+	return n
+}
+
+func (m *EventClaim) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.Message)
+	if l > 0 {
+		n += 1 + l + sovMsgs(uint64(l))
+	}
+	l = len(m.ClaimHash)
+	if l > 0 {
+		n += 1 + l + sovMsgs(uint64(l))
+	}
+	l = len(m.AttestationId)
+	if l > 0 {
+		n += 1 + l + sovMsgs(uint64(l))
+	}
 	return n
 }
 
@@ -1739,6 +2099,171 @@ func sovMsgs(x uint64) (n int) {
 }
 func sozMsgs(x uint64) (n int) {
 	return sovMsgs(uint64((x << 1) ^ uint64((int64(x) >> 63))))
+}
+func (m *MsgUpdateParams) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowMsgs
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: MsgUpdateParams: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: MsgUpdateParams: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Authority", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowMsgs
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthMsgs
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthMsgs
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Authority = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Params", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowMsgs
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthMsgs
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthMsgs
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if err := m.Params.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipMsgs(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthMsgs
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *MsgUpdateParamsResponse) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowMsgs
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: MsgUpdateParamsResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: MsgUpdateParamsResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		default:
+			iNdEx = preIndex
+			skippy, err := skipMsgs(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthMsgs
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
 }
 func (m *MsgSendNFTToCosmosClaim) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
@@ -2049,6 +2574,152 @@ func (m *MsgSendNFTToCosmosClaimResponse) Unmarshal(dAtA []byte) error {
 			return fmt.Errorf("proto: MsgSendNFTToCosmosClaimResponse: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
+		default:
+			iNdEx = preIndex
+			skippy, err := skipMsgs(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthMsgs
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *EventClaim) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowMsgs
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: EventClaim: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: EventClaim: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Message", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowMsgs
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthMsgs
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthMsgs
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Message = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ClaimHash", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowMsgs
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthMsgs
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthMsgs
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.ClaimHash = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 3:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field AttestationId", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowMsgs
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthMsgs
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthMsgs
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.AttestationId = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
 		default:
 			iNdEx = preIndex
 			skippy, err := skipMsgs(dAtA[iNdEx:])

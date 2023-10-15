@@ -110,10 +110,10 @@ func TestQueryGetNFTAttestations(t *testing.T) {
 				require.Error(t, err)
 			} else {
 				require.NoError(t, err)
-				require.Lenf(t, result.Attestations, tc.numResult, "unexpected number of results; tc #%d", i)
+				require.Lenf(t, result.NftAttestations, tc.numResult, "unexpected number of results; tc #%d", i)
 
-				nonces := make([]uint64, len(result.Attestations))
-				for i, att := range result.Attestations {
+				nonces := make([]uint64, len(result.NftAttestations))
+				for i, att := range result.NftAttestations {
 					claim, err := k.UnpackAttestationClaim(&att)
 					require.NoError(t, err)
 					nonces[i] = claim.GetEventNonce()

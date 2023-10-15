@@ -24,13 +24,13 @@ func (k Keeper) Params(c context.Context, _ *types.QueryParamsRequest) (*types.Q
 func (k Keeper) GetLastObservedNFTEthBlock(c context.Context, req *types.QueryLastObservedNFTEthBlockRequest) (*types.QueryLastObservedNFTEthBlockResponse, error) {
 	ctx := sdk.UnwrapSDKContext(c)
 	ethHeight := k.GetLastObservedEthereumBlockHeight(ctx)
-	return &types.QueryLastObservedNFTEthBlockResponse{Block: ethHeight.EthereumBlockHeight}, nil
+	return &types.QueryLastObservedNFTEthBlockResponse{LastObservedNftEthBlock: ethHeight.EthereumBlockHeight}, nil
 }
 
 func (k Keeper) GetLastObservedNFTEthNonce(c context.Context, msg *types.QueryLastObservedNFTEthNonceRequest) (*types.QueryLastObservedNFTEthNonceResponse, error) {
 	ctx := sdk.UnwrapSDKContext(c)
 	nonce := k.GetLastObservedEventNonce(ctx)
-	return &types.QueryLastObservedNFTEthNonceResponse{Nonce: nonce}, nil
+	return &types.QueryLastObservedNFTEthNonceResponse{LastObservedNftEthNonce: nonce}, nil
 }
 
 func (k Keeper) GetNFTAttestations(c context.Context, req *types.QueryNFTAttestationsRequest) (*types.QueryNFTAttestationsResponse, error) {
@@ -93,11 +93,31 @@ func (k Keeper) GetNFTAttestations(c context.Context, req *types.QueryNFTAttesta
 		return nil, iterErr
 	}
 
-	return &types.QueryNFTAttestationsResponse{Attestations: attestations}, nil
+	return &types.QueryNFTAttestationsResponse{NftAttestations: attestations}, nil
 }
 
-func (k Keeper) GetPendingNFTIbcAutoForwards(c context.Context, req *types.QueryPendingNFTIbcAutoForwards) (*types.QueryPendingNFTIbcAutoForwardsResponse, error) {
+func (k Keeper) GetPendingNFTIbcAutoForwards(c context.Context, req *types.QueryPendingNFTIbcAutoForwardsRequest) (*types.QueryPendingNFTIbcAutoForwardsResponse, error) {
 	ctx := sdk.UnwrapSDKContext(c)
 	pendingForwards := k.PendingNFTIbcAutoForwards(ctx, req.Limit)
-	return &types.QueryPendingNFTIbcAutoForwardsResponse{PendingIbcAutoForwards: pendingForwards}, nil
+	return &types.QueryPendingNFTIbcAutoForwardsResponse{PendingNftIbcAutoForwards: pendingForwards}, nil
+}
+
+func (k Keeper) LastNFTEventNonceByAddr(c context.Context, req *types.QueryLastNFTEventNonceByAddrRequest) (*types.QueryLastNFTEventNonceByAddrResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (k Keeper) OutgoingSendNFTToEths(c context.Context, req *types.QueryOutgoingSendNFTToEthsRequest) (*types.QueryOutgoingSendNFTToEthsResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (k Keeper) ERC721ToClassId(c context.Context, req *types.QueryERC721ToClassIdRequest) (*types.QueryERC721ToClassIdResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (k Keeper) ClassIdToERC721(c context.Context, req *types.QueryClassIdToERC721Request) (*types.QueryClassIdToERC721Response, error) {
+	//TODO implement me
+	panic("implement me")
 }

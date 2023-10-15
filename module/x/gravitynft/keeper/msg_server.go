@@ -76,5 +76,29 @@ func (k msgServer) claimHandlerCommon(ctx sdk.Context, msgAny *codectypes.Any, m
 			AttestationId: string(types.GetAttestationKey(msg.GetEventNonce(), hash)),
 		},
 	)
+}
 
+func (k msgServer) SendNFTToEth(c context.Context, msg *types.MsgSendNFTToEth) (*types.MsgSendNFTToEthResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (k msgServer) ExecuteIbcNFTAutoForwards(c context.Context, msg *types.MsgExecuteIbcNFTAutoForwards) (*types.MsgExecuteIbcNFTAutoForwardsResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (k msgServer) SendNFTToEthClaim(c context.Context, msg *types.MsgSendNFTToEthClaim) (*types.MsgSendNFTToEthClaimResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (k msgServer) ERC721DeployedClaim(c context.Context, msg *types.MsgERC721DeployedClaim) (*types.MsgERC721DeployedClaimResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (k msgServer) CancelSendNFTToEth(c context.Context, msg *types.MsgCancelSendNFTToEth) (*types.MsgCancelSendNFTToEthResponse, error) {
+	//TODO implement me
+	panic("implement me")
 }

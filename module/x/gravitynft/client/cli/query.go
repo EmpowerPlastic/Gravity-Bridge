@@ -159,7 +159,7 @@ func GetCmdPendingNFTIbcAutoForwards() *cobra.Command {
 				}
 			}
 
-			req := &types.QueryPendingNFTIbcAutoForwards{Limit: limit}
+			req := &types.QueryPendingNFTIbcAutoForwardsRequest{Limit: limit}
 			res, err := queryClient.GetPendingNFTIbcAutoForwards(cmd.Context(), req)
 			if err != nil {
 				return err
