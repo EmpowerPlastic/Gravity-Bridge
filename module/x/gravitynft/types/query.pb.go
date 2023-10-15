@@ -109,10 +109,174 @@ func (m *QueryParamsResponse) GetParams() Params {
 	return Params{}
 }
 
-// QueryLastObservedNFTEthBlockRequest defines the request for getting the height of the
-// last applied Ethereum Event on the nft bridge. This is expected to lag the actual
-// Ethereum block height significantly due to 1. Ethereum Finality and
-//  2. Consensus mirroring the state on Ethereum
+type QueryLastNFTEventNonceByAddrRequest struct {
+	Address string `protobuf:"bytes,1,opt,name=address,proto3" json:"address,omitempty"`
+}
+
+func (m *QueryLastNFTEventNonceByAddrRequest) Reset()         { *m = QueryLastNFTEventNonceByAddrRequest{} }
+func (m *QueryLastNFTEventNonceByAddrRequest) String() string { return proto.CompactTextString(m) }
+func (*QueryLastNFTEventNonceByAddrRequest) ProtoMessage()    {}
+func (*QueryLastNFTEventNonceByAddrRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_96ce0fa72af846b7, []int{2}
+}
+func (m *QueryLastNFTEventNonceByAddrRequest) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *QueryLastNFTEventNonceByAddrRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_QueryLastNFTEventNonceByAddrRequest.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *QueryLastNFTEventNonceByAddrRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryLastNFTEventNonceByAddrRequest.Merge(m, src)
+}
+func (m *QueryLastNFTEventNonceByAddrRequest) XXX_Size() int {
+	return m.Size()
+}
+func (m *QueryLastNFTEventNonceByAddrRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryLastNFTEventNonceByAddrRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_QueryLastNFTEventNonceByAddrRequest proto.InternalMessageInfo
+
+func (m *QueryLastNFTEventNonceByAddrRequest) GetAddress() string {
+	if m != nil {
+		return m.Address
+	}
+	return ""
+}
+
+type QueryLastNFTEventNonceByAddrResponse struct {
+	LastNftEventNonce uint64 `protobuf:"varint,1,opt,name=last_nft_event_nonce,json=lastNftEventNonce,proto3" json:"last_nft_event_nonce,omitempty"`
+}
+
+func (m *QueryLastNFTEventNonceByAddrResponse) Reset()         { *m = QueryLastNFTEventNonceByAddrResponse{} }
+func (m *QueryLastNFTEventNonceByAddrResponse) String() string { return proto.CompactTextString(m) }
+func (*QueryLastNFTEventNonceByAddrResponse) ProtoMessage()    {}
+func (*QueryLastNFTEventNonceByAddrResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_96ce0fa72af846b7, []int{3}
+}
+func (m *QueryLastNFTEventNonceByAddrResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *QueryLastNFTEventNonceByAddrResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_QueryLastNFTEventNonceByAddrResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *QueryLastNFTEventNonceByAddrResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryLastNFTEventNonceByAddrResponse.Merge(m, src)
+}
+func (m *QueryLastNFTEventNonceByAddrResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *QueryLastNFTEventNonceByAddrResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryLastNFTEventNonceByAddrResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_QueryLastNFTEventNonceByAddrResponse proto.InternalMessageInfo
+
+func (m *QueryLastNFTEventNonceByAddrResponse) GetLastNftEventNonce() uint64 {
+	if m != nil {
+		return m.LastNftEventNonce
+	}
+	return 0
+}
+
+type QueryOutgoingSendNFTToEthsRequest struct {
+}
+
+func (m *QueryOutgoingSendNFTToEthsRequest) Reset()         { *m = QueryOutgoingSendNFTToEthsRequest{} }
+func (m *QueryOutgoingSendNFTToEthsRequest) String() string { return proto.CompactTextString(m) }
+func (*QueryOutgoingSendNFTToEthsRequest) ProtoMessage()    {}
+func (*QueryOutgoingSendNFTToEthsRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_96ce0fa72af846b7, []int{4}
+}
+func (m *QueryOutgoingSendNFTToEthsRequest) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *QueryOutgoingSendNFTToEthsRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_QueryOutgoingSendNFTToEthsRequest.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *QueryOutgoingSendNFTToEthsRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryOutgoingSendNFTToEthsRequest.Merge(m, src)
+}
+func (m *QueryOutgoingSendNFTToEthsRequest) XXX_Size() int {
+	return m.Size()
+}
+func (m *QueryOutgoingSendNFTToEthsRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryOutgoingSendNFTToEthsRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_QueryOutgoingSendNFTToEthsRequest proto.InternalMessageInfo
+
+type QueryOutgoingSendNFTToEthsResponse struct {
+	OutgoingNfts []OutgoingNFT `protobuf:"bytes,1,rep,name=outgoing_nfts,json=outgoingNfts,proto3" json:"outgoing_nfts"`
+}
+
+func (m *QueryOutgoingSendNFTToEthsResponse) Reset()         { *m = QueryOutgoingSendNFTToEthsResponse{} }
+func (m *QueryOutgoingSendNFTToEthsResponse) String() string { return proto.CompactTextString(m) }
+func (*QueryOutgoingSendNFTToEthsResponse) ProtoMessage()    {}
+func (*QueryOutgoingSendNFTToEthsResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_96ce0fa72af846b7, []int{5}
+}
+func (m *QueryOutgoingSendNFTToEthsResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *QueryOutgoingSendNFTToEthsResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_QueryOutgoingSendNFTToEthsResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *QueryOutgoingSendNFTToEthsResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryOutgoingSendNFTToEthsResponse.Merge(m, src)
+}
+func (m *QueryOutgoingSendNFTToEthsResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *QueryOutgoingSendNFTToEthsResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryOutgoingSendNFTToEthsResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_QueryOutgoingSendNFTToEthsResponse proto.InternalMessageInfo
+
+func (m *QueryOutgoingSendNFTToEthsResponse) GetOutgoingNfts() []OutgoingNFT {
+	if m != nil {
+		return m.OutgoingNfts
+	}
+	return nil
+}
+
 type QueryLastObservedNFTEthBlockRequest struct {
 }
 
@@ -120,7 +284,7 @@ func (m *QueryLastObservedNFTEthBlockRequest) Reset()         { *m = QueryLastOb
 func (m *QueryLastObservedNFTEthBlockRequest) String() string { return proto.CompactTextString(m) }
 func (*QueryLastObservedNFTEthBlockRequest) ProtoMessage()    {}
 func (*QueryLastObservedNFTEthBlockRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_96ce0fa72af846b7, []int{2}
+	return fileDescriptor_96ce0fa72af846b7, []int{6}
 }
 func (m *QueryLastObservedNFTEthBlockRequest) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -150,16 +314,14 @@ func (m *QueryLastObservedNFTEthBlockRequest) XXX_DiscardUnknown() {
 var xxx_messageInfo_QueryLastObservedNFTEthBlockRequest proto.InternalMessageInfo
 
 type QueryLastObservedNFTEthBlockResponse struct {
-	// a response of 0 indicates that no Ethereum events have been observed, and thus
-	// the bridge is inactive
-	Block uint64 `protobuf:"varint,1,opt,name=block,proto3" json:"block,omitempty"`
+	LastObservedNftEthBlock uint64 `protobuf:"varint,1,opt,name=last_observed_nft_eth_block,json=lastObservedNftEthBlock,proto3" json:"last_observed_nft_eth_block,omitempty"`
 }
 
 func (m *QueryLastObservedNFTEthBlockResponse) Reset()         { *m = QueryLastObservedNFTEthBlockResponse{} }
 func (m *QueryLastObservedNFTEthBlockResponse) String() string { return proto.CompactTextString(m) }
 func (*QueryLastObservedNFTEthBlockResponse) ProtoMessage()    {}
 func (*QueryLastObservedNFTEthBlockResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_96ce0fa72af846b7, []int{3}
+	return fileDescriptor_96ce0fa72af846b7, []int{7}
 }
 func (m *QueryLastObservedNFTEthBlockResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -188,17 +350,13 @@ func (m *QueryLastObservedNFTEthBlockResponse) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_QueryLastObservedNFTEthBlockResponse proto.InternalMessageInfo
 
-func (m *QueryLastObservedNFTEthBlockResponse) GetBlock() uint64 {
+func (m *QueryLastObservedNFTEthBlockResponse) GetLastObservedNftEthBlock() uint64 {
 	if m != nil {
-		return m.Block
+		return m.LastObservedNftEthBlock
 	}
 	return 0
 }
 
-// QueryLastObservedNFTEthNonceRequest defines the request for getting the event nonce
-// of the last applied Ethereum Event on the nft bridge.
-// Note that this is likely to lag the last executed event a little
-// due to 1. Ethereum Finality and 2. Consensus mirroring the Ethereum state
 type QueryLastObservedNFTEthNonceRequest struct {
 }
 
@@ -206,7 +364,7 @@ func (m *QueryLastObservedNFTEthNonceRequest) Reset()         { *m = QueryLastOb
 func (m *QueryLastObservedNFTEthNonceRequest) String() string { return proto.CompactTextString(m) }
 func (*QueryLastObservedNFTEthNonceRequest) ProtoMessage()    {}
 func (*QueryLastObservedNFTEthNonceRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_96ce0fa72af846b7, []int{4}
+	return fileDescriptor_96ce0fa72af846b7, []int{8}
 }
 func (m *QueryLastObservedNFTEthNonceRequest) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -236,16 +394,14 @@ func (m *QueryLastObservedNFTEthNonceRequest) XXX_DiscardUnknown() {
 var xxx_messageInfo_QueryLastObservedNFTEthNonceRequest proto.InternalMessageInfo
 
 type QueryLastObservedNFTEthNonceResponse struct {
-	// a response of 0 indicates that no Ethereum events have been observed, and thus
-	// the bridge is inactive
-	Nonce uint64 `protobuf:"varint,1,opt,name=nonce,proto3" json:"nonce,omitempty"`
+	LastObservedNftEthNonce uint64 `protobuf:"varint,1,opt,name=last_observed_nft_eth_nonce,json=lastObservedNftEthNonce,proto3" json:"last_observed_nft_eth_nonce,omitempty"`
 }
 
 func (m *QueryLastObservedNFTEthNonceResponse) Reset()         { *m = QueryLastObservedNFTEthNonceResponse{} }
 func (m *QueryLastObservedNFTEthNonceResponse) String() string { return proto.CompactTextString(m) }
 func (*QueryLastObservedNFTEthNonceResponse) ProtoMessage()    {}
 func (*QueryLastObservedNFTEthNonceResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_96ce0fa72af846b7, []int{5}
+	return fileDescriptor_96ce0fa72af846b7, []int{9}
 }
 func (m *QueryLastObservedNFTEthNonceResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -274,39 +430,36 @@ func (m *QueryLastObservedNFTEthNonceResponse) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_QueryLastObservedNFTEthNonceResponse proto.InternalMessageInfo
 
-func (m *QueryLastObservedNFTEthNonceResponse) GetNonce() uint64 {
+func (m *QueryLastObservedNFTEthNonceResponse) GetLastObservedNftEthNonce() uint64 {
 	if m != nil {
-		return m.Nonce
+		return m.LastObservedNftEthNonce
 	}
 	return 0
 }
 
-// QueryNFTAttestationsRequest defines the request structure for getting recent
-// nft attestations with optional query parameters. By default, a limited set of
-// recent attestations will be returned, defined by 'limit'. These attestations
-// can be ordered ascending or descending by nonce, that defaults to ascending.
-// Filtering criteria may also be provided, including nonce, claim type, and
-// height. Note, that an attestation will be returned if it matches ANY of the
-// filter query parameters provided.
 type QueryNFTAttestationsRequest struct {
 	// limit defines how many attestations to limit in the response.
 	Limit uint64 `protobuf:"varint,1,opt,name=limit,proto3" json:"limit,omitempty"`
-	// order_by provides ordering of nft attestations by nonce in the response. Either
-	// 'asc' or 'desc' can be provided. If no value is provided, it defaults to 'asc'.
+	// order_by provides ordering of atteststions by nonce in the response. Either
+	// 'asc' or 'desc' can be provided. If no value is provided, it defaults to
+	// 'asc'.
 	OrderBy string `protobuf:"bytes,2,opt,name=order_by,json=orderBy,proto3" json:"order_by,omitempty"`
-	// claim_type allows filtering attestations by Ethereum nft claim type.
+	// claim_type allows filtering attestations by Ethereum claim type.
 	ClaimType string `protobuf:"bytes,3,opt,name=claim_type,json=claimType,proto3" json:"claim_type,omitempty"`
-	// nonce allows filtering attestations by Ethereum nft claim nonce.
+	// nonce allows filtering attestations by Ethereum claim nonce.
 	Nonce uint64 `protobuf:"varint,4,opt,name=nonce,proto3" json:"nonce,omitempty"`
-	// height allows filtering attestations by Ethereum nft claim height.
+	// height allows filtering attestations by Ethereum claim height.
 	Height uint64 `protobuf:"varint,5,opt,name=height,proto3" json:"height,omitempty"`
+	// indicates whether to search for store data using the old Gravity v1 key "OracleAttestationKey"
+	// Note that queries before the Mercury upgrade at height 1282013 must set this to true
+	UseV1Key bool `protobuf:"varint,6,opt,name=use_v1_key,json=useV1Key,proto3" json:"use_v1_key,omitempty"`
 }
 
 func (m *QueryNFTAttestationsRequest) Reset()         { *m = QueryNFTAttestationsRequest{} }
 func (m *QueryNFTAttestationsRequest) String() string { return proto.CompactTextString(m) }
 func (*QueryNFTAttestationsRequest) ProtoMessage()    {}
 func (*QueryNFTAttestationsRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_96ce0fa72af846b7, []int{6}
+	return fileDescriptor_96ce0fa72af846b7, []int{10}
 }
 func (m *QueryNFTAttestationsRequest) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -370,15 +523,22 @@ func (m *QueryNFTAttestationsRequest) GetHeight() uint64 {
 	return 0
 }
 
+func (m *QueryNFTAttestationsRequest) GetUseV1Key() bool {
+	if m != nil {
+		return m.UseV1Key
+	}
+	return false
+}
+
 type QueryNFTAttestationsResponse struct {
-	Attestations []NFTAttestation `protobuf:"bytes,1,rep,name=attestations,proto3" json:"attestations"`
+	NftAttestations []NFTAttestation `protobuf:"bytes,1,rep,name=nft_attestations,json=nftAttestations,proto3" json:"nft_attestations"`
 }
 
 func (m *QueryNFTAttestationsResponse) Reset()         { *m = QueryNFTAttestationsResponse{} }
 func (m *QueryNFTAttestationsResponse) String() string { return proto.CompactTextString(m) }
 func (*QueryNFTAttestationsResponse) ProtoMessage()    {}
 func (*QueryNFTAttestationsResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_96ce0fa72af846b7, []int{7}
+	return fileDescriptor_96ce0fa72af846b7, []int{11}
 }
 func (m *QueryNFTAttestationsResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -407,30 +567,30 @@ func (m *QueryNFTAttestationsResponse) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_QueryNFTAttestationsResponse proto.InternalMessageInfo
 
-func (m *QueryNFTAttestationsResponse) GetAttestations() []NFTAttestation {
+func (m *QueryNFTAttestationsResponse) GetNftAttestations() []NFTAttestation {
 	if m != nil {
-		return m.Attestations
+		return m.NftAttestations
 	}
 	return nil
 }
 
-type QueryPendingNFTIbcAutoForwards struct {
-	// limit defines the number of pending forwards to return, in order of their nonce
+type QueryPendingNFTIbcAutoForwardsRequest struct {
+	// limit defines the number of pending forwards to return, in order of their SendToCosmos.EventNonce
 	Limit uint64 `protobuf:"varint,1,opt,name=limit,proto3" json:"limit,omitempty"`
 }
 
-func (m *QueryPendingNFTIbcAutoForwards) Reset()         { *m = QueryPendingNFTIbcAutoForwards{} }
-func (m *QueryPendingNFTIbcAutoForwards) String() string { return proto.CompactTextString(m) }
-func (*QueryPendingNFTIbcAutoForwards) ProtoMessage()    {}
-func (*QueryPendingNFTIbcAutoForwards) Descriptor() ([]byte, []int) {
-	return fileDescriptor_96ce0fa72af846b7, []int{8}
+func (m *QueryPendingNFTIbcAutoForwardsRequest) Reset()         { *m = QueryPendingNFTIbcAutoForwardsRequest{} }
+func (m *QueryPendingNFTIbcAutoForwardsRequest) String() string { return proto.CompactTextString(m) }
+func (*QueryPendingNFTIbcAutoForwardsRequest) ProtoMessage()    {}
+func (*QueryPendingNFTIbcAutoForwardsRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_96ce0fa72af846b7, []int{12}
 }
-func (m *QueryPendingNFTIbcAutoForwards) XXX_Unmarshal(b []byte) error {
+func (m *QueryPendingNFTIbcAutoForwardsRequest) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *QueryPendingNFTIbcAutoForwards) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *QueryPendingNFTIbcAutoForwardsRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_QueryPendingNFTIbcAutoForwards.Marshal(b, m, deterministic)
+		return xxx_messageInfo_QueryPendingNFTIbcAutoForwardsRequest.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -440,19 +600,19 @@ func (m *QueryPendingNFTIbcAutoForwards) XXX_Marshal(b []byte, deterministic boo
 		return b[:n], nil
 	}
 }
-func (m *QueryPendingNFTIbcAutoForwards) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_QueryPendingNFTIbcAutoForwards.Merge(m, src)
+func (m *QueryPendingNFTIbcAutoForwardsRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryPendingNFTIbcAutoForwardsRequest.Merge(m, src)
 }
-func (m *QueryPendingNFTIbcAutoForwards) XXX_Size() int {
+func (m *QueryPendingNFTIbcAutoForwardsRequest) XXX_Size() int {
 	return m.Size()
 }
-func (m *QueryPendingNFTIbcAutoForwards) XXX_DiscardUnknown() {
-	xxx_messageInfo_QueryPendingNFTIbcAutoForwards.DiscardUnknown(m)
+func (m *QueryPendingNFTIbcAutoForwardsRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryPendingNFTIbcAutoForwardsRequest.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_QueryPendingNFTIbcAutoForwards proto.InternalMessageInfo
+var xxx_messageInfo_QueryPendingNFTIbcAutoForwardsRequest proto.InternalMessageInfo
 
-func (m *QueryPendingNFTIbcAutoForwards) GetLimit() uint64 {
+func (m *QueryPendingNFTIbcAutoForwardsRequest) GetLimit() uint64 {
 	if m != nil {
 		return m.Limit
 	}
@@ -460,7 +620,7 @@ func (m *QueryPendingNFTIbcAutoForwards) GetLimit() uint64 {
 }
 
 type QueryPendingNFTIbcAutoForwardsResponse struct {
-	PendingIbcAutoForwards []*PendingNFTIbcAutoForward `protobuf:"bytes,1,rep,name=pending_ibc_auto_forwards,json=pendingIbcAutoForwards,proto3" json:"pending_ibc_auto_forwards,omitempty"`
+	PendingNftIbcAutoForwards []*PendingNFTIbcAutoForward `protobuf:"bytes,1,rep,name=pending_nft_ibc_auto_forwards,json=pendingNftIbcAutoForwards,proto3" json:"pending_nft_ibc_auto_forwards,omitempty"`
 }
 
 func (m *QueryPendingNFTIbcAutoForwardsResponse) Reset() {
@@ -469,7 +629,7 @@ func (m *QueryPendingNFTIbcAutoForwardsResponse) Reset() {
 func (m *QueryPendingNFTIbcAutoForwardsResponse) String() string { return proto.CompactTextString(m) }
 func (*QueryPendingNFTIbcAutoForwardsResponse) ProtoMessage()    {}
 func (*QueryPendingNFTIbcAutoForwardsResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_96ce0fa72af846b7, []int{9}
+	return fileDescriptor_96ce0fa72af846b7, []int{13}
 }
 func (m *QueryPendingNFTIbcAutoForwardsResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -498,74 +658,282 @@ func (m *QueryPendingNFTIbcAutoForwardsResponse) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_QueryPendingNFTIbcAutoForwardsResponse proto.InternalMessageInfo
 
-func (m *QueryPendingNFTIbcAutoForwardsResponse) GetPendingIbcAutoForwards() []*PendingNFTIbcAutoForward {
+func (m *QueryPendingNFTIbcAutoForwardsResponse) GetPendingNftIbcAutoForwards() []*PendingNFTIbcAutoForward {
 	if m != nil {
-		return m.PendingIbcAutoForwards
+		return m.PendingNftIbcAutoForwards
 	}
 	return nil
+}
+
+type QueryERC721ToClassIdRequest struct {
+	Erc721 string `protobuf:"bytes,1,opt,name=erc721,proto3" json:"erc721,omitempty"`
+}
+
+func (m *QueryERC721ToClassIdRequest) Reset()         { *m = QueryERC721ToClassIdRequest{} }
+func (m *QueryERC721ToClassIdRequest) String() string { return proto.CompactTextString(m) }
+func (*QueryERC721ToClassIdRequest) ProtoMessage()    {}
+func (*QueryERC721ToClassIdRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_96ce0fa72af846b7, []int{14}
+}
+func (m *QueryERC721ToClassIdRequest) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *QueryERC721ToClassIdRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_QueryERC721ToClassIdRequest.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *QueryERC721ToClassIdRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryERC721ToClassIdRequest.Merge(m, src)
+}
+func (m *QueryERC721ToClassIdRequest) XXX_Size() int {
+	return m.Size()
+}
+func (m *QueryERC721ToClassIdRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryERC721ToClassIdRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_QueryERC721ToClassIdRequest proto.InternalMessageInfo
+
+func (m *QueryERC721ToClassIdRequest) GetErc721() string {
+	if m != nil {
+		return m.Erc721
+	}
+	return ""
+}
+
+type QueryERC721ToClassIdResponse struct {
+	ClassId uint64 `protobuf:"varint,1,opt,name=class_id,json=classId,proto3" json:"class_id,omitempty"`
+}
+
+func (m *QueryERC721ToClassIdResponse) Reset()         { *m = QueryERC721ToClassIdResponse{} }
+func (m *QueryERC721ToClassIdResponse) String() string { return proto.CompactTextString(m) }
+func (*QueryERC721ToClassIdResponse) ProtoMessage()    {}
+func (*QueryERC721ToClassIdResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_96ce0fa72af846b7, []int{15}
+}
+func (m *QueryERC721ToClassIdResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *QueryERC721ToClassIdResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_QueryERC721ToClassIdResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *QueryERC721ToClassIdResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryERC721ToClassIdResponse.Merge(m, src)
+}
+func (m *QueryERC721ToClassIdResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *QueryERC721ToClassIdResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryERC721ToClassIdResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_QueryERC721ToClassIdResponse proto.InternalMessageInfo
+
+func (m *QueryERC721ToClassIdResponse) GetClassId() uint64 {
+	if m != nil {
+		return m.ClassId
+	}
+	return 0
+}
+
+type QueryClassIdToERC721Request struct {
+	ClassId uint64 `protobuf:"varint,1,opt,name=class_id,json=classId,proto3" json:"class_id,omitempty"`
+}
+
+func (m *QueryClassIdToERC721Request) Reset()         { *m = QueryClassIdToERC721Request{} }
+func (m *QueryClassIdToERC721Request) String() string { return proto.CompactTextString(m) }
+func (*QueryClassIdToERC721Request) ProtoMessage()    {}
+func (*QueryClassIdToERC721Request) Descriptor() ([]byte, []int) {
+	return fileDescriptor_96ce0fa72af846b7, []int{16}
+}
+func (m *QueryClassIdToERC721Request) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *QueryClassIdToERC721Request) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_QueryClassIdToERC721Request.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *QueryClassIdToERC721Request) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryClassIdToERC721Request.Merge(m, src)
+}
+func (m *QueryClassIdToERC721Request) XXX_Size() int {
+	return m.Size()
+}
+func (m *QueryClassIdToERC721Request) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryClassIdToERC721Request.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_QueryClassIdToERC721Request proto.InternalMessageInfo
+
+func (m *QueryClassIdToERC721Request) GetClassId() uint64 {
+	if m != nil {
+		return m.ClassId
+	}
+	return 0
+}
+
+type QueryClassIdToERC721Response struct {
+	Erc721 string `protobuf:"bytes,1,opt,name=erc721,proto3" json:"erc721,omitempty"`
+}
+
+func (m *QueryClassIdToERC721Response) Reset()         { *m = QueryClassIdToERC721Response{} }
+func (m *QueryClassIdToERC721Response) String() string { return proto.CompactTextString(m) }
+func (*QueryClassIdToERC721Response) ProtoMessage()    {}
+func (*QueryClassIdToERC721Response) Descriptor() ([]byte, []int) {
+	return fileDescriptor_96ce0fa72af846b7, []int{17}
+}
+func (m *QueryClassIdToERC721Response) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *QueryClassIdToERC721Response) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_QueryClassIdToERC721Response.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *QueryClassIdToERC721Response) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryClassIdToERC721Response.Merge(m, src)
+}
+func (m *QueryClassIdToERC721Response) XXX_Size() int {
+	return m.Size()
+}
+func (m *QueryClassIdToERC721Response) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryClassIdToERC721Response.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_QueryClassIdToERC721Response proto.InternalMessageInfo
+
+func (m *QueryClassIdToERC721Response) GetErc721() string {
+	if m != nil {
+		return m.Erc721
+	}
+	return ""
 }
 
 func init() {
 	proto.RegisterType((*QueryParamsRequest)(nil), "gravitynft.v1.QueryParamsRequest")
 	proto.RegisterType((*QueryParamsResponse)(nil), "gravitynft.v1.QueryParamsResponse")
+	proto.RegisterType((*QueryLastNFTEventNonceByAddrRequest)(nil), "gravitynft.v1.QueryLastNFTEventNonceByAddrRequest")
+	proto.RegisterType((*QueryLastNFTEventNonceByAddrResponse)(nil), "gravitynft.v1.QueryLastNFTEventNonceByAddrResponse")
+	proto.RegisterType((*QueryOutgoingSendNFTToEthsRequest)(nil), "gravitynft.v1.QueryOutgoingSendNFTToEthsRequest")
+	proto.RegisterType((*QueryOutgoingSendNFTToEthsResponse)(nil), "gravitynft.v1.QueryOutgoingSendNFTToEthsResponse")
 	proto.RegisterType((*QueryLastObservedNFTEthBlockRequest)(nil), "gravitynft.v1.QueryLastObservedNFTEthBlockRequest")
 	proto.RegisterType((*QueryLastObservedNFTEthBlockResponse)(nil), "gravitynft.v1.QueryLastObservedNFTEthBlockResponse")
 	proto.RegisterType((*QueryLastObservedNFTEthNonceRequest)(nil), "gravitynft.v1.QueryLastObservedNFTEthNonceRequest")
 	proto.RegisterType((*QueryLastObservedNFTEthNonceResponse)(nil), "gravitynft.v1.QueryLastObservedNFTEthNonceResponse")
 	proto.RegisterType((*QueryNFTAttestationsRequest)(nil), "gravitynft.v1.QueryNFTAttestationsRequest")
 	proto.RegisterType((*QueryNFTAttestationsResponse)(nil), "gravitynft.v1.QueryNFTAttestationsResponse")
-	proto.RegisterType((*QueryPendingNFTIbcAutoForwards)(nil), "gravitynft.v1.QueryPendingNFTIbcAutoForwards")
+	proto.RegisterType((*QueryPendingNFTIbcAutoForwardsRequest)(nil), "gravitynft.v1.QueryPendingNFTIbcAutoForwardsRequest")
 	proto.RegisterType((*QueryPendingNFTIbcAutoForwardsResponse)(nil), "gravitynft.v1.QueryPendingNFTIbcAutoForwardsResponse")
+	proto.RegisterType((*QueryERC721ToClassIdRequest)(nil), "gravitynft.v1.QueryERC721ToClassIdRequest")
+	proto.RegisterType((*QueryERC721ToClassIdResponse)(nil), "gravitynft.v1.QueryERC721ToClassIdResponse")
+	proto.RegisterType((*QueryClassIdToERC721Request)(nil), "gravitynft.v1.QueryClassIdToERC721Request")
+	proto.RegisterType((*QueryClassIdToERC721Response)(nil), "gravitynft.v1.QueryClassIdToERC721Response")
 }
 
 func init() { proto.RegisterFile("gravitynft/v1/query.proto", fileDescriptor_96ce0fa72af846b7) }
 
 var fileDescriptor_96ce0fa72af846b7 = []byte{
-	// 701 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x9c, 0x95, 0xcf, 0x6f, 0xd3, 0x30,
-	0x14, 0xc7, 0x9b, 0xfd, 0x28, 0xcc, 0x83, 0x8b, 0x19, 0x53, 0x9b, 0x6d, 0xd9, 0x16, 0x7e, 0x0d,
-	0xa6, 0x35, 0x5a, 0x07, 0x13, 0x87, 0x09, 0x69, 0x95, 0x68, 0x05, 0x42, 0x05, 0xaa, 0x9e, 0x10,
-	0x52, 0xe4, 0xb4, 0x5e, 0x6a, 0xd1, 0xc6, 0x59, 0xe2, 0x16, 0x72, 0xe5, 0xcc, 0x01, 0x89, 0x23,
-	0x17, 0xfe, 0x17, 0x38, 0xec, 0x38, 0x89, 0x0b, 0x27, 0x84, 0x36, 0xfe, 0x01, 0xfe, 0x03, 0x14,
-	0xdb, 0xd9, 0x92, 0x2c, 0x29, 0x1b, 0xb7, 0xf8, 0xf9, 0xfb, 0xfc, 0x3e, 0x2f, 0x7e, 0xdf, 0x04,
-	0x94, 0x6d, 0x0f, 0x8d, 0x08, 0x0b, 0x9c, 0x3d, 0x66, 0x8c, 0x36, 0x8d, 0xfd, 0x21, 0xf6, 0x82,
-	0x8a, 0xeb, 0x51, 0x46, 0xe1, 0xd5, 0xd3, 0xad, 0xca, 0x68, 0x53, 0x5d, 0x48, 0x2a, 0x6d, 0xec,
-	0x60, 0x9f, 0xf8, 0x42, 0xab, 0x2e, 0x27, 0x37, 0x11, 0x63, 0xd8, 0x67, 0x88, 0x11, 0xea, 0x48,
-	0x41, 0xaa, 0x0e, 0x0b, 0x5c, 0x1c, 0xe5, 0x2e, 0xda, 0x94, 0xda, 0x7d, 0x6c, 0x20, 0x97, 0x18,
-	0xc8, 0x71, 0xa8, 0xc8, 0x8b, 0x76, 0xe7, 0x6c, 0x6a, 0x53, 0xfe, 0x68, 0x84, 0x4f, 0x22, 0xaa,
-	0xcf, 0x01, 0xf8, 0x32, 0x44, 0x7d, 0x81, 0x3c, 0x34, 0xf0, 0x5b, 0x78, 0x7f, 0x88, 0x7d, 0xa6,
-	0x3f, 0x05, 0xd7, 0x12, 0x51, 0xdf, 0xa5, 0x8e, 0x8f, 0xe1, 0x16, 0x28, 0xba, 0x3c, 0x52, 0x52,
-	0x56, 0x94, 0xb5, 0xd9, 0xea, 0xf5, 0x4a, 0xa2, 0xb3, 0x8a, 0x90, 0xd7, 0xa6, 0x0e, 0x7e, 0x2e,
-	0x17, 0x5a, 0x52, 0xaa, 0xdf, 0x02, 0x37, 0xf8, 0x59, 0xcf, 0x90, 0xcf, 0x9e, 0x5b, 0x3e, 0xf6,
-	0x46, 0xb8, 0xdb, 0xac, 0xb7, 0x1f, 0xb3, 0x5e, 0xad, 0x4f, 0x3b, 0x6f, 0xa2, 0x92, 0x3b, 0xe0,
-	0xe6, 0x78, 0x99, 0x64, 0x98, 0x03, 0xd3, 0x56, 0x18, 0xe0, 0x08, 0x53, 0x2d, 0xb1, 0x18, 0x53,
-	0xa4, 0x49, 0x9d, 0x0e, 0xfe, 0x77, 0x11, 0x29, 0x3b, 0x2d, 0xe2, 0x84, 0x81, 0xa8, 0x08, 0x5f,
-	0xe8, 0x9f, 0x15, 0xb0, 0xc0, 0xd3, 0x9b, 0xf5, 0xf6, 0xee, 0xe9, 0xc5, 0x44, 0x6f, 0x2d, 0xcc,
-	0xea, 0x93, 0x01, 0x61, 0x51, 0x16, 0x5f, 0xc0, 0x32, 0xb8, 0x4c, 0xbd, 0x2e, 0xf6, 0x4c, 0x2b,
-	0x28, 0x4d, 0xac, 0x28, 0x6b, 0x33, 0xad, 0x4b, 0x7c, 0x5d, 0x0b, 0xe0, 0x12, 0x00, 0x9d, 0x3e,
-	0x22, 0x03, 0x33, 0xbc, 0xc5, 0xd2, 0x24, 0xdf, 0x9c, 0xe1, 0x91, 0x76, 0xe0, 0xc6, 0x28, 0xa6,
-	0x62, 0x14, 0x70, 0x1e, 0x14, 0x7b, 0x98, 0xd8, 0x3d, 0x56, 0x9a, 0xe6, 0x61, 0xb9, 0xd2, 0x6d,
-	0xb0, 0x98, 0x0d, 0x27, 0x7b, 0x6a, 0x80, 0x2b, 0xb1, 0x69, 0x0a, 0xaf, 0x70, 0x72, 0x6d, 0xb6,
-	0xba, 0x94, 0xba, 0xc2, 0x64, 0xb6, 0xbc, 0xca, 0x44, 0xa2, 0xbe, 0x0d, 0x34, 0x31, 0x1c, 0xd8,
-	0xe9, 0x12, 0xc7, 0x6e, 0xd6, 0xdb, 0x4f, 0xac, 0xce, 0xee, 0x90, 0xd1, 0x3a, 0xf5, 0xde, 0x22,
-	0xaf, 0xeb, 0x67, 0xbf, 0x08, 0xfd, 0x83, 0x02, 0x6e, 0x8f, 0x4f, 0x3c, 0x61, 0xb5, 0x40, 0xd9,
-	0x15, 0x22, 0x93, 0x58, 0x1d, 0x13, 0x0d, 0x19, 0x35, 0xf7, 0xa4, 0x48, 0x82, 0xdf, 0x49, 0xcf,
-	0x5e, 0xce, 0xa1, 0xad, 0x79, 0x79, 0x52, 0xaa, 0x56, 0xf5, 0x4f, 0x11, 0x4c, 0x73, 0x1c, 0xe8,
-	0x81, 0xa2, 0x98, 0x5c, 0xb8, 0x9a, 0x3a, 0xf4, 0xac, 0x35, 0x54, 0x7d, 0x9c, 0x44, 0xe0, 0xeb,
-	0xab, 0xef, 0xbf, 0xff, 0xfe, 0x34, 0xb1, 0x00, 0xcb, 0x46, 0xc2, 0xac, 0x16, 0x66, 0xc8, 0x10,
-	0xae, 0x80, 0x5f, 0x15, 0xa0, 0x36, 0x30, 0xcb, 0x99, 0x76, 0x58, 0xcd, 0xaa, 0x32, 0xde, 0x41,
-	0xea, 0xd6, 0x85, 0x72, 0x24, 0xea, 0x0e, 0x47, 0xdd, 0x86, 0xf7, 0x33, 0x50, 0xf9, 0x37, 0xcc,
-	0xec, 0x23, 0x9f, 0x99, 0x54, 0x1e, 0x61, 0x3a, 0x7b, 0xcc, 0xc4, 0xac, 0x67, 0x72, 0xdb, 0xe5,
-	0x77, 0xc1, 0xed, 0x74, 0xde, 0x2e, 0xe2, 0x16, 0x3d, 0x6f, 0x17, 0x09, 0xbf, 0xfe, 0x77, 0x17,
-	0xc2, 0x51, 0x5f, 0x14, 0x00, 0x1b, 0x98, 0xa5, 0x8c, 0x03, 0xef, 0x65, 0x91, 0x64, 0x5b, 0x5f,
-	0x5d, 0x3f, 0x97, 0x56, 0xd2, 0x6e, 0x72, 0xda, 0x75, 0x78, 0x37, 0x97, 0x36, 0xe4, 0x8b, 0x7b,
-	0x0e, 0x7e, 0x53, 0xc0, 0x62, 0x03, 0xb3, 0x7c, 0xcb, 0x6d, 0x64, 0x8e, 0x65, 0x9e, 0x5c, 0x7d,
-	0x70, 0x21, 0xf9, 0x09, 0xf9, 0x23, 0x4e, 0xfe, 0x10, 0x6e, 0xe7, 0x92, 0x47, 0xb6, 0x0d, 0x3b,
-	0x38, 0x63, 0xdd, 0xda, 0xeb, 0x83, 0x23, 0x4d, 0x39, 0x3c, 0xd2, 0x94, 0x5f, 0x47, 0x9a, 0xf2,
-	0xf1, 0x58, 0x2b, 0x1c, 0x1e, 0x6b, 0x85, 0x1f, 0xc7, 0x5a, 0xe1, 0x55, 0xcd, 0x26, 0xac, 0x37,
-	0xb4, 0x2a, 0x1d, 0x3a, 0x30, 0x1a, 0xe2, 0xec, 0x8d, 0x9a, 0x47, 0xba, 0x36, 0x4e, 0x2f, 0x07,
-	0xb4, 0x3b, 0xec, 0x63, 0xe3, 0x5d, 0x1c, 0x81, 0xff, 0x05, 0xad, 0x22, 0xff, 0xa5, 0x6d, 0xfd,
-	0x0d, 0x00, 0x00, 0xff, 0xff, 0x55, 0xb7, 0x53, 0xc5, 0x8b, 0x07, 0x00, 0x00,
+	// 1074 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x9c, 0x97, 0x4f, 0x6f, 0xdc, 0xc4,
+	0x1b, 0xc7, 0xe3, 0x36, 0xd9, 0xa6, 0xd3, 0x56, 0xfd, 0xfd, 0x86, 0xb4, 0xd9, 0xdd, 0x24, 0xdb,
+	0xc6, 0x21, 0x34, 0x6a, 0x95, 0x75, 0x76, 0xd3, 0x7f, 0x20, 0x10, 0xca, 0x56, 0xbb, 0x51, 0x01,
+	0xb9, 0xb0, 0xac, 0x40, 0x42, 0x48, 0x96, 0xd7, 0x1e, 0x7b, 0xad, 0x78, 0x3d, 0x5b, 0xcf, 0x78,
+	0xc1, 0x42, 0x5c, 0x38, 0x72, 0x42, 0xea, 0x09, 0x5e, 0x04, 0x77, 0x0e, 0x70, 0x43, 0xea, 0xb1,
+	0x12, 0x17, 0x4e, 0x08, 0x25, 0xbc, 0x10, 0xe4, 0x99, 0x71, 0xe3, 0x75, 0xc6, 0x4e, 0xc2, 0xcd,
+	0x33, 0xf3, 0xfc, 0xf9, 0xcc, 0x33, 0x33, 0xdf, 0x67, 0x17, 0xd4, 0xdc, 0xd0, 0x9c, 0x7a, 0x34,
+	0x0e, 0x1c, 0xaa, 0x4d, 0x5b, 0xda, 0xf3, 0x08, 0x85, 0x71, 0x73, 0x12, 0x62, 0x8a, 0xe1, 0xb5,
+	0xe3, 0xa5, 0xe6, 0xb4, 0x55, 0xbf, 0x35, 0x6b, 0x69, 0x52, 0x8a, 0x08, 0x35, 0xa9, 0x87, 0x03,
+	0x6e, 0x5f, 0x5f, 0x99, 0x35, 0x70, 0x51, 0x80, 0x88, 0x47, 0xc4, 0xe2, 0xf2, 0xec, 0x62, 0x12,
+	0x93, 0x2f, 0xe4, 0x00, 0x68, 0x3c, 0x41, 0xa9, 0xcf, 0xaa, 0x8b, 0xb1, 0xeb, 0x23, 0xcd, 0x9c,
+	0x78, 0x9a, 0x19, 0x04, 0x98, 0x67, 0x4b, 0x57, 0x97, 0x5c, 0xec, 0x62, 0xf6, 0xa9, 0x25, 0x5f,
+	0x7c, 0x56, 0x5d, 0x02, 0xf0, 0x93, 0x64, 0x0f, 0x1f, 0x9b, 0xa1, 0x39, 0x26, 0x7d, 0xf4, 0x3c,
+	0x42, 0x84, 0xaa, 0x1f, 0x80, 0x37, 0x66, 0x66, 0xc9, 0x04, 0x07, 0x04, 0xc1, 0x5d, 0x50, 0x99,
+	0xb0, 0x99, 0xaa, 0x72, 0x5b, 0xd9, 0xba, 0xd2, 0xbe, 0xd1, 0x9c, 0xd9, 0x72, 0x93, 0x9b, 0x77,
+	0xe6, 0x5f, 0xfe, 0x75, 0x6b, 0xae, 0x2f, 0x4c, 0xd5, 0xf7, 0xc1, 0x06, 0x8b, 0xf5, 0x91, 0x49,
+	0xa8, 0xde, 0x1b, 0x74, 0xa7, 0x28, 0xa0, 0x3a, 0x0e, 0x2c, 0xd4, 0x89, 0xf7, 0x6c, 0x3b, 0x14,
+	0x29, 0x61, 0x15, 0x5c, 0x32, 0x6d, 0x3b, 0x44, 0x84, 0x07, 0xbf, 0xdc, 0x4f, 0x87, 0xea, 0xe7,
+	0xe0, 0xcd, 0xf2, 0x00, 0x82, 0x4e, 0x03, 0x4b, 0xbe, 0x49, 0xa8, 0x11, 0x38, 0xd4, 0x40, 0x89,
+	0x91, 0x11, 0x24, 0x56, 0x2c, 0xdc, 0x7c, 0xff, 0xff, 0xc9, 0x9a, 0xee, 0xd0, 0x63, 0x77, 0x75,
+	0x03, 0xac, 0xb3, 0xc0, 0xcf, 0x22, 0xea, 0x62, 0x2f, 0x70, 0x3f, 0x45, 0x81, 0xad, 0xf7, 0x06,
+	0x03, 0xdc, 0xa5, 0xa3, 0xd7, 0xa5, 0x38, 0x00, 0x6a, 0x99, 0x91, 0xc8, 0xdd, 0x05, 0xd7, 0xb0,
+	0x30, 0x48, 0xf2, 0x27, 0x7b, 0xb8, 0xb8, 0x75, 0xa5, 0x5d, 0xcf, 0x15, 0x28, 0x0d, 0xa2, 0xf7,
+	0x06, 0xa2, 0x4a, 0x57, 0x53, 0x37, 0xdd, 0xa1, 0x44, 0xdd, 0xcc, 0xd4, 0xea, 0xd9, 0x90, 0xa0,
+	0x70, 0x8a, 0x92, 0x64, 0x5d, 0x3a, 0xea, 0xf8, 0xd8, 0x3a, 0x48, 0x99, 0xec, 0x4c, 0x45, 0xa4,
+	0x66, 0x82, 0xea, 0x5d, 0xb0, 0xc2, 0x2a, 0x82, 0x85, 0x0d, 0x2f, 0x0d, 0x1d, 0x19, 0xc3, 0xc4,
+	0x4c, 0x14, 0x66, 0xd9, 0xcf, 0x46, 0x71, 0x68, 0x1a, 0xa5, 0x04, 0x86, 0x95, 0xef, 0x74, 0x18,
+	0x61, 0x76, 0x1a, 0x4c, 0xf6, 0x94, 0x24, 0x30, 0xfc, 0xac, 0x7e, 0x51, 0xc0, 0x0a, 0x4b, 0xa3,
+	0xf7, 0x06, 0x7b, 0xc7, 0x4f, 0x29, 0x3d, 0x26, 0xb8, 0x04, 0x16, 0x7c, 0x6f, 0xec, 0x51, 0x11,
+	0x87, 0x0f, 0x60, 0x0d, 0x2c, 0xe2, 0xd0, 0x46, 0xa1, 0x31, 0x8c, 0xab, 0x17, 0xf8, 0xad, 0x62,
+	0xe3, 0x4e, 0x0c, 0xd7, 0x00, 0xb0, 0x7c, 0xd3, 0x1b, 0x1b, 0xc9, 0x0b, 0xaa, 0x5e, 0x64, 0x8b,
+	0x97, 0xd9, 0xcc, 0x20, 0x9e, 0xa0, 0x24, 0x1e, 0xe7, 0x9a, 0xe7, 0xf1, 0xd8, 0x00, 0xde, 0x04,
+	0x95, 0x11, 0xf2, 0xdc, 0x11, 0xad, 0x2e, 0xb0, 0x69, 0x31, 0x82, 0xab, 0x00, 0x44, 0x04, 0x19,
+	0xd3, 0x96, 0x71, 0x80, 0xe2, 0x6a, 0xe5, 0xb6, 0xb2, 0xb5, 0xd8, 0x5f, 0x8c, 0x08, 0xfa, 0xac,
+	0xf5, 0x21, 0x8a, 0xd5, 0x00, 0xac, 0xca, 0xd1, 0x45, 0x65, 0x74, 0xf0, 0xbf, 0xa4, 0x16, 0x19,
+	0x85, 0x48, 0xef, 0xcf, 0x5a, 0xee, 0xfe, 0xcc, 0x46, 0x10, 0x57, 0xe8, 0x7a, 0xe0, 0xd0, 0x6c,
+	0x5c, 0xf5, 0x3d, 0xb0, 0xc9, 0x5f, 0x2f, 0x0a, 0x6c, 0x7e, 0xd9, 0x9e, 0x0e, 0xad, 0xbd, 0x88,
+	0xe2, 0x1e, 0x0e, 0xbf, 0x32, 0x43, 0xbb, 0xbc, 0x68, 0xea, 0x0b, 0x05, 0xbc, 0x75, 0x9a, 0xbf,
+	0x20, 0xf7, 0xc0, 0xda, 0x84, 0x1b, 0xb1, 0xd3, 0xf4, 0x86, 0x96, 0x61, 0x46, 0x14, 0x1b, 0x8e,
+	0x30, 0x14, 0xdb, 0xb8, 0x93, 0xd7, 0x89, 0x82, 0xc0, 0xfd, 0x9a, 0x88, 0xa6, 0x3b, 0x34, 0x97,
+	0x52, 0x7d, 0x20, 0xce, 0xbf, 0xdb, 0x7f, 0xf2, 0xa8, 0xdd, 0x1a, 0xe0, 0x27, 0xbe, 0x49, 0xc8,
+	0x53, 0x3b, 0xdd, 0xca, 0x4d, 0x50, 0x41, 0xa1, 0xf5, 0xa8, 0xdd, 0x12, 0xea, 0x21, 0x46, 0xea,
+	0xdb, 0xa2, 0xf6, 0x27, 0xdc, 0xc4, 0x0e, 0x6a, 0x60, 0xd1, 0x4a, 0xa6, 0x0c, 0xcf, 0x16, 0x55,
+	0xb8, 0x64, 0x71, 0x13, 0xf5, 0xb1, 0xc8, 0x28, 0x5c, 0x06, 0x98, 0xc7, 0x48, 0x33, 0x96, 0x78,
+	0x3e, 0x14, 0x49, 0x4f, 0x78, 0x8a, 0xa4, 0x05, 0xb0, 0xed, 0xef, 0xaf, 0x82, 0x05, 0xe6, 0x08,
+	0x43, 0x50, 0xe1, 0x62, 0x0a, 0xd7, 0x73, 0xb5, 0x3b, 0xa9, 0xd6, 0x75, 0xb5, 0xcc, 0x84, 0xa7,
+	0x54, 0xd7, 0xbf, 0xfb, 0xe3, 0x9f, 0x17, 0x17, 0x56, 0x60, 0x4d, 0x9b, 0xe9, 0x1f, 0x43, 0x44,
+	0x4d, 0x8d, 0x0b, 0x35, 0xfc, 0x4d, 0x01, 0xcb, 0x05, 0x1a, 0x0b, 0xdb, 0xb2, 0x14, 0xe5, 0x8a,
+	0x5e, 0xdf, 0x3d, 0x97, 0x8f, 0xe0, 0x7c, 0x87, 0x71, 0xde, 0x87, 0x6d, 0x09, 0x27, 0x0e, 0x4d,
+	0xcb, 0x47, 0xda, 0x6b, 0x7d, 0x67, 0x6f, 0x52, 0xfb, 0x46, 0xf4, 0x89, 0x6f, 0xe1, 0xcf, 0x0a,
+	0xb8, 0x21, 0x95, 0x69, 0xb8, 0x23, 0x43, 0x29, 0x93, 0xfd, 0x7a, 0xeb, 0x1c, 0x1e, 0x02, 0x7d,
+	0x87, 0xa1, 0xdf, 0x85, 0x5b, 0x32, 0xf4, 0xb4, 0x39, 0x10, 0x14, 0xd8, 0x06, 0xc5, 0x89, 0xf0,
+	0x11, 0xf8, 0xab, 0x02, 0xea, 0xfb, 0x88, 0x16, 0xc8, 0x78, 0x71, 0xd1, 0x8b, 0x5b, 0x43, 0x71,
+	0xd1, 0x4b, 0xfa, 0x84, 0xfa, 0x90, 0x91, 0xef, 0xc0, 0xa6, 0x84, 0xbc, 0xa4, 0x81, 0x14, 0xf3,
+	0xb3, 0x93, 0x3d, 0x2b, 0x7f, 0xb6, 0x9b, 0x9c, 0x95, 0x7f, 0xa6, 0xb5, 0xfc, 0x07, 0x7e, 0x2e,
+	0xe7, 0x3f, 0x29, 0x00, 0xee, 0x23, 0x9a, 0xd3, 0x65, 0x78, 0x57, 0xc6, 0x20, 0xef, 0x3b, 0xf5,
+	0x7b, 0x67, 0xb2, 0x15, 0x9c, 0xf7, 0x18, 0xe7, 0x26, 0xdc, 0x90, 0x70, 0x06, 0x0e, 0xdd, 0xce,
+	0x76, 0x00, 0xf8, 0xbb, 0x02, 0x56, 0xf7, 0x11, 0x2d, 0x14, 0x61, 0x78, 0x5f, 0xfa, 0xec, 0x4f,
+	0xd1, 0xfc, 0xfa, 0x83, 0x73, 0x7a, 0x09, 0xf4, 0xc7, 0x0c, 0xbd, 0x0d, 0x77, 0x64, 0xfa, 0x51,
+	0xd6, 0x02, 0xe0, 0x8f, 0x0a, 0xb8, 0x9e, 0x53, 0x5f, 0x79, 0x85, 0xe5, 0xca, 0x2e, 0xaf, 0x70,
+	0x81, 0x9c, 0xab, 0xdb, 0x0c, 0xf3, 0x0e, 0xdc, 0x94, 0x60, 0x72, 0x91, 0x4d, 0x1e, 0x5f, 0xaa,
+	0xdb, 0x8c, 0x2d, 0x27, 0xd2, 0x72, 0x36, 0x79, 0x0f, 0x90, 0xb3, 0x15, 0xa8, 0x7e, 0x29, 0x5b,
+	0x4a, 0xc4, 0xa4, 0x81, 0x71, 0x76, 0xbe, 0x7c, 0x79, 0xd8, 0x50, 0x5e, 0x1d, 0x36, 0x94, 0xbf,
+	0x0f, 0x1b, 0xca, 0x0f, 0x47, 0x8d, 0xb9, 0x57, 0x47, 0x8d, 0xb9, 0x3f, 0x8f, 0x1a, 0x73, 0x5f,
+	0x74, 0x5c, 0x8f, 0x8e, 0xa2, 0x61, 0xd3, 0xc2, 0x63, 0x6d, 0x9f, 0x87, 0xda, 0xee, 0x84, 0x9e,
+	0xed, 0xa2, 0xfc, 0x70, 0x8c, 0xed, 0xc8, 0x47, 0xda, 0xd7, 0xd9, 0x8c, 0xec, 0x1f, 0xc3, 0xb0,
+	0xc2, 0x7e, 0xfe, 0xef, 0xfe, 0x1b, 0x00, 0x00, 0xff, 0xff, 0xa5, 0xd0, 0x2e, 0xb0, 0xd0, 0x0c,
+	0x00, 0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -581,10 +949,14 @@ const _ = grpc.SupportPackageIsVersion4
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
 type QueryClient interface {
 	Params(ctx context.Context, in *QueryParamsRequest, opts ...grpc.CallOption) (*QueryParamsResponse, error)
+	LastNFTEventNonceByAddr(ctx context.Context, in *QueryLastNFTEventNonceByAddrRequest, opts ...grpc.CallOption) (*QueryLastNFTEventNonceByAddrResponse, error)
+	OutgoingSendNFTToEths(ctx context.Context, in *QueryOutgoingSendNFTToEthsRequest, opts ...grpc.CallOption) (*QueryOutgoingSendNFTToEthsResponse, error)
 	GetLastObservedNFTEthBlock(ctx context.Context, in *QueryLastObservedNFTEthBlockRequest, opts ...grpc.CallOption) (*QueryLastObservedNFTEthBlockResponse, error)
 	GetLastObservedNFTEthNonce(ctx context.Context, in *QueryLastObservedNFTEthNonceRequest, opts ...grpc.CallOption) (*QueryLastObservedNFTEthNonceResponse, error)
 	GetNFTAttestations(ctx context.Context, in *QueryNFTAttestationsRequest, opts ...grpc.CallOption) (*QueryNFTAttestationsResponse, error)
-	GetPendingNFTIbcAutoForwards(ctx context.Context, in *QueryPendingNFTIbcAutoForwards, opts ...grpc.CallOption) (*QueryPendingNFTIbcAutoForwardsResponse, error)
+	GetPendingNFTIbcAutoForwards(ctx context.Context, in *QueryPendingNFTIbcAutoForwardsRequest, opts ...grpc.CallOption) (*QueryPendingNFTIbcAutoForwardsResponse, error)
+	ERC721ToClassId(ctx context.Context, in *QueryERC721ToClassIdRequest, opts ...grpc.CallOption) (*QueryERC721ToClassIdResponse, error)
+	ClassIdToERC721(ctx context.Context, in *QueryClassIdToERC721Request, opts ...grpc.CallOption) (*QueryClassIdToERC721Response, error)
 }
 
 type queryClient struct {
@@ -598,6 +970,24 @@ func NewQueryClient(cc grpc1.ClientConn) QueryClient {
 func (c *queryClient) Params(ctx context.Context, in *QueryParamsRequest, opts ...grpc.CallOption) (*QueryParamsResponse, error) {
 	out := new(QueryParamsResponse)
 	err := c.cc.Invoke(ctx, "/gravitynft.v1.Query/Params", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *queryClient) LastNFTEventNonceByAddr(ctx context.Context, in *QueryLastNFTEventNonceByAddrRequest, opts ...grpc.CallOption) (*QueryLastNFTEventNonceByAddrResponse, error) {
+	out := new(QueryLastNFTEventNonceByAddrResponse)
+	err := c.cc.Invoke(ctx, "/gravitynft.v1.Query/LastNFTEventNonceByAddr", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *queryClient) OutgoingSendNFTToEths(ctx context.Context, in *QueryOutgoingSendNFTToEthsRequest, opts ...grpc.CallOption) (*QueryOutgoingSendNFTToEthsResponse, error) {
+	out := new(QueryOutgoingSendNFTToEthsResponse)
+	err := c.cc.Invoke(ctx, "/gravitynft.v1.Query/OutgoingSendNFTToEths", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -631,9 +1021,27 @@ func (c *queryClient) GetNFTAttestations(ctx context.Context, in *QueryNFTAttest
 	return out, nil
 }
 
-func (c *queryClient) GetPendingNFTIbcAutoForwards(ctx context.Context, in *QueryPendingNFTIbcAutoForwards, opts ...grpc.CallOption) (*QueryPendingNFTIbcAutoForwardsResponse, error) {
+func (c *queryClient) GetPendingNFTIbcAutoForwards(ctx context.Context, in *QueryPendingNFTIbcAutoForwardsRequest, opts ...grpc.CallOption) (*QueryPendingNFTIbcAutoForwardsResponse, error) {
 	out := new(QueryPendingNFTIbcAutoForwardsResponse)
 	err := c.cc.Invoke(ctx, "/gravitynft.v1.Query/GetPendingNFTIbcAutoForwards", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *queryClient) ERC721ToClassId(ctx context.Context, in *QueryERC721ToClassIdRequest, opts ...grpc.CallOption) (*QueryERC721ToClassIdResponse, error) {
+	out := new(QueryERC721ToClassIdResponse)
+	err := c.cc.Invoke(ctx, "/gravitynft.v1.Query/ERC721ToClassId", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *queryClient) ClassIdToERC721(ctx context.Context, in *QueryClassIdToERC721Request, opts ...grpc.CallOption) (*QueryClassIdToERC721Response, error) {
+	out := new(QueryClassIdToERC721Response)
+	err := c.cc.Invoke(ctx, "/gravitynft.v1.Query/ClassIdToERC721", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -643,10 +1051,14 @@ func (c *queryClient) GetPendingNFTIbcAutoForwards(ctx context.Context, in *Quer
 // QueryServer is the server API for Query service.
 type QueryServer interface {
 	Params(context.Context, *QueryParamsRequest) (*QueryParamsResponse, error)
+	LastNFTEventNonceByAddr(context.Context, *QueryLastNFTEventNonceByAddrRequest) (*QueryLastNFTEventNonceByAddrResponse, error)
+	OutgoingSendNFTToEths(context.Context, *QueryOutgoingSendNFTToEthsRequest) (*QueryOutgoingSendNFTToEthsResponse, error)
 	GetLastObservedNFTEthBlock(context.Context, *QueryLastObservedNFTEthBlockRequest) (*QueryLastObservedNFTEthBlockResponse, error)
 	GetLastObservedNFTEthNonce(context.Context, *QueryLastObservedNFTEthNonceRequest) (*QueryLastObservedNFTEthNonceResponse, error)
 	GetNFTAttestations(context.Context, *QueryNFTAttestationsRequest) (*QueryNFTAttestationsResponse, error)
-	GetPendingNFTIbcAutoForwards(context.Context, *QueryPendingNFTIbcAutoForwards) (*QueryPendingNFTIbcAutoForwardsResponse, error)
+	GetPendingNFTIbcAutoForwards(context.Context, *QueryPendingNFTIbcAutoForwardsRequest) (*QueryPendingNFTIbcAutoForwardsResponse, error)
+	ERC721ToClassId(context.Context, *QueryERC721ToClassIdRequest) (*QueryERC721ToClassIdResponse, error)
+	ClassIdToERC721(context.Context, *QueryClassIdToERC721Request) (*QueryClassIdToERC721Response, error)
 }
 
 // UnimplementedQueryServer can be embedded to have forward compatible implementations.
@@ -655,6 +1067,12 @@ type UnimplementedQueryServer struct {
 
 func (*UnimplementedQueryServer) Params(ctx context.Context, req *QueryParamsRequest) (*QueryParamsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Params not implemented")
+}
+func (*UnimplementedQueryServer) LastNFTEventNonceByAddr(ctx context.Context, req *QueryLastNFTEventNonceByAddrRequest) (*QueryLastNFTEventNonceByAddrResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method LastNFTEventNonceByAddr not implemented")
+}
+func (*UnimplementedQueryServer) OutgoingSendNFTToEths(ctx context.Context, req *QueryOutgoingSendNFTToEthsRequest) (*QueryOutgoingSendNFTToEthsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method OutgoingSendNFTToEths not implemented")
 }
 func (*UnimplementedQueryServer) GetLastObservedNFTEthBlock(ctx context.Context, req *QueryLastObservedNFTEthBlockRequest) (*QueryLastObservedNFTEthBlockResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetLastObservedNFTEthBlock not implemented")
@@ -665,8 +1083,14 @@ func (*UnimplementedQueryServer) GetLastObservedNFTEthNonce(ctx context.Context,
 func (*UnimplementedQueryServer) GetNFTAttestations(ctx context.Context, req *QueryNFTAttestationsRequest) (*QueryNFTAttestationsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetNFTAttestations not implemented")
 }
-func (*UnimplementedQueryServer) GetPendingNFTIbcAutoForwards(ctx context.Context, req *QueryPendingNFTIbcAutoForwards) (*QueryPendingNFTIbcAutoForwardsResponse, error) {
+func (*UnimplementedQueryServer) GetPendingNFTIbcAutoForwards(ctx context.Context, req *QueryPendingNFTIbcAutoForwardsRequest) (*QueryPendingNFTIbcAutoForwardsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetPendingNFTIbcAutoForwards not implemented")
+}
+func (*UnimplementedQueryServer) ERC721ToClassId(ctx context.Context, req *QueryERC721ToClassIdRequest) (*QueryERC721ToClassIdResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ERC721ToClassId not implemented")
+}
+func (*UnimplementedQueryServer) ClassIdToERC721(ctx context.Context, req *QueryClassIdToERC721Request) (*QueryClassIdToERC721Response, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ClassIdToERC721 not implemented")
 }
 
 func RegisterQueryServer(s grpc1.Server, srv QueryServer) {
@@ -687,6 +1111,42 @@ func _Query_Params_Handler(srv interface{}, ctx context.Context, dec func(interf
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(QueryServer).Params(ctx, req.(*QueryParamsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Query_LastNFTEventNonceByAddr_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(QueryLastNFTEventNonceByAddrRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(QueryServer).LastNFTEventNonceByAddr(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/gravitynft.v1.Query/LastNFTEventNonceByAddr",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(QueryServer).LastNFTEventNonceByAddr(ctx, req.(*QueryLastNFTEventNonceByAddrRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Query_OutgoingSendNFTToEths_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(QueryOutgoingSendNFTToEthsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(QueryServer).OutgoingSendNFTToEths(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/gravitynft.v1.Query/OutgoingSendNFTToEths",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(QueryServer).OutgoingSendNFTToEths(ctx, req.(*QueryOutgoingSendNFTToEthsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -746,7 +1206,7 @@ func _Query_GetNFTAttestations_Handler(srv interface{}, ctx context.Context, dec
 }
 
 func _Query_GetPendingNFTIbcAutoForwards_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(QueryPendingNFTIbcAutoForwards)
+	in := new(QueryPendingNFTIbcAutoForwardsRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -758,7 +1218,43 @@ func _Query_GetPendingNFTIbcAutoForwards_Handler(srv interface{}, ctx context.Co
 		FullMethod: "/gravitynft.v1.Query/GetPendingNFTIbcAutoForwards",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(QueryServer).GetPendingNFTIbcAutoForwards(ctx, req.(*QueryPendingNFTIbcAutoForwards))
+		return srv.(QueryServer).GetPendingNFTIbcAutoForwards(ctx, req.(*QueryPendingNFTIbcAutoForwardsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Query_ERC721ToClassId_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(QueryERC721ToClassIdRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(QueryServer).ERC721ToClassId(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/gravitynft.v1.Query/ERC721ToClassId",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(QueryServer).ERC721ToClassId(ctx, req.(*QueryERC721ToClassIdRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Query_ClassIdToERC721_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(QueryClassIdToERC721Request)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(QueryServer).ClassIdToERC721(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/gravitynft.v1.Query/ClassIdToERC721",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(QueryServer).ClassIdToERC721(ctx, req.(*QueryClassIdToERC721Request))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -770,6 +1266,14 @@ var _Query_serviceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Params",
 			Handler:    _Query_Params_Handler,
+		},
+		{
+			MethodName: "LastNFTEventNonceByAddr",
+			Handler:    _Query_LastNFTEventNonceByAddr_Handler,
+		},
+		{
+			MethodName: "OutgoingSendNFTToEths",
+			Handler:    _Query_OutgoingSendNFTToEths_Handler,
 		},
 		{
 			MethodName: "GetLastObservedNFTEthBlock",
@@ -786,6 +1290,14 @@ var _Query_serviceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetPendingNFTIbcAutoForwards",
 			Handler:    _Query_GetPendingNFTIbcAutoForwards_Handler,
+		},
+		{
+			MethodName: "ERC721ToClassId",
+			Handler:    _Query_ERC721ToClassId_Handler,
+		},
+		{
+			MethodName: "ClassIdToERC721",
+			Handler:    _Query_ClassIdToERC721_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
@@ -848,6 +1360,124 @@ func (m *QueryParamsResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	return len(dAtA) - i, nil
 }
 
+func (m *QueryLastNFTEventNonceByAddrRequest) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *QueryLastNFTEventNonceByAddrRequest) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *QueryLastNFTEventNonceByAddrRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if len(m.Address) > 0 {
+		i -= len(m.Address)
+		copy(dAtA[i:], m.Address)
+		i = encodeVarintQuery(dAtA, i, uint64(len(m.Address)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *QueryLastNFTEventNonceByAddrResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *QueryLastNFTEventNonceByAddrResponse) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *QueryLastNFTEventNonceByAddrResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if m.LastNftEventNonce != 0 {
+		i = encodeVarintQuery(dAtA, i, uint64(m.LastNftEventNonce))
+		i--
+		dAtA[i] = 0x8
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *QueryOutgoingSendNFTToEthsRequest) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *QueryOutgoingSendNFTToEthsRequest) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *QueryOutgoingSendNFTToEthsRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	return len(dAtA) - i, nil
+}
+
+func (m *QueryOutgoingSendNFTToEthsResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *QueryOutgoingSendNFTToEthsResponse) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *QueryOutgoingSendNFTToEthsResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if len(m.OutgoingNfts) > 0 {
+		for iNdEx := len(m.OutgoingNfts) - 1; iNdEx >= 0; iNdEx-- {
+			{
+				size, err := m.OutgoingNfts[iNdEx].MarshalToSizedBuffer(dAtA[:i])
+				if err != nil {
+					return 0, err
+				}
+				i -= size
+				i = encodeVarintQuery(dAtA, i, uint64(size))
+			}
+			i--
+			dAtA[i] = 0xa
+		}
+	}
+	return len(dAtA) - i, nil
+}
+
 func (m *QueryLastObservedNFTEthBlockRequest) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
@@ -891,8 +1521,8 @@ func (m *QueryLastObservedNFTEthBlockResponse) MarshalToSizedBuffer(dAtA []byte)
 	_ = i
 	var l int
 	_ = l
-	if m.Block != 0 {
-		i = encodeVarintQuery(dAtA, i, uint64(m.Block))
+	if m.LastObservedNftEthBlock != 0 {
+		i = encodeVarintQuery(dAtA, i, uint64(m.LastObservedNftEthBlock))
 		i--
 		dAtA[i] = 0x8
 	}
@@ -942,8 +1572,8 @@ func (m *QueryLastObservedNFTEthNonceResponse) MarshalToSizedBuffer(dAtA []byte)
 	_ = i
 	var l int
 	_ = l
-	if m.Nonce != 0 {
-		i = encodeVarintQuery(dAtA, i, uint64(m.Nonce))
+	if m.LastObservedNftEthNonce != 0 {
+		i = encodeVarintQuery(dAtA, i, uint64(m.LastObservedNftEthNonce))
 		i--
 		dAtA[i] = 0x8
 	}
@@ -970,6 +1600,16 @@ func (m *QueryNFTAttestationsRequest) MarshalToSizedBuffer(dAtA []byte) (int, er
 	_ = i
 	var l int
 	_ = l
+	if m.UseV1Key {
+		i--
+		if m.UseV1Key {
+			dAtA[i] = 1
+		} else {
+			dAtA[i] = 0
+		}
+		i--
+		dAtA[i] = 0x30
+	}
 	if m.Height != 0 {
 		i = encodeVarintQuery(dAtA, i, uint64(m.Height))
 		i--
@@ -1022,10 +1662,10 @@ func (m *QueryNFTAttestationsResponse) MarshalToSizedBuffer(dAtA []byte) (int, e
 	_ = i
 	var l int
 	_ = l
-	if len(m.Attestations) > 0 {
-		for iNdEx := len(m.Attestations) - 1; iNdEx >= 0; iNdEx-- {
+	if len(m.NftAttestations) > 0 {
+		for iNdEx := len(m.NftAttestations) - 1; iNdEx >= 0; iNdEx-- {
 			{
-				size, err := m.Attestations[iNdEx].MarshalToSizedBuffer(dAtA[:i])
+				size, err := m.NftAttestations[iNdEx].MarshalToSizedBuffer(dAtA[:i])
 				if err != nil {
 					return 0, err
 				}
@@ -1039,7 +1679,7 @@ func (m *QueryNFTAttestationsResponse) MarshalToSizedBuffer(dAtA []byte) (int, e
 	return len(dAtA) - i, nil
 }
 
-func (m *QueryPendingNFTIbcAutoForwards) Marshal() (dAtA []byte, err error) {
+func (m *QueryPendingNFTIbcAutoForwardsRequest) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -1049,12 +1689,12 @@ func (m *QueryPendingNFTIbcAutoForwards) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *QueryPendingNFTIbcAutoForwards) MarshalTo(dAtA []byte) (int, error) {
+func (m *QueryPendingNFTIbcAutoForwardsRequest) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *QueryPendingNFTIbcAutoForwards) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *QueryPendingNFTIbcAutoForwardsRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
@@ -1087,10 +1727,10 @@ func (m *QueryPendingNFTIbcAutoForwardsResponse) MarshalToSizedBuffer(dAtA []byt
 	_ = i
 	var l int
 	_ = l
-	if len(m.PendingIbcAutoForwards) > 0 {
-		for iNdEx := len(m.PendingIbcAutoForwards) - 1; iNdEx >= 0; iNdEx-- {
+	if len(m.PendingNftIbcAutoForwards) > 0 {
+		for iNdEx := len(m.PendingNftIbcAutoForwards) - 1; iNdEx >= 0; iNdEx-- {
 			{
-				size, err := m.PendingIbcAutoForwards[iNdEx].MarshalToSizedBuffer(dAtA[:i])
+				size, err := m.PendingNftIbcAutoForwards[iNdEx].MarshalToSizedBuffer(dAtA[:i])
 				if err != nil {
 					return 0, err
 				}
@@ -1100,6 +1740,122 @@ func (m *QueryPendingNFTIbcAutoForwardsResponse) MarshalToSizedBuffer(dAtA []byt
 			i--
 			dAtA[i] = 0xa
 		}
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *QueryERC721ToClassIdRequest) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *QueryERC721ToClassIdRequest) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *QueryERC721ToClassIdRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if len(m.Erc721) > 0 {
+		i -= len(m.Erc721)
+		copy(dAtA[i:], m.Erc721)
+		i = encodeVarintQuery(dAtA, i, uint64(len(m.Erc721)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *QueryERC721ToClassIdResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *QueryERC721ToClassIdResponse) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *QueryERC721ToClassIdResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if m.ClassId != 0 {
+		i = encodeVarintQuery(dAtA, i, uint64(m.ClassId))
+		i--
+		dAtA[i] = 0x8
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *QueryClassIdToERC721Request) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *QueryClassIdToERC721Request) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *QueryClassIdToERC721Request) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if m.ClassId != 0 {
+		i = encodeVarintQuery(dAtA, i, uint64(m.ClassId))
+		i--
+		dAtA[i] = 0x8
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *QueryClassIdToERC721Response) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *QueryClassIdToERC721Response) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *QueryClassIdToERC721Response) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if len(m.Erc721) > 0 {
+		i -= len(m.Erc721)
+		copy(dAtA[i:], m.Erc721)
+		i = encodeVarintQuery(dAtA, i, uint64(len(m.Erc721)))
+		i--
+		dAtA[i] = 0xa
 	}
 	return len(dAtA) - i, nil
 }
@@ -1135,6 +1891,55 @@ func (m *QueryParamsResponse) Size() (n int) {
 	return n
 }
 
+func (m *QueryLastNFTEventNonceByAddrRequest) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.Address)
+	if l > 0 {
+		n += 1 + l + sovQuery(uint64(l))
+	}
+	return n
+}
+
+func (m *QueryLastNFTEventNonceByAddrResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	if m.LastNftEventNonce != 0 {
+		n += 1 + sovQuery(uint64(m.LastNftEventNonce))
+	}
+	return n
+}
+
+func (m *QueryOutgoingSendNFTToEthsRequest) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	return n
+}
+
+func (m *QueryOutgoingSendNFTToEthsResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	if len(m.OutgoingNfts) > 0 {
+		for _, e := range m.OutgoingNfts {
+			l = e.Size()
+			n += 1 + l + sovQuery(uint64(l))
+		}
+	}
+	return n
+}
+
 func (m *QueryLastObservedNFTEthBlockRequest) Size() (n int) {
 	if m == nil {
 		return 0
@@ -1150,8 +1955,8 @@ func (m *QueryLastObservedNFTEthBlockResponse) Size() (n int) {
 	}
 	var l int
 	_ = l
-	if m.Block != 0 {
-		n += 1 + sovQuery(uint64(m.Block))
+	if m.LastObservedNftEthBlock != 0 {
+		n += 1 + sovQuery(uint64(m.LastObservedNftEthBlock))
 	}
 	return n
 }
@@ -1171,8 +1976,8 @@ func (m *QueryLastObservedNFTEthNonceResponse) Size() (n int) {
 	}
 	var l int
 	_ = l
-	if m.Nonce != 0 {
-		n += 1 + sovQuery(uint64(m.Nonce))
+	if m.LastObservedNftEthNonce != 0 {
+		n += 1 + sovQuery(uint64(m.LastObservedNftEthNonce))
 	}
 	return n
 }
@@ -1200,6 +2005,9 @@ func (m *QueryNFTAttestationsRequest) Size() (n int) {
 	if m.Height != 0 {
 		n += 1 + sovQuery(uint64(m.Height))
 	}
+	if m.UseV1Key {
+		n += 2
+	}
 	return n
 }
 
@@ -1209,8 +2017,8 @@ func (m *QueryNFTAttestationsResponse) Size() (n int) {
 	}
 	var l int
 	_ = l
-	if len(m.Attestations) > 0 {
-		for _, e := range m.Attestations {
+	if len(m.NftAttestations) > 0 {
+		for _, e := range m.NftAttestations {
 			l = e.Size()
 			n += 1 + l + sovQuery(uint64(l))
 		}
@@ -1218,7 +2026,7 @@ func (m *QueryNFTAttestationsResponse) Size() (n int) {
 	return n
 }
 
-func (m *QueryPendingNFTIbcAutoForwards) Size() (n int) {
+func (m *QueryPendingNFTIbcAutoForwardsRequest) Size() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -1236,11 +2044,61 @@ func (m *QueryPendingNFTIbcAutoForwardsResponse) Size() (n int) {
 	}
 	var l int
 	_ = l
-	if len(m.PendingIbcAutoForwards) > 0 {
-		for _, e := range m.PendingIbcAutoForwards {
+	if len(m.PendingNftIbcAutoForwards) > 0 {
+		for _, e := range m.PendingNftIbcAutoForwards {
 			l = e.Size()
 			n += 1 + l + sovQuery(uint64(l))
 		}
+	}
+	return n
+}
+
+func (m *QueryERC721ToClassIdRequest) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.Erc721)
+	if l > 0 {
+		n += 1 + l + sovQuery(uint64(l))
+	}
+	return n
+}
+
+func (m *QueryERC721ToClassIdResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	if m.ClassId != 0 {
+		n += 1 + sovQuery(uint64(m.ClassId))
+	}
+	return n
+}
+
+func (m *QueryClassIdToERC721Request) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	if m.ClassId != 0 {
+		n += 1 + sovQuery(uint64(m.ClassId))
+	}
+	return n
+}
+
+func (m *QueryClassIdToERC721Response) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.Erc721)
+	if l > 0 {
+		n += 1 + l + sovQuery(uint64(l))
 	}
 	return n
 }
@@ -1384,6 +2242,291 @@ func (m *QueryParamsResponse) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
+func (m *QueryLastNFTEventNonceByAddrRequest) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowQuery
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: QueryLastNFTEventNonceByAddrRequest: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: QueryLastNFTEventNonceByAddrRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Address", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthQuery
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Address = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipQuery(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *QueryLastNFTEventNonceByAddrResponse) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowQuery
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: QueryLastNFTEventNonceByAddrResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: QueryLastNFTEventNonceByAddrResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field LastNftEventNonce", wireType)
+			}
+			m.LastNftEventNonce = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.LastNftEventNonce |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		default:
+			iNdEx = preIndex
+			skippy, err := skipQuery(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *QueryOutgoingSendNFTToEthsRequest) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowQuery
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: QueryOutgoingSendNFTToEthsRequest: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: QueryOutgoingSendNFTToEthsRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		default:
+			iNdEx = preIndex
+			skippy, err := skipQuery(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *QueryOutgoingSendNFTToEthsResponse) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowQuery
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: QueryOutgoingSendNFTToEthsResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: QueryOutgoingSendNFTToEthsResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field OutgoingNfts", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthQuery
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.OutgoingNfts = append(m.OutgoingNfts, OutgoingNFT{})
+			if err := m.OutgoingNfts[len(m.OutgoingNfts)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipQuery(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
 func (m *QueryLastObservedNFTEthBlockRequest) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -1465,9 +2608,9 @@ func (m *QueryLastObservedNFTEthBlockResponse) Unmarshal(dAtA []byte) error {
 		switch fieldNum {
 		case 1:
 			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Block", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field LastObservedNftEthBlock", wireType)
 			}
-			m.Block = 0
+			m.LastObservedNftEthBlock = 0
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return ErrIntOverflowQuery
@@ -1477,7 +2620,7 @@ func (m *QueryLastObservedNFTEthBlockResponse) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				m.Block |= uint64(b&0x7F) << shift
+				m.LastObservedNftEthBlock |= uint64(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}
@@ -1584,9 +2727,9 @@ func (m *QueryLastObservedNFTEthNonceResponse) Unmarshal(dAtA []byte) error {
 		switch fieldNum {
 		case 1:
 			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Nonce", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field LastObservedNftEthNonce", wireType)
 			}
-			m.Nonce = 0
+			m.LastObservedNftEthNonce = 0
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return ErrIntOverflowQuery
@@ -1596,7 +2739,7 @@ func (m *QueryLastObservedNFTEthNonceResponse) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				m.Nonce |= uint64(b&0x7F) << shift
+				m.LastObservedNftEthNonce |= uint64(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}
@@ -1772,6 +2915,26 @@ func (m *QueryNFTAttestationsRequest) Unmarshal(dAtA []byte) error {
 					break
 				}
 			}
+		case 6:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field UseV1Key", wireType)
+			}
+			var v int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				v |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			m.UseV1Key = bool(v != 0)
 		default:
 			iNdEx = preIndex
 			skippy, err := skipQuery(dAtA[iNdEx:])
@@ -1824,7 +2987,7 @@ func (m *QueryNFTAttestationsResponse) Unmarshal(dAtA []byte) error {
 		switch fieldNum {
 		case 1:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Attestations", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field NftAttestations", wireType)
 			}
 			var msglen int
 			for shift := uint(0); ; shift += 7 {
@@ -1851,8 +3014,8 @@ func (m *QueryNFTAttestationsResponse) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.Attestations = append(m.Attestations, NFTAttestation{})
-			if err := m.Attestations[len(m.Attestations)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+			m.NftAttestations = append(m.NftAttestations, NFTAttestation{})
+			if err := m.NftAttestations[len(m.NftAttestations)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
 				return err
 			}
 			iNdEx = postIndex
@@ -1877,7 +3040,7 @@ func (m *QueryNFTAttestationsResponse) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *QueryPendingNFTIbcAutoForwards) Unmarshal(dAtA []byte) error {
+func (m *QueryPendingNFTIbcAutoForwardsRequest) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -1900,10 +3063,10 @@ func (m *QueryPendingNFTIbcAutoForwards) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: QueryPendingNFTIbcAutoForwards: wiretype end group for non-group")
+			return fmt.Errorf("proto: QueryPendingNFTIbcAutoForwardsRequest: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: QueryPendingNFTIbcAutoForwards: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: QueryPendingNFTIbcAutoForwardsRequest: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
@@ -1977,7 +3140,7 @@ func (m *QueryPendingNFTIbcAutoForwardsResponse) Unmarshal(dAtA []byte) error {
 		switch fieldNum {
 		case 1:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field PendingIbcAutoForwards", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field PendingNftIbcAutoForwards", wireType)
 			}
 			var msglen int
 			for shift := uint(0); ; shift += 7 {
@@ -2004,10 +3167,312 @@ func (m *QueryPendingNFTIbcAutoForwardsResponse) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.PendingIbcAutoForwards = append(m.PendingIbcAutoForwards, &PendingNFTIbcAutoForward{})
-			if err := m.PendingIbcAutoForwards[len(m.PendingIbcAutoForwards)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+			m.PendingNftIbcAutoForwards = append(m.PendingNftIbcAutoForwards, &PendingNFTIbcAutoForward{})
+			if err := m.PendingNftIbcAutoForwards[len(m.PendingNftIbcAutoForwards)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
 				return err
 			}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipQuery(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *QueryERC721ToClassIdRequest) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowQuery
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: QueryERC721ToClassIdRequest: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: QueryERC721ToClassIdRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Erc721", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthQuery
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Erc721 = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipQuery(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *QueryERC721ToClassIdResponse) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowQuery
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: QueryERC721ToClassIdResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: QueryERC721ToClassIdResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ClassId", wireType)
+			}
+			m.ClassId = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.ClassId |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		default:
+			iNdEx = preIndex
+			skippy, err := skipQuery(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *QueryClassIdToERC721Request) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowQuery
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: QueryClassIdToERC721Request: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: QueryClassIdToERC721Request: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ClassId", wireType)
+			}
+			m.ClassId = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.ClassId |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		default:
+			iNdEx = preIndex
+			skippy, err := skipQuery(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *QueryClassIdToERC721Response) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowQuery
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: QueryClassIdToERC721Response: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: QueryClassIdToERC721Response: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Erc721", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthQuery
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Erc721 = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
 		default:
 			iNdEx = preIndex

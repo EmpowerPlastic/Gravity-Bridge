@@ -16,11 +16,9 @@ enum NFTClaimType {
   // A claim for a SendNFTToCosmos transaction
   NFT_CLAIM_TYPE_SEND_NFT_TO_COSMOS      = 1;
 
-  // TODO: WILL WE USE THIS?
   // A claim for when an NFT is sent to Ethereum
   NFT_CLAIM_TYPE_SEND_NFT_TO_ETH   = 2;
 
-  // TODO: ASK JAKUB ABOUT THIS ONE: IS THIS THE NFT-GRAVITY CONTRACT?
   // A claim for when an erc721 contract has been deployed
   NFT_CLAIM_TYPE_ERC721_DEPLOYED      = 3;
 }
@@ -71,18 +69,19 @@ message EventInvalidSendNFTToCosmosReceiver {
 // EventSendNFTToCosmos is emitted when a CLAIM_TYPE_SEND_NFT_TO_COSMOS has been processed (observed + handled)
 message EventSendNFTToCosmos {
   string contract = 1;
-  string class_id = 3;
-  string token_id = 4;
-  string nonce    = 5;
+  string class_id = 2;
+  string token_id = 3;
+  string nonce    = 4;
 }
 
 // EventSendNFTToCosmosLocal is emitted when NFT has been sent to a local (gravity) address,
 // rather than added to the ibc forwarding queue. This happens as part of the handling of CLAIM_TYPE_SEND_NFT_TO_COSMOS.
 message EventSendNFTToCosmosLocal {
-  string nonce = 1;
-  string receiver = 2;
-  string class_id = 3;
-  string token_id = 4;
+  string contract = 1;
+  string class_id = 2;
+  string token_id = 3;
+  string nonce = 4;
+  string receiver = 5;
 }
 
 // EventSendNFTToCosmosPendingIbcAutoForward is emitted when NFT has been added to the IBC auto forwarding queue.
