@@ -585,7 +585,8 @@ func NewGravityApp(
 		&accountKeeper,
 		&bech32IbcKeeper,
 		&nftKeeper,
-		&ibcnftTransferKeeper)
+		&ibcnftTransferKeeper,
+		authtypes.NewModuleAddress(govtypes.ModuleName).String())
 	app.gravitynftKeeper = &gravitynftKeeper
 
 	// Add the staking hooks from distribution, slashing, and gravity to staking

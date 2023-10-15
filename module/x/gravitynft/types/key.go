@@ -7,8 +7,9 @@ import (
 )
 
 const (
+	// TODO: Is this the final module name? Should we change the name of the folder also?
 	// ModuleName is the name of the module
-	ModuleName = "gravitynft"
+	ModuleName = "erc721gravity"
 
 	// StoreKey to be used when creating the KVStore
 	StoreKey = ModuleName
