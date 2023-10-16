@@ -7,8 +7,14 @@ import (
 
 // InitGenesis starts a chain from a genesis state
 func InitGenesis(ctx sdk.Context, k Keeper, data types.GenesisState) {
+	if err := k.setParams(ctx, *data.Params); err != nil {
+		panic(err)
+	}
+
+	k.SetLastObservedEventNonce(ctx, data.GravityNonces.LastObservedNftNonce)
+	// TODO: restore slash send NFT to ETH
+
 	// TODO: Implement me!
-	panic("InitGenesis not implemented yet")
 }
 
 // ExportGenesis exports all the state needed to restart the chain

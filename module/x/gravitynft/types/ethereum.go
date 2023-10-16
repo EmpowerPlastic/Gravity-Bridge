@@ -3,6 +3,7 @@ package types
 import (
 	"fmt"
 	gravitytypes "github.com/Gravity-Bridge/Gravity-Bridge/module/x/gravity/types"
+	"strings"
 )
 
 const (
@@ -25,5 +26,5 @@ const (
 
 // GravityERC721ClassId converts an EthAddress to a gravity cosmos class id for ERC721 tokens
 func GravityERC721ClassId(tokenContract gravitytypes.EthAddress) string {
-	return fmt.Sprintf("%s%s%s", GravityNFTClassIDPrefix, GravityNFTClassIDSeparator, tokenContract.GetAddress().Hex())
+	return fmt.Sprintf("%s%s%s", GravityNFTClassIDPrefix, GravityNFTClassIDSeparator, strings.ToLower(tokenContract.GetAddress().Hex()))
 }

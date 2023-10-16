@@ -1,8 +1,9 @@
-package keeper
+package keeper_test
 
 import (
 	"bytes"
 	"fmt"
+	gravitynftkeeper "github.com/Gravity-Bridge/Gravity-Bridge/module/x/gravitynft/keeper"
 	"github.com/Gravity-Bridge/Gravity-Bridge/module/x/gravitynft/types"
 	codectypes "github.com/cosmos/cosmos-sdk/codec/types"
 	sdktypes "github.com/cosmos/cosmos-sdk/types"
@@ -77,7 +78,7 @@ func TestGetMostRecentAttestations(t *testing.T) {
 
 // TODO: Test the nonces and last observered etc
 
-func createAttestations(t *testing.T, length int, k Keeper, ctx sdktypes.Context) ([]types.MsgSendNFTToCosmosClaim, []codectypes.Any, [][]byte) {
+func createAttestations(t *testing.T, length int, k gravitynftkeeper.Keeper, ctx sdktypes.Context) ([]types.MsgSendNFTToCosmosClaim, []codectypes.Any, [][]byte) {
 	msgs := make([]types.MsgSendNFTToCosmosClaim, 0, length)
 	anys := make([]codectypes.Any, 0, length)
 	hashes := make([][]byte, 0, length)

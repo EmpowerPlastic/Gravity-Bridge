@@ -15,7 +15,7 @@ import (
 
 // nolint: exhaustruct
 func TestQueryGetNFTAttestations(t *testing.T) {
-	input := keeper.CreateTestEnv(t)
+	input := CreateTestEnv(t)
 	encCfg := app.MakeEncodingConfig()
 	k := input.GravityNFTKeeper
 	ctx := input.Context
@@ -25,7 +25,7 @@ func TestQueryGetNFTAttestations(t *testing.T) {
 	queryClient := types.NewQueryClient(queryHelper)
 
 	numAttestations := 10
-	createAttestations(t, k, ctx, numAttestations)
+	setAttestations(t, k, ctx, numAttestations)
 
 	testCases := []struct {
 		name      string
@@ -124,7 +124,7 @@ func TestQueryGetNFTAttestations(t *testing.T) {
 	}
 }
 
-func createAttestations(t *testing.T, k keeper.Keeper, ctx sdk.Context, length int) {
+func setAttestations(t *testing.T, k keeper.Keeper, ctx sdk.Context, length int) {
 	t.Helper()
 
 	for i := 0; i < length; i++ {

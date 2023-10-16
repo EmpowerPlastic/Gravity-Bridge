@@ -9,20 +9,20 @@ import (
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 )
 
-type msgServer struct {
+type MsgServer struct {
 	Keeper
 }
 
 // nolint: exhaustruct
-var _ types.MsgServer = msgServer{}
+var _ types.MsgServer = MsgServer{}
 
 // NewMsgServerImpl returns an implementation of the gov MsgServer interface
 // for the provided Keeper.
 func NewMsgServerImpl(keeper Keeper) types.MsgServer {
-	return &msgServer{Keeper: keeper}
+	return &MsgServer{Keeper: keeper}
 }
 
-func (k msgServer) UpdateParams(c context.Context, msg *types.MsgUpdateParams) (*types.MsgUpdateParamsResponse, error) {
+func (k MsgServer) UpdateParams(c context.Context, msg *types.MsgUpdateParams) (*types.MsgUpdateParamsResponse, error) {
 	if k.authority != msg.Authority {
 		return nil, errors.Wrapf(sdkerrors.ErrUnauthorized, "invalid authority; expected %s, got %s", k.authority, msg.Authority)
 	}
@@ -36,7 +36,7 @@ func (k msgServer) UpdateParams(c context.Context, msg *types.MsgUpdateParams) (
 	return &types.MsgUpdateParamsResponse{}, nil
 }
 
-func (k msgServer) SendNFTToCosmosClaim(c context.Context, msg *types.MsgSendNFTToCosmosClaim) (*types.MsgSendNFTToCosmosClaimResponse, error) {
+func (k MsgServer) SendNFTToCosmosClaim(c context.Context, msg *types.MsgSendNFTToCosmosClaim) (*types.MsgSendNFTToCosmosClaimResponse, error) {
 	ctx := sdk.UnwrapSDKContext(c)
 
 	if err := k.gravityKeeper.CheckOrchestratorValidatorInSet(ctx, msg.Orchestrator); err != nil {
@@ -57,7 +57,7 @@ func (k msgServer) SendNFTToCosmosClaim(c context.Context, msg *types.MsgSendNFT
 
 // claimHandlerCommon is an internal function that provides common code for processing claims once they are
 // translated from the message to the Ethereum claim interface
-func (k msgServer) claimHandlerCommon(ctx sdk.Context, msgAny *codectypes.Any, msg types.EthereumNFTClaim) error {
+func (k MsgServer) claimHandlerCommon(ctx sdk.Context, msgAny *codectypes.Any, msg types.EthereumNFTClaim) error {
 	// Add the claim to the store
 	_, err := k.Attest(ctx, msg, msgAny)
 	if err != nil {
@@ -78,27 +78,27 @@ func (k msgServer) claimHandlerCommon(ctx sdk.Context, msgAny *codectypes.Any, m
 	)
 }
 
-func (k msgServer) SendNFTToEth(c context.Context, msg *types.MsgSendNFTToEth) (*types.MsgSendNFTToEthResponse, error) {
+func (k MsgServer) SendNFTToEth(c context.Context, msg *types.MsgSendNFTToEth) (*types.MsgSendNFTToEthResponse, error) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (k msgServer) ExecuteIbcNFTAutoForwards(c context.Context, msg *types.MsgExecuteIbcNFTAutoForwards) (*types.MsgExecuteIbcNFTAutoForwardsResponse, error) {
+func (k MsgServer) ExecuteIbcNFTAutoForwards(c context.Context, msg *types.MsgExecuteIbcNFTAutoForwards) (*types.MsgExecuteIbcNFTAutoForwardsResponse, error) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (k msgServer) SendNFTToEthClaim(c context.Context, msg *types.MsgSendNFTToEthClaim) (*types.MsgSendNFTToEthClaimResponse, error) {
+func (k MsgServer) SendNFTToEthClaim(c context.Context, msg *types.MsgSendNFTToEthClaim) (*types.MsgSendNFTToEthClaimResponse, error) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (k msgServer) ERC721DeployedClaim(c context.Context, msg *types.MsgERC721DeployedClaim) (*types.MsgERC721DeployedClaimResponse, error) {
+func (k MsgServer) ERC721DeployedClaim(c context.Context, msg *types.MsgERC721DeployedClaim) (*types.MsgERC721DeployedClaimResponse, error) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (k msgServer) CancelSendNFTToEth(c context.Context, msg *types.MsgCancelSendNFTToEth) (*types.MsgCancelSendNFTToEthResponse, error) {
+func (k MsgServer) CancelSendNFTToEth(c context.Context, msg *types.MsgCancelSendNFTToEth) (*types.MsgCancelSendNFTToEthResponse, error) {
 	//TODO implement me
 	panic("implement me")
 }

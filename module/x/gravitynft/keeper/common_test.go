@@ -1,4 +1,4 @@
-package keeper
+package keeper_test
 
 import (
 	"bytes"
@@ -6,6 +6,7 @@ import (
 	gravityparams "github.com/Gravity-Bridge/Gravity-Bridge/module/app/params"
 	gravitykeeper "github.com/Gravity-Bridge/Gravity-Bridge/module/x/gravity/keeper"
 	gravitytypes "github.com/Gravity-Bridge/Gravity-Bridge/module/x/gravity/types"
+	gravitynftkeeper "github.com/Gravity-Bridge/Gravity-Bridge/module/x/gravitynft/keeper"
 	"github.com/Gravity-Bridge/Gravity-Bridge/module/x/gravitynft/types"
 	"github.com/Gravity-Bridge/Gravity-Bridge/module/x/internft"
 	bech32ibckeeper "github.com/althea-net/bech32-ibc/x/bech32ibc/keeper"
@@ -242,7 +243,7 @@ var (
 
 // TestInput stores the various keepers required to test gravity
 type TestInput struct {
-	GravityNFTKeeper  Keeper
+	GravityNFTKeeper  gravitynftkeeper.Keeper
 	GravityKeeper     gravitykeeper.Keeper
 	AccountKeeper     authkeeper.AccountKeeper
 	StakingKeeper     stakingkeeper.Keeper
@@ -251,6 +252,8 @@ type TestInput struct {
 	BankKeeper        bankkeeper.BaseKeeper
 	GovKeeper         govkeeper.Keeper
 	IbcTransferKeeper ibctransferkeeper.Keeper
+	NftKeeper 		  nftkeeper.Keeper
+	Bech32IBCKeeper   bech32ibckeeper.Keeper
 	Context           sdk.Context
 	Marshaler         codec.Codec
 	LegacyAmino       *codec.LegacyAmino
@@ -339,8 +342,6 @@ func CreateTestEnv(t *testing.T) TestInput {
 	paramsKeeper.Subspace(stakingtypes.ModuleName)
 	paramsKeeper.Subspace(distrtypes.ModuleName)
 	paramsKeeper.Subspace(govtypes.ModuleName)
-	// TODO: ADD HERE WHEN/IF WE DO NFT PARAMSPACE
-	// paramsKeeper.Subspace(types.DefaultParamspace)
 	paramsKeeper.Subspace(gravitytypes.DefaultParamspace)
 	paramsKeeper.Subspace(slashingtypes.ModuleName)
 	paramsKeeper.Subspace(ibchost.ModuleName)
@@ -357,6 +358,7 @@ func CreateTestEnv(t *testing.T) TestInput {
 		gravitytypes.ModuleName:        {authtypes.Minter, authtypes.Burner},
 		ibctransfertypes.ModuleName:    {authtypes.Minter, authtypes.Burner},
 		nfttypes.ModuleName:            nil,
+		types.ModuleName: 				nil,
 	}
 
 	accountKeeper := authkeeper.NewAccountKeeper(
@@ -519,7 +521,7 @@ func CreateTestEnv(t *testing.T) TestInput {
 
 	gravityKeeper.SetParams(ctx, TestingGravityParams)
 
-	gravityNFTKeeper := NewKeeper(gravityNFTKey, marshaler, &gravityKeeper, &stakingKeeper, &accountKeeper,
+	gravityNFTKeeper := gravitynftkeeper.NewKeeper(gravityNFTKey, marshaler, &gravityKeeper, &stakingKeeper, &accountKeeper,
 		&bech32IbcKeeper, &nftKeeper, &nftTransferKeeper, authtypes.NewModuleAddress(govtypes.ModuleName).String())
 	// TODO: Set params and any other genesis stuffs
 
@@ -533,6 +535,8 @@ func CreateTestEnv(t *testing.T) TestInput {
 		BankKeeper:        bankKeeper,
 		GovKeeper:         govKeeper,
 		IbcTransferKeeper: ibcTransferKeeper,
+		NftKeeper: 		   nftKeeper,
+		Bech32IBCKeeper:   bech32IbcKeeper,
 		Context:           ctx,
 		Marshaler:         marshaler,
 		LegacyAmino:       cdc,
