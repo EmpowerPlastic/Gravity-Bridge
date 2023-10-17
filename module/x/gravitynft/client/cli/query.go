@@ -142,7 +142,7 @@ func GetCmdPendingNFTIbcAutoForwards() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "pending-nft-ibc-auto-forwards [optional limit]",
 		Short: "Query SendNFTToCosmos transactions waiting to be forwarded over IBC",
-		Args:  cobra.MaximumNArgs(1),
+		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx, err := client.GetClientQueryContext(cmd)
 			if err != nil {

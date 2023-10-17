@@ -196,6 +196,7 @@ var (
 		gravitytypes.ModuleName:        {authtypes.Minter, authtypes.Burner},
 		icatypes.ModuleName:            nil,
 		nfttypes.ModuleName:            nil,
+		gravitynfttypes.ModuleName: 	nil,
 	}
 
 	// module accounts that are allowed to receive tokens
