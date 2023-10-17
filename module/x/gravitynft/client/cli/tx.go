@@ -9,16 +9,11 @@ import (
 	"github.com/spf13/cobra"
 	"strconv"
 
-	"github.com/Gravity-Bridge/Gravity-Bridge/module/x/gravitynft/keeper"
 	"github.com/Gravity-Bridge/Gravity-Bridge/module/x/gravitynft/types"
 )
 
 // GetTxCmd bundles all the subcmds together so they appear under `gravitynft tx`
 func GetTxCmd() *cobra.Command {
-	// needed for governance proposal txs in cli case
-	// internal check prevents double registration in node case
-	keeper.RegisterProposalTypes()
-
 	// nolint: exhaustruct
 	gravitynftTxCmd := &cobra.Command{
 		Use:                        types.ModuleName,

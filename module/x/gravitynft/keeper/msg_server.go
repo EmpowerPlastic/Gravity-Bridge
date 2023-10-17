@@ -112,3 +112,17 @@ func (k MsgServer) CancelSendNFTToEth(c context.Context, msg *types.MsgCancelSen
 	//TODO implement me
 	panic("implement me")
 }
+
+func (k MsgServer) UnhaltNFTBridge(c context.Context, msg *types.MsgUnhaltNFTBridge) (*types.MsgUnhaltNFTBridgeResponse, error) {
+	ctx := sdk.UnwrapSDKContext(c)
+
+	if k.authority != msg.Authority {
+		return nil, errors.Wrapf(sdkerrors.ErrUnauthorized, "invalid authority; expected %s, got %s", k.authority, msg.Authority)
+	}
+
+	if err := k.pruneAttestationsAfterNonce(ctx, msg.TargetNonce); err != nil {
+		return nil, err
+	}
+
+	return &types.MsgUnhaltNFTBridgeResponse{}, nil
+}

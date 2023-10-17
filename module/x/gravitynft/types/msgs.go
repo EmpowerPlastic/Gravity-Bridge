@@ -18,6 +18,7 @@ var (
 	_ sdk.Msg = &MsgSendNFTToEth{}
 	_ sdk.Msg = &MsgSendNFTToEthClaim{}
 	_ sdk.Msg = &MsgCancelSendNFTToEth{}
+	_ sdk.Msg = &MsgUnhaltNFTBridge{}
 )
 
 func (msg *MsgUpdateParams) ValidateBasic() error {
@@ -131,6 +132,22 @@ func (msg *MsgCancelSendNFTToEth) ValidateBasic() error {
 func (msg *MsgCancelSendNFTToEth) GetSigners() []sdk.AccAddress {
 	//TODO implement me
 	panic("implement me")
+}
+
+func (msg *MsgUnhaltNFTBridge) ValidateBasic() error {
+	if _, err := sdk.AccAddressFromBech32(msg.Authority); err != nil {
+		return sdkerrors.Wrap(errors.ErrInvalidAddress, "authority")
+	}
+	return nil
+}
+
+func (msg *MsgUnhaltNFTBridge) GetSigners() []sdk.AccAddress {
+	acc, err := sdk.AccAddressFromBech32(msg.Authority)
+	if err != nil {
+		panic(err)
+	}
+
+	return []sdk.AccAddress{acc}
 }
 
 // EthereumNFTClaim represents a claim on ethereum state
