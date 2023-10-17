@@ -1,14 +1,14 @@
+import axios from "axios";
+import commandLineArgs from "command-line-args";
+import { ethers } from "ethers";
+import fs from "fs";
+import { exit } from "process";
 import { Gravity } from "./typechain/Gravity";
 import { GravityERC721 } from "./typechain/GravityERC721";
 import { TestERC20A } from "./typechain/TestERC20A";
 import { TestERC20B } from "./typechain/TestERC20B";
 import { TestERC20C } from "./typechain/TestERC20C";
 import { TestERC721A } from "./typechain/TestERC721A";
-import { ethers } from "ethers";
-import fs from "fs";
-import commandLineArgs from "command-line-args";
-import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from "axios";
-import { exit } from "process";
 
 const args = commandLineArgs([
   // the ethernum node used to deploy the contract
@@ -253,7 +253,8 @@ async function deploy() {
   const factoryERC721 = new ethers.ContractFactory(abiERC721, bytecodeERC721, wallet);
 
   const gravityERC721 = (await factoryERC721.deploy(
-    gravity.address
+    gravity.address,
+    gravityId
   ) as GravityERC721);
 
   await gravityERC721.deployed();

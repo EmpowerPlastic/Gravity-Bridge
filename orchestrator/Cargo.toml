@@ -1,6 +1,6 @@
 [workspace]
 members = ["orchestrator", "cosmos_gravity", "cosmos_gravitynft", "ethereum_gravity", "ethereum_gravitynft", "gravity_utils", "test_runner", "relayer", "gbt", "metrics_exporter"]
-default-members = ["gbt", "cosmos_gravitynft", "ethereum_gravitynft"]
+default-members = ["gbt"]
 resolver = "2"
 
 [workspace.dependencies]

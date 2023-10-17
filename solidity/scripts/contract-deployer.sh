@@ -5,5 +5,5 @@ contract-deployer.ts \
 --eth-node="http://localhost:8545" \
 --eth-privkey="0xb1bab011e03a9862664706fc3bbaa1b16651528e5f0e7fbfcbfdd8be302a13e7" \
 --contract=./artifacts/contracts/Gravity.sol/Gravity.json \
+--contractERC721=./artifacts/contracts/GravityERC721.sol/GravityERC721.json \
 --test-mode=true
-# --contractERC721=./artifacts/contracts/GravityERC721.sol/GravityERC721.json \
