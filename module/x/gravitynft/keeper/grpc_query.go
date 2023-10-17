@@ -2,11 +2,12 @@ package keeper
 
 import (
 	"context"
+	"strings"
+
 	sdkerrors "cosmossdk.io/errors"
 	"github.com/Gravity-Bridge/Gravity-Bridge/module/x/gravitynft/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/errors"
-	"strings"
 )
 
 // nolint: exhaustruct
@@ -103,8 +104,22 @@ func (k Keeper) GetPendingNFTIbcAutoForwards(c context.Context, req *types.Query
 }
 
 func (k Keeper) LastNFTEventNonceByAddr(c context.Context, req *types.QueryLastNFTEventNonceByAddrRequest) (*types.QueryLastNFTEventNonceByAddrResponse, error) {
-	//TODO implement me
-	panic("implement me")
+	ctx := sdk.UnwrapSDKContext(c)
+	var ret types.QueryLastNFTEventNonceByAddrResponse
+	addr, err := sdk.AccAddressFromBech32(req.Address)
+	if err != nil {
+		return nil, sdkerrors.Wrap(errors.ErrInvalidAddress, req.Address)
+	}
+	validator, found := k.gravityKeeper.GetOrchestratorValidator(ctx, addr)
+	if !found {
+		return nil, sdkerrors.Wrap(types.ErrUnknown, "address")
+	}
+	if err := sdk.VerifyAddressFormat(validator.GetOperator()); err != nil {
+		return nil, sdkerrors.Wrap(err, "invalid validator address")
+	}
+	lastEventNonce := k.GetLastEventNonceByValidator(ctx, validator.GetOperator())
+	ret.LastNftEventNonce = lastEventNonce
+	return &ret, nil
 }
 
 func (k Keeper) OutgoingSendNFTToEths(c context.Context, req *types.QueryOutgoingSendNFTToEthsRequest) (*types.QueryOutgoingSendNFTToEthsResponse, error) {
