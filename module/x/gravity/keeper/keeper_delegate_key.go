@@ -1,6 +1,7 @@
 package keeper
 
 import (
+	"github.com/cosmos/cosmos-sdk/types/errors"
 	"time"
 
 	sdkerrors "cosmossdk.io/errors"
@@ -16,6 +17,27 @@ import (
 ///////////////////////////
 //// ADDRESS DELEGATION ///
 ///////////////////////////
+
+// CheckOrchestratorValidatorInSet checks that the orchestrator refers to a validator that is
+// currently in the set
+func (k Keeper) CheckOrchestratorValidatorInSet(ctx sdk.Context, orchestrator string) error {
+	orchaddr, err := sdk.AccAddressFromBech32(orchestrator)
+	if err != nil {
+		return sdkerrors.Wrap(types.ErrInvalid, "acc address invalid")
+	}
+	validator, found := k.GetOrchestratorValidator(ctx, orchaddr)
+	if !found {
+		return sdkerrors.Wrap(types.ErrUnknown, "validator")
+	}
+
+	// return an error if the validator isn't in the active set
+	val := k.StakingKeeper.Validator(ctx, validator.GetOperator())
+	if val == nil || !val.IsBonded() {
+		return sdkerrors.Wrap(errors.ErrorInvalidSigner, "validator not in active set")
+	}
+
+	return nil
+}
 
 // SetOrchestratorValidator sets the Orchestrator key for a given validator
 func (k Keeper) SetOrchestratorValidator(ctx sdk.Context, val sdk.ValAddress, orch sdk.AccAddress) {

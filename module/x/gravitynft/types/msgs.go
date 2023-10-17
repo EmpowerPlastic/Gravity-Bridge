@@ -11,8 +11,34 @@ import (
 
 // nolint: exhaustruct
 var (
+	_ sdk.Msg = &MsgUpdateParams{}
 	_ sdk.Msg = &MsgSendNFTToCosmosClaim{}
+	_ sdk.Msg = &MsgERC721DeployedClaim{}
+	_ sdk.Msg = &MsgExecuteIbcNFTAutoForwards{}
+	_ sdk.Msg = &MsgSendNFTToEth{}
+	_ sdk.Msg = &MsgSendNFTToEthClaim{}
+	_ sdk.Msg = &MsgCancelSendNFTToEth{}
 )
+
+func (msg *MsgUpdateParams) ValidateBasic() error {
+	if _, err := sdk.AccAddressFromBech32(msg.Authority); err != nil {
+		return sdkerrors.Wrap(errors.ErrInvalidAddress, "authority")
+	}
+
+	if err := msg.Params.Validate(); err != nil {
+		return sdkerrors.Wrap(err, "params")
+	}
+	return nil
+}
+
+func (msg *MsgUpdateParams) GetSigners() []sdk.AccAddress {
+	acc, err := sdk.AccAddressFromBech32(msg.Authority)
+	if err != nil {
+		panic(err)
+	}
+
+	return []sdk.AccAddress{acc}
+}
 
 func (msg *MsgSendNFTToCosmosClaim) ValidateBasic() error {
 	if err := gravitytypes.ValidateEthAddress(msg.EthereumSender); err != nil {
@@ -47,6 +73,56 @@ func (msg *MsgSendNFTToCosmosClaim) GetSigners() []sdk.AccAddress {
 	return []sdk.AccAddress{acc}
 }
 
+func (m *MsgERC721DeployedClaim) ValidateBasic() error {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (m *MsgERC721DeployedClaim) GetSigners() []sdk.AccAddress {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (m *MsgExecuteIbcNFTAutoForwards) ValidateBasic() error {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (m *MsgExecuteIbcNFTAutoForwards) GetSigners() []sdk.AccAddress {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (m *MsgSendNFTToEth) ValidateBasic() error {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (m *MsgSendNFTToEth) GetSigners() []sdk.AccAddress {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (m *MsgSendNFTToEthClaim) ValidateBasic() error {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (m *MsgSendNFTToEthClaim) GetSigners() []sdk.AccAddress {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (m *MsgCancelSendNFTToEth) ValidateBasic() error {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (m *MsgCancelSendNFTToEth) GetSigners() []sdk.AccAddress {
+	//TODO implement me
+	panic("implement me")
+}
+
 // EthereumNFTClaim represents a claim on ethereum state
 type EthereumNFTClaim interface {
 	// All Ethereum claims that we relay from the Gravity contract and into the module
@@ -77,6 +153,8 @@ type EthereumNFTClaim interface {
 // nolint: exhaustruct
 var (
 	_ EthereumNFTClaim = &MsgSendNFTToCosmosClaim{}
+	_ EthereumNFTClaim = &MsgERC721DeployedClaim{}
+	_ EthereumNFTClaim = &MsgSendNFTToEthClaim{}
 )
 
 func (msg *MsgSendNFTToCosmosClaim) GetClaimer() sdk.AccAddress {
@@ -104,4 +182,44 @@ func (msg *MsgSendNFTToCosmosClaim) ClaimHash() ([]byte, error) {
 
 func (msg *MsgSendNFTToCosmosClaim) SetOrchestrator(orchestrator sdk.AccAddress) {
 	msg.Orchestrator = orchestrator.String()
+}
+
+func (m *MsgERC721DeployedClaim) GetClaimer() sdk.AccAddress {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (m *MsgERC721DeployedClaim) GetType() NFTClaimType {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (m *MsgERC721DeployedClaim) ClaimHash() ([]byte, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (m *MsgERC721DeployedClaim) SetOrchestrator(address sdk.AccAddress) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (m *MsgSendNFTToEthClaim) GetClaimer() sdk.AccAddress {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (m *MsgSendNFTToEthClaim) GetType() NFTClaimType {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (m *MsgSendNFTToEthClaim) ClaimHash() ([]byte, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (m *MsgSendNFTToEthClaim) SetOrchestrator(address sdk.AccAddress) {
+	//TODO implement me
+	panic("implement me")
 }

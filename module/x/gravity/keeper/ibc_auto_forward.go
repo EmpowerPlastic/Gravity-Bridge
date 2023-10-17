@@ -47,7 +47,7 @@ func (k Keeper) ValidatePendingIbcAutoForward(ctx sdk.Context, forward types.Pen
 	if err != nil {
 		return sdkerrors.Wrapf(bech32ibctypes.ErrInvalidHRP, "ForeignReciever %s has an invalid or unregistered prefix", forward.ForeignReceiver)
 	}
-	if forward.IbcChannel != hrpRecord.SourceChannel {
+	if forward.IbcChannel != hrpRecord.FungibleSourceChannel {
 		return sdkerrors.Wrapf(types.ErrMismatched, "IbcChannel %s does not match the registered prefix's IBC channel %v",
 			forward.IbcChannel, hrpRecord.String(),
 		)
