@@ -83,9 +83,19 @@ func (k MsgServer) SendNFTToEth(c context.Context, msg *types.MsgSendNFTToEth) (
 	panic("implement me")
 }
 
+// ExecuteIbcNFTAutoForwards moves pending IBC Auto-Forwards to their respective chains by calling ibcnft-transfer's Transfer
+// function with all the relevant information
+// Note: this endpoint and the related queue are necessary due to a Tendermint bug where events created in EndBlocker
+// do not appear. We process SendToCosmos observations in EndBlocker but are therefore unable to auto-forward these txs
+// in the same block. This endpoint triggers the creation of those ibc-transfer events which relayers watch for.
 func (k MsgServer) ExecuteIbcNFTAutoForwards(c context.Context, msg *types.MsgExecuteIbcNFTAutoForwards) (*types.MsgExecuteIbcNFTAutoForwardsResponse, error) {
-	//TODO implement me
-	panic("implement me")
+	ctx := sdk.UnwrapSDKContext(c)
+
+	if err := k.ProcessPendingIbcNFTAutoForwards(ctx, msg.GetForwardsToClear()); err != nil {
+		return nil, err
+	}
+
+	return &types.MsgExecuteIbcNFTAutoForwardsResponse{}, nil
 }
 
 func (k MsgServer) SendNFTToEthClaim(c context.Context, msg *types.MsgSendNFTToEthClaim) (*types.MsgSendNFTToEthClaimResponse, error) {

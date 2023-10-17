@@ -73,52 +73,62 @@ func (msg *MsgSendNFTToCosmosClaim) GetSigners() []sdk.AccAddress {
 	return []sdk.AccAddress{acc}
 }
 
-func (m *MsgERC721DeployedClaim) ValidateBasic() error {
+func (msg *MsgERC721DeployedClaim) ValidateBasic() error {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (m *MsgERC721DeployedClaim) GetSigners() []sdk.AccAddress {
+func (msg *MsgERC721DeployedClaim) GetSigners() []sdk.AccAddress {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (m *MsgExecuteIbcNFTAutoForwards) ValidateBasic() error {
+func (msg *MsgExecuteIbcNFTAutoForwards) ValidateBasic() error {
+	if msg.ForwardsToClear == 0 {
+		return fmt.Errorf("no forwards to clear")
+	}
+
+	if _, err := sdk.AccAddressFromBech32(msg.Executor); err != nil {
+		return sdkerrors.Wrap(err, "Unable to parse executor as a valid bech32 address")
+	}
+	return nil
+}
+
+func (msg *MsgExecuteIbcNFTAutoForwards) GetSigners() []sdk.AccAddress {
+	msg.ProtoMessage()
+	acc, err := sdk.AccAddressFromBech32(msg.Executor)
+	if err != nil {
+		panic(err)
+	}
+	return []sdk.AccAddress{acc}
+}
+
+func (msg *MsgSendNFTToEth) ValidateBasic() error {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (m *MsgExecuteIbcNFTAutoForwards) GetSigners() []sdk.AccAddress {
+func (msg *MsgSendNFTToEth) GetSigners() []sdk.AccAddress {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (m *MsgSendNFTToEth) ValidateBasic() error {
+func (msg *MsgSendNFTToEthClaim) ValidateBasic() error {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (m *MsgSendNFTToEth) GetSigners() []sdk.AccAddress {
+func (msg *MsgSendNFTToEthClaim) GetSigners() []sdk.AccAddress {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (m *MsgSendNFTToEthClaim) ValidateBasic() error {
+func (msg *MsgCancelSendNFTToEth) ValidateBasic() error {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (m *MsgSendNFTToEthClaim) GetSigners() []sdk.AccAddress {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (m *MsgCancelSendNFTToEth) ValidateBasic() error {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (m *MsgCancelSendNFTToEth) GetSigners() []sdk.AccAddress {
+func (msg *MsgCancelSendNFTToEth) GetSigners() []sdk.AccAddress {
 	//TODO implement me
 	panic("implement me")
 }
@@ -184,42 +194,42 @@ func (msg *MsgSendNFTToCosmosClaim) SetOrchestrator(orchestrator sdk.AccAddress)
 	msg.Orchestrator = orchestrator.String()
 }
 
-func (m *MsgERC721DeployedClaim) GetClaimer() sdk.AccAddress {
+func (msg *MsgERC721DeployedClaim) GetClaimer() sdk.AccAddress {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (m *MsgERC721DeployedClaim) GetType() NFTClaimType {
+func (msg *MsgERC721DeployedClaim) GetType() NFTClaimType {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (m *MsgERC721DeployedClaim) ClaimHash() ([]byte, error) {
+func (msg *MsgERC721DeployedClaim) ClaimHash() ([]byte, error) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (m *MsgERC721DeployedClaim) SetOrchestrator(address sdk.AccAddress) {
+func (msg *MsgERC721DeployedClaim) SetOrchestrator(address sdk.AccAddress) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (m *MsgSendNFTToEthClaim) GetClaimer() sdk.AccAddress {
+func (msg *MsgSendNFTToEthClaim) GetClaimer() sdk.AccAddress {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (m *MsgSendNFTToEthClaim) GetType() NFTClaimType {
+func (msg *MsgSendNFTToEthClaim) GetType() NFTClaimType {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (m *MsgSendNFTToEthClaim) ClaimHash() ([]byte, error) {
+func (msg *MsgSendNFTToEthClaim) ClaimHash() ([]byte, error) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (m *MsgSendNFTToEthClaim) SetOrchestrator(address sdk.AccAddress) {
+func (msg *MsgSendNFTToEthClaim) SetOrchestrator(address sdk.AccAddress) {
 	//TODO implement me
 	panic("implement me")
 }
