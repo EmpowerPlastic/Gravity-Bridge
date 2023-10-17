@@ -59,12 +59,12 @@ func InitGenesis(ctx sdk.Context, k Keeper, data types.GenesisState) {
 
 	// restore various nonces, this MUST match GravityNonces in genesis
 	k.SetLatestValsetNonce(ctx, data.GravityNonces.LatestValsetNonce)
-	k.setLastObservedEventNonce(ctx, data.GravityNonces.LastObservedNonce)
+	k.SetLastObservedEventNonce(ctx, data.GravityNonces.LastObservedNonce)
 	k.SetLastSlashedValsetNonce(ctx, data.GravityNonces.LastSlashedValsetNonce)
 	k.SetLastSlashedBatchBlock(ctx, data.GravityNonces.LastSlashedBatchBlock)
 	k.SetLastSlashedLogicCallBlock(ctx, data.GravityNonces.LastSlashedLogicCallBlock)
-	k.setID(ctx, data.GravityNonces.LastTxPoolId, []byte(types.KeyLastTXPoolID))
-	k.setID(ctx, data.GravityNonces.LastBatchId, []byte(types.KeyLastOutgoingBatchID))
+	k.SetID(ctx, data.GravityNonces.LastTxPoolId, []byte(types.KeyLastTXPoolID))
+	k.SetID(ctx, data.GravityNonces.LastBatchId, []byte(types.KeyLastOutgoingBatchID))
 
 	initBridgeDataFromGenesis(ctx, k, data)
 

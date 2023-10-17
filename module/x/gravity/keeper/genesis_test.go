@@ -144,9 +144,7 @@ func TestBatchAndTxImportExport(t *testing.T) {
 	sourceChannel := "channel-0"
 	rec := bech32ibctypes.HrpIbcRecord{
 		Hrp:               foreignHrp,
-		SourceChannel:     sourceChannel,
-		IcsToHeightOffset: 1000,
-		IcsToTimeOffset:   1000,
+		FungibleSourceChannel:     sourceChannel,
 	}
 	input.GravityKeeper.bech32IbcKeeper.SetHrpIbcRecords(ctx, []bech32ibctypes.HrpIbcRecord{rec})
 	hrpRecords := input.GravityKeeper.bech32IbcKeeper.GetHrpIbcRecords(ctx)
@@ -172,7 +170,7 @@ func TestBatchAndTxImportExport(t *testing.T) {
 			IbcChannel:      sourceChannel,
 			EventNonce:      uint64(i + 1),
 		}
-		input.GravityKeeper.setLastObservedEventNonce(ctx, fwd.EventNonce)
+		input.GravityKeeper.SetLastObservedEventNonce(ctx, fwd.EventNonce)
 		err = input.GravityKeeper.addPendingIbcAutoForward(ctx, fwd, stake)
 		require.NoError(t, err)
 		forwards[i] = &fwd

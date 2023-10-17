@@ -68,12 +68,31 @@ message QueryLastObservedNFTEthNonceResponse {
   uint64 last_observed_nft_eth_nonce = 1;
 }
 
-message QueryNFTAttestationsRequest {}
+message QueryNFTAttestationsRequest {
+    // limit defines how many attestations to limit in the response.
+    uint64 limit = 1;
+    // order_by provides ordering of atteststions by nonce in the response. Either
+    // 'asc' or 'desc' can be provided. If no value is provided, it defaults to
+    // 'asc'.
+    string order_by = 2;
+    // claim_type allows filtering attestations by Ethereum claim type.
+    string claim_type = 3;
+    // nonce allows filtering attestations by Ethereum claim nonce.
+    uint64 nonce = 4;
+    // height allows filtering attestations by Ethereum claim height.
+    uint64 height = 5;
+    // indicates whether to search for store data using the old Gravity v1 key "OracleAttestationKey"
+    // Note that queries before the Mercury upgrade at height 1282013 must set this to true
+    bool use_v1_key = 6;
+}
 message QueryNFTAttestationsResponse {
   repeated NFTAttestation nft_attestations = 1 [(gogoproto.nullable) = false];
 }
 
-message QueryPendingNFTIbcAutoForwardsRequest {}
+message QueryPendingNFTIbcAutoForwardsRequest {
+    // limit defines the number of pending forwards to return, in order of their SendToCosmos.EventNonce
+    uint64 limit = 1;
+}
 message QueryPendingNFTIbcAutoForwardsResponse {
   repeated PendingNFTIbcAutoForward pending_nft_ibc_auto_forwards = 1;
 }

@@ -1,6 +1,14 @@
 package types
 
-import sdkerrors "cosmossdk.io/errors"
+import (
+	sdkerrors "cosmossdk.io/errors"
+	sdk "github.com/cosmos/cosmos-sdk/types"
+)
+
+var (
+	// AttestationVotesPowerThreshold threshold of votes power to succeed
+	AttestationVotesPowerThreshold = sdk.NewInt(66)
+)
 
 // ValidateBasic validates genesis state by looping through the params and
 // calling their validation functions

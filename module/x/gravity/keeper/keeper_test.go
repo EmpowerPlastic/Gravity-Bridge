@@ -147,9 +147,9 @@ func TestAttestationIterator(t *testing.T) {
 	require.NoError(t, err)
 
 	input.GravityKeeper.SetAttestation(ctx, claim1.EventNonce, hash1, att1)
-	input.GravityKeeper.setLastObservedEventNonce(ctx, claim1.EventNonce)
+	input.GravityKeeper.SetLastObservedEventNonce(ctx, claim1.EventNonce)
 	input.GravityKeeper.SetAttestation(ctx, claim2.EventNonce, hash2, att2)
-	input.GravityKeeper.setLastObservedEventNonce(ctx, claim2.EventNonce)
+	input.GravityKeeper.SetLastObservedEventNonce(ctx, claim2.EventNonce)
 
 	atts := []types.Attestation{}
 	input.GravityKeeper.IterateAttestations(ctx, false, func(_ []byte, att types.Attestation) bool {
