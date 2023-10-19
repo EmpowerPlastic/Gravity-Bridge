@@ -3,6 +3,7 @@ package keeper
 import (
 	"context"
 	sdkerrors "cosmossdk.io/errors"
+	gravitytypes "github.com/Gravity-Bridge/Gravity-Bridge/module/x/gravity/types"
 	"github.com/Gravity-Bridge/Gravity-Bridge/module/x/gravitynft/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/errors"
@@ -17,7 +18,6 @@ const queryAttentionsLimit uint64 = 1000
 // Params queries the params of the gravity module
 func (k Keeper) Params(c context.Context, _ *types.QueryParamsRequest) (*types.QueryParamsResponse, error) {
 	params := k.GetParams(sdk.UnwrapSDKContext(c))
-
 	return &types.QueryParamsResponse{Params: params}, nil
 }
 
@@ -103,8 +103,22 @@ func (k Keeper) GetPendingNFTIbcAutoForwards(c context.Context, req *types.Query
 }
 
 func (k Keeper) LastNFTEventNonceByAddr(c context.Context, req *types.QueryLastNFTEventNonceByAddrRequest) (*types.QueryLastNFTEventNonceByAddrResponse, error) {
-	//TODO implement me
-	panic("implement me")
+	ctx := sdk.UnwrapSDKContext(c)
+	var ret types.QueryLastNFTEventNonceByAddrResponse
+	addr, err := sdk.AccAddressFromBech32(req.Address)
+	if err != nil {
+		return nil, sdkerrors.Wrap(errors.ErrInvalidAddress, req.Address)
+	}
+	validator, found := k.gravityKeeper.GetOrchestratorValidator(ctx, addr)
+	if !found {
+		return nil, sdkerrors.Wrap(types.ErrUnknown, "address")
+	}
+	if err := sdk.VerifyAddressFormat(validator.GetOperator()); err != nil {
+		return nil, sdkerrors.Wrap(err, "invalid validator address")
+	}
+	lastEventNonce := k.GetLastEventNonceByValidator(ctx, validator.GetOperator())
+	ret.LastNftEventNonce = lastEventNonce
+	return &ret, nil
 }
 
 func (k Keeper) OutgoingSendNFTToEths(c context.Context, req *types.QueryOutgoingSendNFTToEthsRequest) (*types.QueryOutgoingSendNFTToEthsResponse, error) {
@@ -113,11 +127,28 @@ func (k Keeper) OutgoingSendNFTToEths(c context.Context, req *types.QueryOutgoin
 }
 
 func (k Keeper) ERC721ToClassId(c context.Context, req *types.QueryERC721ToClassIdRequest) (*types.QueryERC721ToClassIdResponse, error) {
-	//TODO implement me
-	panic("implement me")
+	ctx := sdk.UnwrapSDKContext(c)
+	ethAddr, err := gravitytypes.NewEthAddress(req.Erc721)
+	if err != nil {
+		return nil, sdkerrors.Wrapf(err, "invalid ERC721 in request: %s", req.Erc721)
+	}
+	cosmosOriginated, classID := k.ERC721ToClassIDLookup(ctx, *ethAddr)
+	var ret types.QueryERC721ToClassIdResponse
+	ret.ClassId = classID
+	ret.CosmosOriginated = cosmosOriginated
+
+	return &ret, nil
 }
 
 func (k Keeper) ClassIdToERC721(c context.Context, req *types.QueryClassIdToERC721Request) (*types.QueryClassIdToERC721Response, error) {
-	//TODO implement me
-	panic("implement me")
+	ctx := sdk.UnwrapSDKContext(c)
+	cosmosOriginated, erc721, err := k.ClassIDToERC721Lookup(ctx, req.ClassId)
+	if err != nil {
+		return nil, sdkerrors.Wrapf(err, "invalid classID (%v) queried", req.ClassId)
+	}
+	var ret types.QueryClassIdToERC721Response
+	ret.Erc721 = erc721.GetAddress().Hex()
+	ret.CosmosOriginated = cosmosOriginated
+
+	return &ret, err
 }

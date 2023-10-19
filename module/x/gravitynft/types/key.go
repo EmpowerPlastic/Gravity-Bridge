@@ -7,7 +7,7 @@ import (
 )
 
 const (
-	// TODO: Is this the final module name? Should we change the name of the folder also?
+	// TODO: Find a proper module name. The original idea of gravitynft won't work because it crashes with the prefix of "grabity"
 	// ModuleName is the name of the module
 	ModuleName = "erc721gravity"
 
@@ -43,9 +43,13 @@ var (
 	// [0xa34e56ab6fab9ee91e82ba216bfeb759]
 	LastObservedEventNonceKey = HashString("LastObservedEventNonceKey")
 
-	// ERC721ToDenomKey prefixes the index of Cosmos originated assets ERC721s to denoms
-	// [caf3c584d2930aa14feb256fca05ee1f]
-	ERC721ToDenomKey = HashString("ERC721ToDenomKey")
+	// ClassIDToERC721Key prefixes the index of Cosmos originated asset denoms to ERC20s
+	// [0f4178d32f57c540e8f15e93b90323d7]
+	ClassIDToERC721Key = HashString("ClassIDToERC721Key")
+
+	// ERC721ToClassIDKey prefixes the index of Cosmos originated assets ERC721s to ClassIDs
+	// [1358ec20e89e72219658c1005cf6f9a0]
+	ERC721ToClassIDKey = HashString("ERC721ToClassIDKey")
 
 	// PendingNFTIbcAutoForwards indexes pending SendNFTToCosmos sends via IBC, queued by event nonce
 	// [67b20bb5f0a19693de3469e155ef5352]
@@ -78,8 +82,12 @@ func GetLastEventNonceByValidatorKey(validator sdk.ValAddress) []byte {
 	return AppendBytes(LastEventNonceByValidatorKey, validator.Bytes())
 }
 
-func GetERC721ToDenomKey(erc721 gravitytypes.EthAddress) []byte {
-	return AppendBytes(ERC721ToDenomKey, erc721.GetAddress().Bytes())
+func GetClassIDToERC721Key(denom string) []byte {
+	return AppendBytes(ClassIDToERC721Key, []byte(denom))
+}
+
+func GetERC721ToClassIDKey(erc721 gravitytypes.EthAddress) []byte {
+	return AppendBytes(ERC721ToClassIDKey, erc721.GetAddress().Bytes())
 }
 
 // GetPendingNFTIbcAutoForwardKey returns the following key format

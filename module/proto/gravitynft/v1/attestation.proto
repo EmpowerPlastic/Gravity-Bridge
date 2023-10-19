@@ -105,3 +105,9 @@ message EventSendNFTToCosmosExecutedIbcAutoForward {
   string timeout_time = 6;
   string timeout_height = 7;
 }
+
+message EventERC721DeployedClaim {
+  string contract = 1;
+  string class_id = 2;
+  string nonce = 3;
+}

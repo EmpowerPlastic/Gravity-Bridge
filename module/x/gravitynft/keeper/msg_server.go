@@ -104,8 +104,22 @@ func (k MsgServer) SendNFTToEthClaim(c context.Context, msg *types.MsgSendNFTToE
 }
 
 func (k MsgServer) ERC721DeployedClaim(c context.Context, msg *types.MsgERC721DeployedClaim) (*types.MsgERC721DeployedClaimResponse, error) {
-	//TODO implement me
-	panic("implement me")
+	ctx := sdk.UnwrapSDKContext(c)
+
+	err := k.gravityKeeper.CheckOrchestratorValidatorInSet(ctx, msg.Orchestrator)
+	if err != nil {
+		return nil, sdkerrors.Wrap(err, "Could not check orchestrator validator in set")
+	}
+	any, err := codectypes.NewAnyWithValue(msg)
+	if err != nil {
+		return nil, sdkerrors.Wrap(err, "Could not check Any value")
+	}
+	err = k.claimHandlerCommon(ctx, any, msg)
+	if err != nil {
+		return nil, err
+	}
+
+	return &types.MsgERC721DeployedClaimResponse{}, nil
 }
 
 func (k MsgServer) CancelSendNFTToEth(c context.Context, msg *types.MsgCancelSendNFTToEth) (*types.MsgCancelSendNFTToEthResponse, error) {

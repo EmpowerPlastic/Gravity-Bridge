@@ -101,12 +101,14 @@ message QueryERC721ToClassIdRequest {
   string erc721 = 1;
 }
 message QueryERC721ToClassIdResponse {
-  uint64 class_id = 1;
+  string class_id = 1;
+  bool   cosmos_originated = 2;
 }
 
 message QueryClassIdToERC721Request {
-  uint64 class_id = 1;
+  string class_id = 1;
 }
 message QueryClassIdToERC721Response {
   string erc721 = 1;
+  bool   cosmos_originated = 2;
 }
