@@ -7,11 +7,9 @@ import (
 
 // EndBlocker is called at the end of every block
 func EndBlocker(ctx sdk.Context, k keeper.Keeper) {
-	// TODO: Do we need slashing here?
-	// ^ Looking at gravity abci they slash only for valset confirms, missing batches ans logic calls.
+	// TODO: Add slashing
 	attestationTally(ctx, k)
-	// TODO: Do we need any cleanup here? Gravity abci cleans up timed out batches and logic calls
-	// TODO: Do we need to do anything related to Valsets here, like create or prune?
+	// TODO: Add cleanups
 
 	pruneAttestations(ctx, k)
 }
@@ -20,12 +18,11 @@ func EndBlocker(ctx sdk.Context, k keeper.Keeper) {
 // "Observe" those who have passed the threshold. Break the loop once we see
 // an attestation that has not passed the threshold
 func attestationTally(ctx sdk.Context, k keeper.Keeper) {
-	// TODO: Get BridgeActive from Params and return if it is not active atm
-	/*params := k.GetParams(ctx)
+	params := k.GetParams(ctx)
 	// bridge is currently disabled, do not process attestations from Ethereum
 	if !params.BridgeActive {
 		return
-	}*/
+	}
 
 	attmap, keys := k.GetAttestationMapping(ctx)
 	// This iterates over all keys (event nonces) in the attestation mapping. Each value contains

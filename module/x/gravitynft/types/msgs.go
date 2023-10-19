@@ -15,9 +15,11 @@ var (
 	_ sdk.Msg = &MsgSendNFTToCosmosClaim{}
 	_ sdk.Msg = &MsgERC721DeployedClaim{}
 	_ sdk.Msg = &MsgExecuteIbcNFTAutoForwards{}
+	// TODO: There should probably only be one MsgSendNFTToEth..?
 	_ sdk.Msg = &MsgSendNFTToEth{}
 	_ sdk.Msg = &MsgSendNFTToEthClaim{}
 	_ sdk.Msg = &MsgCancelSendNFTToEth{}
+	_ sdk.Msg = &MsgUnhaltNFTBridge{}
 )
 
 func (msg *MsgUpdateParams) ValidateBasic() error {
@@ -73,54 +75,92 @@ func (msg *MsgSendNFTToCosmosClaim) GetSigners() []sdk.AccAddress {
 	return []sdk.AccAddress{acc}
 }
 
-func (m *MsgERC721DeployedClaim) ValidateBasic() error {
+func (msg *MsgERC721DeployedClaim) ValidateBasic() error {
+	if err := gravitytypes.ValidateEthAddress(msg.TokenContract); err != nil {
+		return sdkerrors.Wrap(err, "erc721 contract address")
+	}
+	if _, err := sdk.AccAddressFromBech32(msg.Orchestrator); err != nil {
+		return sdkerrors.Wrap(errors.ErrInvalidAddress, msg.Orchestrator)
+	}
+	if msg.EventNonce == 0 {
+		return fmt.Errorf("nonce == 0")
+	}
+	return nil
+}
+
+func (msg *MsgERC721DeployedClaim) GetSigners() []sdk.AccAddress {
+	acc, err := sdk.AccAddressFromBech32(msg.Orchestrator)
+	if err != nil {
+		panic(err)
+	}
+
+	return []sdk.AccAddress{acc}
+}
+
+func (msg *MsgExecuteIbcNFTAutoForwards) ValidateBasic() error {
+	if msg.ForwardsToClear == 0 {
+		return fmt.Errorf("no forwards to clear")
+	}
+
+	if _, err := sdk.AccAddressFromBech32(msg.Executor); err != nil {
+		return sdkerrors.Wrap(err, "Unable to parse executor as a valid bech32 address")
+	}
+	return nil
+}
+
+func (msg *MsgExecuteIbcNFTAutoForwards) GetSigners() []sdk.AccAddress {
+	msg.ProtoMessage()
+	acc, err := sdk.AccAddressFromBech32(msg.Executor)
+	if err != nil {
+		panic(err)
+	}
+	return []sdk.AccAddress{acc}
+}
+
+func (msg *MsgSendNFTToEth) ValidateBasic() error {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (m *MsgERC721DeployedClaim) GetSigners() []sdk.AccAddress {
+func (msg *MsgSendNFTToEth) GetSigners() []sdk.AccAddress {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (m *MsgExecuteIbcNFTAutoForwards) ValidateBasic() error {
+func (msg *MsgSendNFTToEthClaim) ValidateBasic() error {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (m *MsgExecuteIbcNFTAutoForwards) GetSigners() []sdk.AccAddress {
+func (msg *MsgSendNFTToEthClaim) GetSigners() []sdk.AccAddress {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (m *MsgSendNFTToEth) ValidateBasic() error {
+func (msg *MsgCancelSendNFTToEth) ValidateBasic() error {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (m *MsgSendNFTToEth) GetSigners() []sdk.AccAddress {
+func (msg *MsgCancelSendNFTToEth) GetSigners() []sdk.AccAddress {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (m *MsgSendNFTToEthClaim) ValidateBasic() error {
-	//TODO implement me
-	panic("implement me")
+func (msg *MsgUnhaltNFTBridge) ValidateBasic() error {
+	if _, err := sdk.AccAddressFromBech32(msg.Authority); err != nil {
+		return sdkerrors.Wrap(errors.ErrInvalidAddress, "authority")
+	}
+	return nil
 }
 
-func (m *MsgSendNFTToEthClaim) GetSigners() []sdk.AccAddress {
-	//TODO implement me
-	panic("implement me")
-}
+func (msg *MsgUnhaltNFTBridge) GetSigners() []sdk.AccAddress {
+	acc, err := sdk.AccAddressFromBech32(msg.Authority)
+	if err != nil {
+		panic(err)
+	}
 
-func (m *MsgCancelSendNFTToEth) ValidateBasic() error {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (m *MsgCancelSendNFTToEth) GetSigners() []sdk.AccAddress {
-	//TODO implement me
-	panic("implement me")
+	return []sdk.AccAddress{acc}
 }
 
 // EthereumNFTClaim represents a claim on ethereum state
@@ -175,6 +215,11 @@ func (msg *MsgSendNFTToCosmosClaim) GetType() NFTClaimType {
 	return NFT_CLAIM_TYPE_SEND_NFT_TO_COSMOS
 }
 
+// Hash implements BridgeDeposit.Hash
+// modify this with care as it is security sensitive. If an element of the claim is not in this hash a single hostile validator
+// could engineer a hash collision and execute a version of the claim with any unhashed data changed to benefit them.
+// note that the Orchestrator is the only field excluded from this hash, this is because that value is used higher up in the store
+// structure for who has made what claim and is verified by the msg ante-handler for signatures
 func (msg *MsgSendNFTToCosmosClaim) ClaimHash() ([]byte, error) {
 	path := fmt.Sprintf("%d/%d/%s/%s/%s/%s/%s", msg.EventNonce, msg.EthBlockHeight, msg.TokenContract, msg.TokenId, msg.TokenUri, msg.EthereumSender, msg.CosmosReceiver)
 	return tmhash.Sum([]byte(path)), nil
@@ -184,42 +229,58 @@ func (msg *MsgSendNFTToCosmosClaim) SetOrchestrator(orchestrator sdk.AccAddress)
 	msg.Orchestrator = orchestrator.String()
 }
 
-func (m *MsgERC721DeployedClaim) GetClaimer() sdk.AccAddress {
+func (msg *MsgERC721DeployedClaim) GetClaimer() sdk.AccAddress {
+	err := msg.ValidateBasic()
+	if err != nil {
+		panic("MsgERC20DeployedClaim failed ValidateBasic! Should have been handled earlier")
+	}
+
+	val, err := sdk.AccAddressFromBech32(msg.Orchestrator)
+	if err != nil {
+		panic(err)
+	}
+	return val
+}
+
+func (msg *MsgERC721DeployedClaim) GetType() NFTClaimType {
+	return NFT_CLAIM_TYPE_ERC721_DEPLOYED
+}
+
+// Hash implements BridgeDeposit.Hash
+// modify this with care as it is security sensitive. If an element of the claim is not in this hash a single hostile validator
+// could engineer a hash collision and execute a version of the claim with any unhashed data changed to benefit them.
+// note that the Orchestrator is the only field excluded from this hash, this is because that value is used higher up in the store
+// structure for who has made what claim and is verified by the msg ante-handler for signatures
+func (msg *MsgERC721DeployedClaim) ClaimHash() ([]byte, error) {
+	path := fmt.Sprintf("%d/%d/%s/%s", msg.EventNonce, msg.EthBlockHeight, msg.TokenContract, msg.ClassId)
+	return tmhash.Sum([]byte(path)), nil
+}
+
+func (msg *MsgERC721DeployedClaim) SetOrchestrator(orchestrator sdk.AccAddress) {
+	msg.Orchestrator = orchestrator.String()
+}
+
+func (msg *MsgSendNFTToEthClaim) GetClaimer() sdk.AccAddress {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (m *MsgERC721DeployedClaim) GetType() NFTClaimType {
+func (msg *MsgSendNFTToEthClaim) GetType() NFTClaimType {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (m *MsgERC721DeployedClaim) ClaimHash() ([]byte, error) {
+// Hash implements BridgeDeposit.Hash
+// modify this with care as it is security sensitive. If an element of the claim is not in this hash a single hostile validator
+// could engineer a hash collision and execute a version of the claim with any unhashed data changed to benefit them.
+// note that the Orchestrator is the only field excluded from this hash, this is because that value is used higher up in the store
+// structure for who has made what claim and is verified by the msg ante-handler for signatures
+func (msg *MsgSendNFTToEthClaim) ClaimHash() ([]byte, error) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (m *MsgERC721DeployedClaim) SetOrchestrator(address sdk.AccAddress) {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (m *MsgSendNFTToEthClaim) GetClaimer() sdk.AccAddress {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (m *MsgSendNFTToEthClaim) GetType() NFTClaimType {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (m *MsgSendNFTToEthClaim) ClaimHash() ([]byte, error) {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (m *MsgSendNFTToEthClaim) SetOrchestrator(address sdk.AccAddress) {
+func (msg *MsgSendNFTToEthClaim) SetOrchestrator(address sdk.AccAddress) {
 	//TODO implement me
 	panic("implement me")
 }

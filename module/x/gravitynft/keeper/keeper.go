@@ -31,7 +31,6 @@ type Keeper struct {
 	bech32IbcKeeper      *bech32ibckeeper.Keeper
 	nftKeeper            *nftkeeper.Keeper
 	ibcNftTransferKeeper *ibcnfttransferkeeper.Keeper
-	// TODO: Add stuffs
 
 	// the address capable of executing a MsgUpdateParams message. Typically, this
 	// should be the x/gov module account.
@@ -63,8 +62,6 @@ func (k Keeper) validateMembers() {
 		panic("Nil ibcNftTransferKeeper!")
 	}
 }
-
-// TODO: Create NewKeeper method and add it to app.go
 
 // NewKeeper returns a new instance of the gravity keeper
 func NewKeeper(

@@ -27,9 +27,6 @@ func RegisterInterfaces(registry types.InterfaceRegistry) {
 		&MsgSendNFTToCosmosClaim{},
 	)
 
-	// TODO: If we need any gov stuff?
-	// registry.RegisterImplementations((*govtypesv1beta1.Content)(nil), &UnhaltBridgeProposal{}, &AirdropProposal{}, &IBCMetadataProposal{})
-
 	// TODO: If we need anything like this
 	// registry.RegisterInterface("gravity.v1beta1.EthereumSigned", (*EthereumSigned)(nil), &Valset{}, &OutgoingTxBatch{}, &OutgoingLogicCall{})
 
