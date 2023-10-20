@@ -34,7 +34,7 @@ pub async fn send_erc721_claims(
         msgs.push(i.1);
     }
     contact
-        .send_message(&msgs, None, &[fee], None, Some(TIMEOUT), our_cosmos_key)
+        .send_message(&msgs, None, &[fee], Some(TIMEOUT), our_cosmos_key)
         .await
 }
 

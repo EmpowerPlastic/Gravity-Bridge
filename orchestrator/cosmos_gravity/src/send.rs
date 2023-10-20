@@ -72,7 +72,6 @@ pub async fn set_gravity_delegate_addresses(
             &[msg],
             Some(MEMO.to_string()),
             &[fee],
-            None,
             Some(TIMEOUT),
             private_key,
         )
@@ -118,7 +117,6 @@ pub async fn send_valset_confirms(
             &messages,
             Some(MEMO.to_string()),
             &[fee],
-            None,
             Some(TIMEOUT),
             private_key,
         )
@@ -165,7 +163,6 @@ pub async fn send_batch_confirm(
             &messages,
             Some(MEMO.to_string()),
             &[fee],
-            None,
             Some(TIMEOUT),
             private_key,
         )
@@ -210,7 +207,6 @@ pub async fn send_logic_call_confirm(
             &messages,
             Some(MEMO.to_string()),
             &[fee],
-            None,
             Some(TIMEOUT),
             private_key,
         )
@@ -281,7 +277,7 @@ pub async fn send_ethereum_claims(
     }
 
     contact
-        .send_message(&msgs, None, &[fee], None, Some(TIMEOUT), our_cosmos_key)
+        .send_message(&msgs, None, &[fee], Some(TIMEOUT), our_cosmos_key)
         .await
 }
 
@@ -376,7 +372,6 @@ pub async fn send_to_eth(
             &[msg],
             Some(MEMO.to_string()),
             &[fee],
-            None,
             Some(TIMEOUT),
             private_key,
         )
@@ -406,7 +401,6 @@ pub async fn send_request_batch(
             &[msg],
             Some(MEMO.to_string()),
             &fee,
-            None,
             Some(TIMEOUT),
             private_key,
         )
@@ -441,7 +435,6 @@ pub async fn submit_bad_signature_evidence(
             &[msg],
             Some(MEMO.to_string()),
             &[fee],
-            None,
             Some(TIMEOUT),
             private_key,
         )
@@ -469,7 +462,6 @@ pub async fn cancel_send_to_eth(
             &[msg],
             Some(MEMO.to_string()),
             &[fee],
-            None,
             Some(TIMEOUT),
             private_key,
         )
@@ -494,7 +486,7 @@ pub async fn execute_pending_ibc_auto_forwards(
     );
     let timeout = Duration::from_secs(60);
     let res = contact
-        .send_message(&[msg], None, &[fee], None, Some(timeout), cosmos_key)
+        .send_message(&[msg], None, &[fee], Some(timeout), cosmos_key)
         .await;
 
     if res.is_err() {

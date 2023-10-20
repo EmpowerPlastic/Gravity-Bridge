@@ -15,6 +15,7 @@ use web30::client::Web3;
 
 pub async fn ibc_metadata_proposal_test(
     gravity_address: Address,
+    gravityerc721_address: Address,
     keys: Vec<ValidatorKeys>,
     grpc_client: GravityQueryClient<Channel>,
     contact: &Contact,
@@ -36,6 +37,8 @@ pub async fn ibc_metadata_proposal_test(
         display: "nada".to_string(),
         name: "invalid".to_string(),
         symbol: "INV".to_string(),
+        uri: "invalid".to_string(),
+        uri_hash: "0x0".to_string(),
     };
 
     // valid metadata to test, but would overwrite existing metadata
@@ -57,6 +60,8 @@ pub async fn ibc_metadata_proposal_test(
         display: "mfootoken".to_string(),
         name: "Footoken".to_string(),
         symbol: "FOO".to_string(),
+        uri: "https://example.com/footoken".to_string(),
+        uri_hash: "0x0".to_string(),
     };
 
     // valid metadata to test, but would overwrite existing metadata
@@ -78,6 +83,8 @@ pub async fn ibc_metadata_proposal_test(
         display: "mnometadatatoken".to_string(),
         name: "Metadata token".to_string(),
         symbol: "META".to_string(),
+        uri: "https://example.com/metadata".to_string(),
+        uri_hash: "0x0".to_string(),
     };
 
     // check that a totally invalid version does not work
@@ -114,6 +121,7 @@ pub async fn ibc_metadata_proposal_test(
     info!("Deploying representative ERC20");
     deploy_cosmos_representing_erc20_and_check_adoption(
         gravity_address,
+        gravityerc721_address,
         web30,
         Some(keys),
         &mut grpc_client,

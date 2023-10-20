@@ -97,7 +97,6 @@ pub async fn recover_funds(args: RecoverFundsOpts, address_prefix: String) {
             .send_coins(
                 args.amount.clone(),
                 args.cosmos_fee,
-                None,
                 cosmos_destination,
                 Some(TIMEOUT),
                 args.ethereum_key,

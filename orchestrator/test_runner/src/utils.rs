@@ -344,7 +344,7 @@ pub async fn start_orchestrators(
         let mut grpc_client = GravityQueryClient::connect(COSMOS_NODE_GRPC.as_str())
             .await
             .unwrap();
-        let mut grpc_nft_client = GravityNftQueryClient::connect(COSMOS_NODE_GRPC.as_str())
+        let grpc_nft_client = GravityNftQueryClient::connect(COSMOS_NODE_GRPC.as_str())
             .await
             .unwrap();
         let params = get_gravity_params(&mut grpc_client)
