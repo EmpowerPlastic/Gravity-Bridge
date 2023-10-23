@@ -39,7 +39,7 @@ enum ClaimType {
 // The actual content of the claims is passed in with the transaction making the claim
 // and then passed through the call stack alongside the attestation while it is processed
 // the key in which the attestation is stored is keyed on the exact details of the claim
-// but there is no reason to store those exact details becuause the next message sender
+// but there is no reason to store those exact details because the next message sender
 // will kindly provide you with them.
 message Attestation {
   bool                observed = 1;
@@ -61,6 +61,8 @@ message ERC20Token {
   ];
 }
 
+// EventObservation is emitted when an attestation has been observed (has enough votes),
+// processed and applied to state.
 message EventObservation {
   string attestation_type = 1;
   string bridge_contract  = 2;
@@ -69,6 +71,9 @@ message EventObservation {
   string nonce            = 5;
 }
 
+// EventInvalidSendToCosmosReceiver is emitted when a deposit is invalid, either because
+// the address is invalid, the address is black-listed or for whatever other
+// reason it was not possible to send the deposited asset.
 message EventInvalidSendToCosmosReceiver {
   string amount = 1;
   string nonce  = 2;
@@ -76,12 +81,15 @@ message EventInvalidSendToCosmosReceiver {
   string sender = 4;
 }
 
+// EventSendToCosmos is emitted when a CLAIM_TYPE_SEND_TO_COSMOS has been processed (observed + handled)
 message EventSendToCosmos {
   string amount = 1;
   string nonce  = 2;
   string token  = 3;
 }
 
+// EventSendToCosmosLocal is emitted when tokens has been sent to a local (gravity) address,
+// rather than added to the ibc forwarding queue. This happens as part of the handling of CLAIM_TYPE_SEND_TO_COSMOS.
 message EventSendToCosmosLocal {
   string nonce = 1;
   string receiver = 2;
@@ -89,6 +97,8 @@ message EventSendToCosmosLocal {
   string amount = 4;
 }
 
+// EventSendToCosmosPendingIbcAutoForward is emitted when tokens has been added to the IBC auto forwarding queue.
+// This happens as part of the handling of CLAIM_TYPE_SEND_TO_COSMOS.
 message EventSendToCosmosPendingIbcAutoForward {
   string nonce = 1;
   string receiver = 2;
@@ -97,6 +107,8 @@ message EventSendToCosmosPendingIbcAutoForward {
   string channel = 5;
 }
 
+// EventSendToCosmosExecutedIbcAutoForward is emitted when tokens have been flushed (executed) from
+// the IBC auto forwarding queue. In other words, the IBC packet has been sent.
 message EventSendToCosmosExecutedIbcAutoForward {
   string nonce = 1;
   string receiver = 2;

@@ -40,6 +40,7 @@ pub async fn happy_path_test_v2_native(
     contact: &Contact,
     keys: Vec<ValidatorKeys>,
     gravity_address: EthAddress,
+    gravityerc721_address: EthAddress,
     validator_out: bool,
 ) {
     let native_metadata = stake_metadata(contact).await;
@@ -49,6 +50,7 @@ pub async fn happy_path_test_v2_native(
         contact,
         keys.clone(),
         gravity_address,
+        gravityerc721_address,
         validator_out,
         native_metadata,
     )
@@ -61,6 +63,7 @@ pub async fn happy_path_test_v2(
     contact: &Contact,
     keys: Vec<ValidatorKeys>,
     gravity_address: EthAddress,
+    gravityerc721_address: EthAddress,
     validator_out: bool,
     ibc_metadata: Option<Metadata>,
 ) {
@@ -75,6 +78,7 @@ pub async fn happy_path_test_v2(
         contact,
         keys.clone(),
         gravity_address,
+        gravityerc721_address,
         validator_out,
         ibc_metadata.clone(),
     )
@@ -87,12 +91,14 @@ pub async fn deploy_and_bridge_cosmos_token(
     contact: &Contact,
     keys: Vec<ValidatorKeys>,
     gravity_address: EthAddress,
+    gravityerc721_address: EthAddress,
     validator_out: bool,
     ibc_metadata: Metadata,
 ) {
     let mut grpc_client = grpc_client;
     let erc20_contract = deploy_cosmos_representing_erc20_and_check_adoption(
         gravity_address,
+        gravityerc721_address,
         web30,
         Some(keys.clone()),
         &mut grpc_client,
@@ -269,6 +275,7 @@ pub async fn send_to_eth_and_confirm(
 /// where we do a governance update to enable rewards
 pub async fn deploy_cosmos_representing_erc20_and_check_adoption(
     gravity_address: EthAddress,
+    gravityerc721_address: EthAddress,
     web30: &Web3,
     keys: Option<Vec<ValidatorKeys>>,
     grpc_client: &mut GravityQueryClient<Channel>,
@@ -317,6 +324,7 @@ pub async fn deploy_cosmos_representing_erc20_and_check_adoption(
         start_orchestrators(
             keys.clone(),
             gravity_address,
+            gravityerc721_address,
             validator_out,
             no_relay_market_config,
         )

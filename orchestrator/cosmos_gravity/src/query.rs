@@ -177,7 +177,7 @@ pub async fn get_transaction_batch_signatures(
     Ok(out)
 }
 
-/// Gets the last event nonce that a given validator has attested to, this lets us
+/// Gets the last event nonce for gravity.sol contract that a given validator has attested to, this lets us
 /// catch up with what the current event nonce should be if a oracle is restarted
 pub async fn get_last_event_nonce_for_validator(
     client: &mut GravityQueryClient<Channel>,

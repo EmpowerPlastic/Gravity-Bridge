@@ -83,7 +83,7 @@ func (ClaimType) EnumDescriptor() ([]byte, []int) {
 // The actual content of the claims is passed in with the transaction making the claim
 // and then passed through the call stack alongside the attestation while it is processed
 // the key in which the attestation is stored is keyed on the exact details of the claim
-// but there is no reason to store those exact details becuause the next message sender
+// but there is no reason to store those exact details because the next message sender
 // will kindly provide you with them.
 type Attestation struct {
 	Observed bool       `protobuf:"varint,1,opt,name=observed,proto3" json:"observed,omitempty"`
@@ -203,6 +203,8 @@ func (m *ERC20Token) GetContract() string {
 	return ""
 }
 
+// EventObservation is emitted when an attestation has been observed (has enough votes),
+// processed and applied to state.
 type EventObservation struct {
 	AttestationType string `protobuf:"bytes,1,opt,name=attestation_type,json=attestationType,proto3" json:"attestation_type,omitempty"`
 	BridgeContract  string `protobuf:"bytes,2,opt,name=bridge_contract,json=bridgeContract,proto3" json:"bridge_contract,omitempty"`
@@ -279,6 +281,9 @@ func (m *EventObservation) GetNonce() string {
 	return ""
 }
 
+// EventInvalidSendToCosmosReceiver is emitted when a deposit is invalid, either because
+// the address is invalid, the address is black-listed or for whatever other
+// reason it was not possible to send the deposited asset.
 type EventInvalidSendToCosmosReceiver struct {
 	Amount string `protobuf:"bytes,1,opt,name=amount,proto3" json:"amount,omitempty"`
 	Nonce  string `protobuf:"bytes,2,opt,name=nonce,proto3" json:"nonce,omitempty"`
@@ -347,6 +352,7 @@ func (m *EventInvalidSendToCosmosReceiver) GetSender() string {
 	return ""
 }
 
+// EventSendToCosmos is emitted when a CLAIM_TYPE_SEND_TO_COSMOS has been processed (observed + handled)
 type EventSendToCosmos struct {
 	Amount string `protobuf:"bytes,1,opt,name=amount,proto3" json:"amount,omitempty"`
 	Nonce  string `protobuf:"bytes,2,opt,name=nonce,proto3" json:"nonce,omitempty"`
@@ -407,6 +413,8 @@ func (m *EventSendToCosmos) GetToken() string {
 	return ""
 }
 
+// EventSendToCosmosLocal is emitted when tokens has been sent to a local (gravity) address,
+// rather than added to the ibc forwarding queue. This happens as part of the handling of CLAIM_TYPE_SEND_TO_COSMOS.
 type EventSendToCosmosLocal struct {
 	Nonce    string `protobuf:"bytes,1,opt,name=nonce,proto3" json:"nonce,omitempty"`
 	Receiver string `protobuf:"bytes,2,opt,name=receiver,proto3" json:"receiver,omitempty"`
@@ -475,6 +483,8 @@ func (m *EventSendToCosmosLocal) GetAmount() string {
 	return ""
 }
 
+// EventSendToCosmosPendingIbcAutoForward is emitted when tokens has been added to the IBC auto forwarding queue.
+// This happens as part of the handling of CLAIM_TYPE_SEND_TO_COSMOS.
 type EventSendToCosmosPendingIbcAutoForward struct {
 	Nonce    string `protobuf:"bytes,1,opt,name=nonce,proto3" json:"nonce,omitempty"`
 	Receiver string `protobuf:"bytes,2,opt,name=receiver,proto3" json:"receiver,omitempty"`
@@ -553,6 +563,8 @@ func (m *EventSendToCosmosPendingIbcAutoForward) GetChannel() string {
 	return ""
 }
 
+// EventSendToCosmosExecutedIbcAutoForward is emitted when tokens have been flushed (executed) from
+// the IBC auto forwarding queue. In other words, the IBC packet has been sent.
 type EventSendToCosmosExecutedIbcAutoForward struct {
 	Nonce         string `protobuf:"bytes,1,opt,name=nonce,proto3" json:"nonce,omitempty"`
 	Receiver      string `protobuf:"bytes,2,opt,name=receiver,proto3" json:"receiver,omitempty"`

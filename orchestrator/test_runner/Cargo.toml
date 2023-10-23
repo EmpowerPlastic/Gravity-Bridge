@@ -12,6 +12,8 @@ path = "src/main.rs"
 [dependencies]
 ethereum_gravity = {path = "../ethereum_gravity"}
 cosmos_gravity = {path = "../cosmos_gravity"}
+ethereum_gravitynft = {path = "../ethereum_gravitynft"}
+cosmos_gravitynft = {path = "../cosmos_gravitynft"}
 gravity_utils = {path = "../gravity_utils"}
 gravity_proto = {workspace = true}
 orchestrator = {path = "../orchestrator/"}

@@ -218,7 +218,7 @@ pub async fn send_logic_call_confirm(
 pub async fn send_ethereum_claims(
     contact: &Contact,
     our_cosmos_key: impl PrivateKey,
-    deposits: Vec<SendToCosmosEvent>,
+    erc20_deposits: Vec<SendToCosmosEvent>,
     withdraws: Vec<TransactionBatchExecutedEvent>,
     erc20_deploys: Vec<Erc20DeployedEvent>,
     logic_calls: Vec<LogicCallExecutedEvent>,
@@ -239,14 +239,15 @@ pub async fn send_ethereum_claims(
 
     // Create claim Msgs, keeping their event_nonces for insertion into unordered_msgs
 
-    let deposit_nonces_msgs: Vec<(u64, Msg)> = create_claim_msgs(deposits, our_cosmos_address);
+    let erc20_deposit_nonces_msgs: Vec<(u64, Msg)> =
+        create_claim_msgs(erc20_deposits, our_cosmos_address);
     let withdraw_nonces_msgs: Vec<(u64, Msg)> = create_claim_msgs(withdraws, our_cosmos_address);
     let deploy_nonces_msgs: Vec<(u64, Msg)> = create_claim_msgs(erc20_deploys, our_cosmos_address);
     let logic_nonces_msgs: Vec<(u64, Msg)> = create_claim_msgs(logic_calls, our_cosmos_address);
     let valset_nonces_msgs: Vec<(u64, Msg)> = create_claim_msgs(valsets, our_cosmos_address);
 
     // Collect all of the claims into an iterator, then add them to unordered_msgs
-    deposit_nonces_msgs
+    erc20_deposit_nonces_msgs
         .into_iter()
         .chain(withdraw_nonces_msgs.into_iter())
         .chain(deploy_nonces_msgs.into_iter())
@@ -265,7 +266,7 @@ pub async fn send_ethereum_claims(
     const MAX_ORACLE_MESSAGES: usize = 1000;
     let mut msgs = Vec::new();
     for i in keys {
-        // pushes messages with a later nonce onto the end
+        // apushes messages with a later nonce onto the end
         msgs.push(unordered_msgs.remove_entry(&i).unwrap().1);
     }
     // prevents the message buffer from getting too big if a lot of events
@@ -320,7 +321,7 @@ pub async fn send_to_eth(
     let chain_fee = match chain_fee {
         Some(fee) => fee,
         None => Coin {
-            amount: get_reasonable_send_to_eth_fee(contact, amount.amount)
+            amount: get_reasonable_send_to_eth_fee(contact, amount.amount.clone())
                 .await
                 .expect("Unable to get reasonable SendToEth fee"),
             denom: amount.denom.clone(),
@@ -336,7 +337,7 @@ pub async fn send_to_eth(
     let mut found = false;
     for balance in balances {
         if balance.denom == amount.denom {
-            let total_amount = amount.amount + (fee.amount * 2u8.into());
+            let total_amount = amount.amount.clone() + (fee.amount.clone() * 2u8.into());
             if balance.amount < total_amount {
                 return Err(CosmosGrpcError::BadInput(format!(
                     "Insufficient balance of {} to send {}",

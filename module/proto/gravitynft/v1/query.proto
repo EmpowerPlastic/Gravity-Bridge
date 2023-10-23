@@ -1,0 +1,114 @@
+syntax = "proto3";
+package gravitynft.v1;
+
+import "gravitynft/v1/attestation.proto";
+import "gravitynft/v1/genesis.proto";
+import "gravitynft/v1/nft.proto";
+import "gravitynft/v1/types.proto";
+import "google/api/annotations.proto";
+import "gogoproto/gogo.proto";
+
+option go_package = "github.com/Gravity-Bridge/Gravity-Bridge/module/x/gravitynft/types";
+
+// Query defines the gRPC querier service
+service Query {
+  rpc Params(QueryParamsRequest) returns (QueryParamsResponse) {
+    option (google.api.http).get = "/gravitynft/v1beta/params";
+  }
+  rpc LastNFTEventNonceByAddr(QueryLastNFTEventNonceByAddrRequest) returns (QueryLastNFTEventNonceByAddrResponse) {
+    option (google.api.http).get = "/gravitynft/v1beta/oracle/nft_eventnonce/{address}";
+  }
+  rpc OutgoingSendNFTToEths(QueryOutgoingSendNFTToEthsRequest) returns (QueryOutgoingSendNFTToEthsResponse) {
+    option (google.api.http).get = "/gravitynft/v1beta/outgoing_send_to_eths";
+  }
+  rpc GetLastObservedNFTEthBlock(QueryLastObservedNFTEthBlockRequest) returns (QueryLastObservedNFTEthBlockResponse) {
+    option (google.api.http).get = "/gravitynft/v1beta/last_observed_nft_eth_block";
+  }
+  rpc GetLastObservedNFTEthNonce(QueryLastObservedNFTEthNonceRequest) returns (QueryLastObservedNFTEthNonceResponse) {
+    option (google.api.http).get = "/gravitynft/v1beta/last_observed_nft_eth_nonce";
+  }
+  rpc GetNFTAttestations(QueryNFTAttestationsRequest) returns (QueryNFTAttestationsResponse) {
+    option (google.api.http).get = "/gravitynft/v1beta/nft-attestations";
+  }
+  rpc GetPendingNFTIbcAutoForwards(QueryPendingNFTIbcAutoForwardsRequest) returns (QueryPendingNFTIbcAutoForwardsResponse) {
+    option (google.api.http).get = "/gravitynft/v1beta/pending_nft_ibc_auto_forwards";
+  }
+  rpc ERC721ToClassId(QueryERC721ToClassIdRequest) returns (QueryERC721ToClassIdResponse) {
+    option (google.api.http).get = "/gravitynft/v1beta/erc721_to_class_id";
+  }
+  rpc ClassIdToERC721(QueryClassIdToERC721Request) returns (QueryClassIdToERC721Response) {
+    option (google.api.http).get = "/gravitynft/v1beta/class_id_to_erc721";
+  }
+}
+
+message QueryParamsRequest {}
+message QueryParamsResponse {
+  Params params = 1 [(gogoproto.nullable) = false];
+}
+
+message QueryLastNFTEventNonceByAddrRequest {
+  string address = 1;
+}
+message QueryLastNFTEventNonceByAddrResponse {
+  uint64 last_nft_event_nonce = 1;
+}
+
+message QueryOutgoingSendNFTToEthsRequest {}
+message QueryOutgoingSendNFTToEthsResponse {
+  repeated OutgoingNFT outgoing_nfts = 1 [(gogoproto.nullable) = false];
+}
+
+message QueryLastObservedNFTEthBlockRequest {}
+message QueryLastObservedNFTEthBlockResponse {
+  uint64 last_observed_nft_eth_block = 1;
+}
+
+message QueryLastObservedNFTEthNonceRequest {}
+message QueryLastObservedNFTEthNonceResponse {
+  uint64 last_observed_nft_eth_nonce = 1;
+}
+
+message QueryNFTAttestationsRequest {
+    // limit defines how many attestations to limit in the response.
+    uint64 limit = 1;
+    // order_by provides ordering of atteststions by nonce in the response. Either
+    // 'asc' or 'desc' can be provided. If no value is provided, it defaults to
+    // 'asc'.
+    string order_by = 2;
+    // claim_type allows filtering attestations by Ethereum claim type.
+    string claim_type = 3;
+    // nonce allows filtering attestations by Ethereum claim nonce.
+    uint64 nonce = 4;
+    // height allows filtering attestations by Ethereum claim height.
+    uint64 height = 5;
+    // indicates whether to search for store data using the old Gravity v1 key "OracleAttestationKey"
+    // Note that queries before the Mercury upgrade at height 1282013 must set this to true
+    bool use_v1_key = 6;
+}
+message QueryNFTAttestationsResponse {
+  repeated NFTAttestation nft_attestations = 1 [(gogoproto.nullable) = false];
+}
+
+message QueryPendingNFTIbcAutoForwardsRequest {
+    // limit defines the number of pending forwards to return, in order of their SendToCosmos.EventNonce
+    uint64 limit = 1;
+}
+message QueryPendingNFTIbcAutoForwardsResponse {
+  repeated PendingNFTIbcAutoForward pending_nft_ibc_auto_forwards = 1;
+}
+
+message QueryERC721ToClassIdRequest {
+  string erc721 = 1;
+}
+message QueryERC721ToClassIdResponse {
+  string class_id = 1;
+  bool   cosmos_originated = 2;
+}
+
+message QueryClassIdToERC721Request {
+  string class_id = 1;
+}
+message QueryClassIdToERC721Response {
+  string erc721 = 1;
+  bool   cosmos_originated = 2;
+}

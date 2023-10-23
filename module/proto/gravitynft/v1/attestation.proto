@@ -1,0 +1,113 @@
+syntax = "proto3";
+package gravitynft.v1;
+
+import "gogoproto/gogo.proto";
+import "google/protobuf/any.proto";
+
+option go_package = "github.com/Gravity-Bridge/Gravity-Bridge/module/x/gravitynft/types";
+
+// NFTClaimType is the cosmos type of an event from the counterpart chain that can
+// be handled
+enum NFTClaimType {
+  option (gogoproto.goproto_enum_prefix) = false;
+
+  // An unspecified claim type
+  NFT_CLAIM_TYPE_UNSPECIFIED         = 0;
+  // A claim for a SendNFTToCosmos transaction
+  NFT_CLAIM_TYPE_SEND_NFT_TO_COSMOS      = 1;
+
+  // A claim for when an NFT is sent to Ethereum
+  NFT_CLAIM_TYPE_SEND_NFT_TO_ETH   = 2;
+
+  // A claim for when an erc721 contract has been deployed
+  NFT_CLAIM_TYPE_ERC721_DEPLOYED      = 3;
+}
+
+// NFTAttestation is an aggregate of `claims` that eventually becomes `observed` by
+// all orchestrators
+// EVENT_NONCE:
+// EventNonce a nonce provided by the gravity contract that is unique per event fired
+// These event nonces must be relayed in order. This is a correctness issue,
+// if relaying out of order transaction replay attacks become possible
+// OBSERVED:
+// Observed indicates that >67% of validators have attested to the event,
+// and that the event should be executed by the gravity state machine
+//
+// The actual content of the claims is passed in with the transaction making the claim
+// and then passed through the call stack alongside the attestation while it is processed
+// the key in which the attestation is stored is keyed on the exact details of the claim
+// but there is no reason to store those exact details because the next message sender
+// will kindly provide you with them.
+message NFTAttestation {
+  bool                observed = 1;
+  repeated string     votes    = 2;
+  uint64              height   = 3;
+  google.protobuf.Any claim    = 4;
+}
+
+// NFTEventObservation is emitted when an attestation has been observed (has enough votes),
+// processed and applied to state.
+message NFTEventObservation {
+  string attestation_type = 1;
+  string bridge_contract  = 2;
+  string bridge_chain_id  = 3;
+  string attestation_id   = 4;
+  string nonce            = 5;
+}
+
+// EventInvalidSendNFTToCosmosReceiver is emitted when a deposit is invalid, either because
+// the address is invalid, the address is black-listed or for whatever other
+// reason it was not possible to send the deposited asset.
+message EventInvalidSendNFTToCosmosReceiver {
+  string contract = 1;
+  string class_id  = 2;
+  string token_id  = 3;
+  string nonce    = 4;
+  string sender   = 5;
+}
+
+// EventSendNFTToCosmos is emitted when a CLAIM_TYPE_SEND_NFT_TO_COSMOS has been processed (observed + handled)
+message EventSendNFTToCosmos {
+  string contract = 1;
+  string class_id = 2;
+  string token_id = 3;
+  string nonce    = 4;
+}
+
+// EventSendNFTToCosmosLocal is emitted when NFT has been sent to a local (gravity) address,
+// rather than added to the ibc forwarding queue. This happens as part of the handling of CLAIM_TYPE_SEND_NFT_TO_COSMOS.
+message EventSendNFTToCosmosLocal {
+  string contract = 1;
+  string class_id = 2;
+  string token_id = 3;
+  string nonce = 4;
+  string receiver = 5;
+}
+
+// EventSendNFTToCosmosPendingIbcAutoForward is emitted when NFT has been added to the IBC auto forwarding queue.
+// This happens as part of the handling of CLAIM_TYPE_SEND_NFT_TO_COSMOS.
+message EventSendNFTToCosmosPendingIbcAutoForward {
+  string nonce = 1;
+  string receiver = 2;
+  string class_id = 3;
+  string token_id = 4;
+  string channel = 5;
+}
+
+// EventSendNFTToCosmosExecutedIbcAutoForward is emitted when tokens have been flushed (executed) from
+// the IBC auto forwarding queue. In other words, the IBC packet has been sent.
+message EventSendNFTToCosmosExecutedIbcAutoForward {
+  string nonce = 1;
+  string receiver = 2;
+  string class_id = 3;
+  string token_id = 4;
+  string channel = 5;
+  string timeout_time = 6;
+  string timeout_height = 7;
+}
+
+message EventERC721DeployedClaim {
+  string contract = 1;
+  string class_id = 2;
+  string nonce = 3;
+}

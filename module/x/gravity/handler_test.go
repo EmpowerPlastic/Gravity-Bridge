@@ -129,7 +129,7 @@ func TestMsgSendToCosmosClaim(t *testing.T) {
 			CosmosReceiver: myCosmosAddr.String(),
 			Orchestrator:   v.String(),
 		}
-		// each msg goes into it's own block
+		// each msg goes into its own block
 		ctx = ctx.WithBlockTime(myBlockTime)
 		_, err := h(ctx, &ethClaim)
 		EndBlocker(ctx, input.GravityKeeper)

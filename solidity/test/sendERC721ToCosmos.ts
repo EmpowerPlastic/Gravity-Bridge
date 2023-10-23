@@ -29,9 +29,7 @@ async function runTest(opts: {
   const {
     gravity,
     gravityERC721,
-    testERC721,
-    fakeGravity,
-    checkpoint
+    testERC721
   } = await deployContractsERC721(gravityId, validators, powers);
 
   

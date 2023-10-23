@@ -139,6 +139,12 @@ pub async fn orchestrator(
             }
         }
     };
+    let erc721_contract_address = if let Some(c) = args.gravityerc721_contract_address {
+        c
+    } else {
+        error!("You must specify --gravityerc721-contract-address");
+        exit(1);
+    };
 
     if config.orchestrator.relayer_enabled {
         // setup and explain relayer settings
@@ -162,7 +168,9 @@ pub async fn orchestrator(
         connections.web3.unwrap(),
         connections.contact.unwrap(),
         connections.grpc.unwrap(),
+        connections.grpc_nft.unwrap(),
         contract_address,
+        erc721_contract_address,
         params.gravity_id,
         fee,
         config,

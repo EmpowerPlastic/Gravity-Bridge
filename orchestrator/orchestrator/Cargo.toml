@@ -13,6 +13,7 @@ path = "src/lib.rs"
 relayer = {path = "../relayer/"}
 ethereum_gravity = {path = "../ethereum_gravity"}
 cosmos_gravity = {path = "../cosmos_gravity"}
+cosmos_gravitynft = {path = "../cosmos_gravitynft"}
 gravity_utils = {path = "../gravity_utils"}
 gravity_proto = {workspace = true}
 metrics_exporter = {path = "../metrics_exporter/"}

@@ -1,0 +1,148 @@
+syntax = "proto3";
+package gravitynft.v1;
+
+import "cosmos_proto/cosmos.proto";
+import "google/api/annotations.proto";
+import "gogoproto/gogo.proto";
+import "gravitynft/v1/genesis.proto";
+
+option go_package = "github.com/Gravity-Bridge/Gravity-Bridge/module/x/gravitynft/types";
+
+// Msg defines the state transitions possible within gravitynft
+service Msg {
+  // UpdateParams defines a governance operation for updating the x/gravitynft module parameters.
+  // The authority is defined in the keeper.
+  rpc UpdateParams(MsgUpdateParams) returns (MsgUpdateParamsResponse) {
+    option (google.api.http).post = "/gravitynft/v1/update_params";
+  }
+  // UnhaltNFTBridge defines a governance operation for unhalting the x/gravitynft module.
+    rpc UnhaltNFTBridge(MsgUnhaltNFTBridge) returns (MsgUnhaltNFTBridgeResponse) {
+    option (google.api.http).post = "/gravitynft/v1/unhalt_nft_bridge";
+  }
+  rpc SendNFTToCosmosClaim(MsgSendNFTToCosmosClaim) returns (MsgSendNFTToCosmosClaimResponse) {
+    option (google.api.http).post = "/gravitynft/v1/send_nft_to_cosmos_claim";
+  }
+  rpc SendNFTToEth(MsgSendNFTToEth) returns (MsgSendNFTToEthResponse) {
+    option (google.api.http).post = "/gravitynft/v1/send_nft_to_eth";
+  }
+  rpc ExecuteIbcNFTAutoForwards(MsgExecuteIbcNFTAutoForwards) returns (MsgExecuteIbcNFTAutoForwardsResponse) {
+    option (google.api.http).post = "/gravitynft/v1/execute_ibc_nft_auto_forwards";
+  }
+  rpc SendNFTToEthClaim(MsgSendNFTToEthClaim) returns (MsgSendNFTToEthClaimResponse) {
+    option (google.api.http).post = "/gravitynft/v1/send_nft_to_eth_claim";
+  }
+  rpc ERC721DeployedClaim(MsgERC721DeployedClaim) returns (MsgERC721DeployedClaimResponse) {
+    option (google.api.http).post = "/gravitynft/v1/erc721_deployed_claim";
+  }
+  rpc CancelSendNFTToEth(MsgCancelSendNFTToEth) returns (MsgCancelSendNFTToEthResponse) {
+    option (google.api.http).post = "/gravitynft/v1/cancel_send_nft_to_eth";
+  }
+}
+
+message MsgUpdateParams {
+  // authority is the address that controls the module (defaults to x/gov).
+  string authority = 1;
+
+  // params defines the x/gravitynft parameters to update.
+  //
+  // NOTE: All parameters must be supplied.
+  Params params = 2 [(gogoproto.nullable) = false];
+}
+message MsgUpdateParamsResponse {}
+
+// UnhaltBridgeProposal is meant to be used by governance (authority) to restoring
+// the bridge after an oracle disagreement. Once this proposal is passed the nft bridge state will roll back events
+// to the nonce provided in target_nonce if and only if those events have not yet been observed (executed on the Cosmos chain). This allows for easy
+// handling of cases where for example an Ethereum hardfork has occurred and more than 1/3 of the validator set
+// disagrees with the rest. Normally this would require a chain halt, manual genesis editing and restore to resolve
+// with this feature a governance proposal can be used instead
+message MsgUnhaltNFTBridge {
+  // authority is the address that controls the module (defaults to x/gov).
+  string authority = 1;
+
+  uint64 target_nonce = 2;
+}
+message MsgUnhaltNFTBridgeResponse {}
+
+// MsgSendNFTToCosmosClaim
+// When more than 66% of the active validator set has
+// claimed to have seen the NFT deposit enter the ethereum blockchain NFT is minted and
+// issued to the Cosmos address in question
+// -------------
+message MsgSendNFTToCosmosClaim {
+    uint64 event_nonce      = 1;
+    uint64 eth_block_height = 2;
+    string token_contract   = 3;
+    string token_id         = 4;
+    string token_uri        = 5;
+    string ethereum_sender  = 6;
+    string cosmos_receiver  = 7;
+    string orchestrator     = 8;
+  }
+message MsgSendNFTToCosmosClaimResponse {}
+
+message EventClaim {
+  string message        = 1;
+  string claim_hash     = 2;
+  string attestation_id = 3;
+}
+
+// MsgSendNFTToEth
+// When a user wants to send an NFT to Ethereum they must first call this function
+// -------------
+message MsgSendNFTToEth {
+    string class_id          = 1;
+    string token_id          = 2;
+    string cosmos_sender     = 3;
+    string ethereum_receiver = 4;
+    string orchestrator      = 5;
+  }
+
+message MsgSendNFTToEthResponse {}
+
+// MsgExecuteIbcNFTAutoForwards
+// Prompts the forwarding of Pending IBC Auto-Forwards in the queue
+// The Pending forwards will be executed in order of their original SendNFTToCosmos.EventNonce
+// The tokens in the queue will be sent to a local gravity-prefixed address if IBC transfer is not possible
+// -------------
+message MsgExecuteIbcNFTAutoForwards {
+  uint64 forwards_to_clear = 1; // How many queued forwards to clear, be careful about gas limits
+  string executor = 2; // This is message sender
+}
+
+message MsgExecuteIbcNFTAutoForwardsResponse {}
+
+// MsgSendNFTToEthClaim claims that an NFT has been received on Ethereum
+// -------------
+message MsgSendNFTToEthClaim {
+    uint64 event_nonce        = 1;
+    uint64 eth_block_height   = 2;
+    string token_contract     = 3;
+    string token_id           = 4;
+    string cosmos_sender      = 6;
+    string ethereum_receiver  = 7;
+    string orchestrator       = 8;
+  }
+
+message MsgSendNFTToEthClaimResponse {}
+
+// MsgERC721DeployedClaim claims that an ERC721 contract has been deployed on Ethereum
+// -------------
+message MsgERC721DeployedClaim {
+    uint64 event_nonce        = 1;
+    uint64 eth_block_height   = 2;
+    string token_contract     = 3;
+    string class_id           = 4;
+    string orchestrator       = 5;
+  }
+
+message MsgERC721DeployedClaimResponse {}
+
+// MsgCancelSendNFTToEth cancels a pending NFT send to Ethereum
+// -------------
+message MsgCancelSendNFTToEth {
+    uint64 event_nonce        = 1;
+    string orchestrator       = 2;
+  }
+
+message MsgCancelSendNFTToEthResponse {}

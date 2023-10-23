@@ -187,7 +187,7 @@ func TestGetSetLastEventNonceByValidator(t *testing.T) {
 	addrInBytes := valAccount.GetAddress().Bytes()
 
 	// In case this is first time validator is submiting claim, nonce is expected to be LastObservedNonce-1
-	k.setLastObservedEventNonce(ctx, nonce)
+	k.SetLastObservedEventNonce(ctx, nonce)
 	getEventNonce := k.GetLastEventNonceByValidator(ctx, addrInBytes)
 	require.Equal(t, nonce-1, getEventNonce)
 
