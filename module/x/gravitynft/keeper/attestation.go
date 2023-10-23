@@ -392,3 +392,57 @@ func (k Keeper) IterateAttestations(ctx sdk.Context, reverse bool, cb func(key [
 		}
 	}
 }
+
+// Iterate over all attestations currently being voted on in order of nonce
+// and prune those that are older than nonceCutoff
+func (k Keeper) pruneAttestationsAfterNonce(ctx sdk.Context, nonceCutoff uint64) error {
+	// Decide on the most recent nonce we can actually roll back to
+	lastObserved := k.GetLastObservedEventNonce(ctx)
+	if nonceCutoff < lastObserved || nonceCutoff == 0 {
+		return sdkerrors.Wrap(types.ErrInvalid, "Cannot reset to a nonce before the last observed event")
+	}
+
+	// Get relevant event nonces
+	attmap, keys := k.GetAttestationMapping(ctx)
+
+	// Discover all affected validators whose LastEventNonce must be reset to nonceCutoff
+
+	numValidators := len(k.StakingKeeper.GetBondedValidatorsByPower(ctx))
+	// void and setMember are necessary for sets to work
+	type void struct{}
+	var setMember void
+	// Initialize a Set of validators
+	affectedValidatorsSet := make(map[string]void, numValidators)
+
+	// Delete all reverted attestations, keeping track of the validators who attested to any of them
+	for _, nonce := range keys {
+		for _, att := range attmap[nonce] {
+			// we delete all attestations earlier than the cutoff event nonce
+			if nonce > nonceCutoff {
+				ctx.Logger().Info(fmt.Sprintf("Deleting attestation at height %v", att.Height))
+				for _, vote := range att.Votes {
+					if _, ok := affectedValidatorsSet[vote]; !ok { // if set does not contain vote
+						affectedValidatorsSet[vote] = setMember // add key to set
+					}
+				}
+
+				k.DeleteAttestation(ctx, att)
+			}
+		}
+	}
+
+	// Reset the last event nonce for all validators affected by history deletion
+	for vote := range affectedValidatorsSet {
+		val, err := sdk.ValAddressFromBech32(vote)
+		if err != nil {
+			return sdkerrors.Wrap(err, "invalid validator address affected by bridge reset")
+		}
+		valLastNonce := k.GetLastEventNonceByValidator(ctx, val)
+		if valLastNonce > nonceCutoff {
+			ctx.Logger().Info("Resetting validator's last event nonce due to bridge unhalt", "validator", vote, "lastEventNonce", valLastNonce, "resetNonce", nonceCutoff)
+			k.SetLastEventNonceByValidator(ctx, val, nonceCutoff)
+		}
+	}
+
+	return nil
+}

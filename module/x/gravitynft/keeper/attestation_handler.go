@@ -32,7 +32,10 @@ func (a AttestationHandler) Handle(ctx sdk.Context, att types.NFTAttestation, cl
 	case *types.MsgSendNFTToCosmosClaim:
 		return a.handleSendNFTToCosmos(ctx, *claim)
 
-	// TODO: Add other claim types (like NFT_CLAIM_TYPE_ERC721_DEPLOYED)
+	case *types.MsgERC721DeployedClaim:
+		return a.handleERC721Deployed(ctx, *claim)
+
+	// TODO: Add rest of claim types
 
 	default:
 		panic(fmt.Sprintf("Invalid event type for attestations %s", claim.GetType()))
@@ -96,7 +99,7 @@ func (a AttestationHandler) handleSendNFTToCosmos(ctx sdk.Context, claim types.M
 		return sdkerrors.Wrap(errTokenAddress, "invalid ethereum sender on claim")
 	}
 
-	// TODO: IS THIS OK? UISING THE GRAVITY MODULE'S BLACKLIST?
+	// TODO: IS THIS OK? UISING THE GRAVITY MODULE'S BLACKLIST? ANY REASON WE WOULD NEED A SEPARATE BLACKLIST FOR THE NFT SIDE?
 	// Block blacklisted asset transfers using the gravity module's black list
 	// (these funds are unrecoverable for the blacklisted sender, they will instead be sent to community pool)
 	if a.keeper.gravityKeeper.IsOnBlacklist(ctx, *ethereumSender) {
@@ -133,8 +136,7 @@ func (a AttestationHandler) handleSendNFTToCosmos(ctx sdk.Context, claim types.M
 		ibcForwardQueued, err := a.sendNFTToCosmosAccount(ctx, claim, receiverAddress, nftToken)
 		_ = ibcForwardQueued
 
-		// TODO: Add this stuff type of  later for production
-		// TODO: Perform module balance assertions
+		// TODO: Assert the sending just like the gravity module does
 		/*if err != nil || ibcForwardQueued { // ibc forward enqueue and errors should not send tokens to anyone
 			a.assertNothingSent(ctx, moduleAddr, preSendBalance, denom)
 		} else { // No error, local send -> assert send had right amount
@@ -366,4 +368,38 @@ func (a AttestationHandler) addERC721ToIbcAutoForwardQueue(
 	}
 
 	return a.keeper.AddPendingNFTPendingIbcAutoForward(ctx, forward)
+}
+
+// Upon acceptance of sufficient ERC20 Deployed claims, register claim.TokenContract as the canonical ethereum
+// representation of the metadata governance previously voted for
+func (a AttestationHandler) handleERC721Deployed(ctx sdk.Context, claim types.MsgERC721DeployedClaim) error {
+	tokenAddress, err := gravitytypes.NewEthAddress(claim.TokenContract)
+	if err != nil {
+		return sdkerrors.Wrap(err, "invalid token contract on claim")
+	}
+	// Disallow re-registration when a token already has a canonical representation
+	existingERC721, exists := a.keeper.GetCosmosOriginatedClassID(ctx, *tokenAddress)
+	if exists {
+		return sdkerrors.Wrap(
+			types.ErrInvalid,
+			fmt.Sprintf("ERC721 %s already exists for contract %s denom %s", existingERC721, claim.TokenContract, claim.ClassId))
+	}
+
+	// Add to denom-erc20 mapping
+	a.keeper.setCosmosOriginatedDenomToERC721(ctx, claim.ClassId, *tokenAddress)
+
+	err = ctx.EventManager().EmitTypedEvent(
+		&types.EventERC721DeployedClaim{
+			Contract: tokenAddress.GetAddress().Hex(),
+			ClassId: claim.ClassId,
+			Nonce: strconv.Itoa(int(claim.GetEventNonce())),
+		},
+	)
+	return err
+}
+
+func (k Keeper) setCosmosOriginatedDenomToERC721(ctx sdk.Context, classID string, tokenContract gravitytypes.EthAddress) {
+	store := ctx.KVStore(k.storeKey)
+	store.Set(types.GetClassIDToERC721Key(classID), tokenContract.GetAddress().Bytes())
+	store.Set(types.GetERC721ToClassIDKey(tokenContract), []byte(classID))
 }

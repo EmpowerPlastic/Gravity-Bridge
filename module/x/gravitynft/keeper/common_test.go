@@ -596,6 +596,7 @@ func (t TestInput) AssertInvariants() {
 	stakeInvariantFunc := stakingkeeper.AllInvariants(t.StakingKeeper)
 	gravInvariantFunc := gravitykeeper.AllInvariants(t.GravityKeeper)
 	// TODO: ADD IF WE ADD INVARIANTS
+	// I would not reccommed spending too much time on invariants as it is getting heavily reworked in the SDK
 
 	invariantStr, invariantViolated := distrInvariantFunc(t.Context)
 	if invariantViolated {

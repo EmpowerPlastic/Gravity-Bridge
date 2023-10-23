@@ -83,9 +83,19 @@ func (k MsgServer) SendNFTToEth(c context.Context, msg *types.MsgSendNFTToEth) (
 	panic("implement me")
 }
 
+// ExecuteIbcNFTAutoForwards moves pending IBC Auto-Forwards to their respective chains by calling ibcnft-transfer's Transfer
+// function with all the relevant information
+// Note: this endpoint and the related queue are necessary due to a Tendermint bug where events created in EndBlocker
+// do not appear. We process SendToCosmos observations in EndBlocker but are therefore unable to auto-forward these txs
+// in the same block. This endpoint triggers the creation of those ibc-transfer events which relayers watch for.
 func (k MsgServer) ExecuteIbcNFTAutoForwards(c context.Context, msg *types.MsgExecuteIbcNFTAutoForwards) (*types.MsgExecuteIbcNFTAutoForwardsResponse, error) {
-	//TODO implement me
-	panic("implement me")
+	ctx := sdk.UnwrapSDKContext(c)
+
+	if err := k.ProcessPendingIbcNFTAutoForwards(ctx, msg.GetForwardsToClear()); err != nil {
+		return nil, err
+	}
+
+	return &types.MsgExecuteIbcNFTAutoForwardsResponse{}, nil
 }
 
 func (k MsgServer) SendNFTToEthClaim(c context.Context, msg *types.MsgSendNFTToEthClaim) (*types.MsgSendNFTToEthClaimResponse, error) {
@@ -94,11 +104,39 @@ func (k MsgServer) SendNFTToEthClaim(c context.Context, msg *types.MsgSendNFTToE
 }
 
 func (k MsgServer) ERC721DeployedClaim(c context.Context, msg *types.MsgERC721DeployedClaim) (*types.MsgERC721DeployedClaimResponse, error) {
-	//TODO implement me
-	panic("implement me")
+	ctx := sdk.UnwrapSDKContext(c)
+
+	err := k.gravityKeeper.CheckOrchestratorValidatorInSet(ctx, msg.Orchestrator)
+	if err != nil {
+		return nil, sdkerrors.Wrap(err, "Could not check orchestrator validator in set")
+	}
+	any, err := codectypes.NewAnyWithValue(msg)
+	if err != nil {
+		return nil, sdkerrors.Wrap(err, "Could not check Any value")
+	}
+	err = k.claimHandlerCommon(ctx, any, msg)
+	if err != nil {
+		return nil, err
+	}
+
+	return &types.MsgERC721DeployedClaimResponse{}, nil
 }
 
 func (k MsgServer) CancelSendNFTToEth(c context.Context, msg *types.MsgCancelSendNFTToEth) (*types.MsgCancelSendNFTToEthResponse, error) {
 	//TODO implement me
 	panic("implement me")
+}
+
+func (k MsgServer) UnhaltNFTBridge(c context.Context, msg *types.MsgUnhaltNFTBridge) (*types.MsgUnhaltNFTBridgeResponse, error) {
+	ctx := sdk.UnwrapSDKContext(c)
+
+	if k.authority != msg.Authority {
+		return nil, errors.Wrapf(sdkerrors.ErrUnauthorized, "invalid authority; expected %s, got %s", k.authority, msg.Authority)
+	}
+
+	if err := k.pruneAttestationsAfterNonce(ctx, msg.TargetNonce); err != nil {
+		return nil, err
+	}
+
+	return &types.MsgUnhaltNFTBridgeResponse{}, nil
 }

@@ -76,7 +76,7 @@ func TestGetMostRecentAttestations(t *testing.T) {
 	}
 }
 
-// TODO: Test the nonces and last observered etc
+// TODO: Add tests for nonces and last observered etc
 
 func createAttestations(t *testing.T, length int, k gravitynftkeeper.Keeper, ctx sdktypes.Context) ([]types.MsgSendNFTToCosmosClaim, []codectypes.Any, [][]byte) {
 	msgs := make([]types.MsgSendNFTToCosmosClaim, 0, length)

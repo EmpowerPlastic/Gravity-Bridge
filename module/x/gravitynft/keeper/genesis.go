@@ -14,7 +14,7 @@ func InitGenesis(ctx sdk.Context, k Keeper, data types.GenesisState) {
 	k.SetLastObservedEventNonce(ctx, data.GravityNonces.LastObservedNftNonce)
 	// TODO: restore slash send NFT to ETH
 
-	// TODO: Implement me!
+	// TODO: Implement the rest here
 }
 
 // ExportGenesis exports all the state needed to restart the chain
