@@ -2,12 +2,13 @@ package keeper
 
 import (
 	"context"
+	"strings"
+
 	sdkerrors "cosmossdk.io/errors"
 	gravitytypes "github.com/Gravity-Bridge/Gravity-Bridge/module/x/gravity/types"
 	"github.com/Gravity-Bridge/Gravity-Bridge/module/x/gravitynft/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/errors"
-	"strings"
 )
 
 // nolint: exhaustruct

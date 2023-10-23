@@ -19,5 +19,8 @@ artifacts
 #build artifacts
 /module/artifacts
 
-# MacOS files
+# macOS files
 .DS_Store
+
+# VSCode files
+.vscode/

@@ -46,6 +46,7 @@ pub async fn upgrade_part_1(
     keys: Vec<ValidatorKeys>,
     ibc_keys: Vec<CosmosPrivateKey>,
     gravity_address: EthAddress,
+    gravityerc721_address: EthAddress,
     erc20_addresses: Vec<EthAddress>,
 ) {
     info!("Starting upgrade test part 1");
@@ -63,6 +64,7 @@ pub async fn upgrade_part_1(
         grpc_client.clone(),
         keys.clone(),
         gravity_address,
+        gravityerc721_address,
         erc20_addresses.clone(),
         metadata.clone(),
     )
@@ -75,6 +77,7 @@ pub async fn upgrade_part_1(
         keys.clone(),
         ibc_keys.clone(),
         gravity_address,
+        gravityerc721_address,
         erc20_addresses.clone(),
         false,
     )
@@ -115,6 +118,7 @@ pub async fn upgrade_part_2(
     keys: Vec<ValidatorKeys>,
     ibc_keys: Vec<CosmosPrivateKey>,
     gravity_address: EthAddress,
+    gravityerc721_address: EthAddress,
     erc20_addresses: Vec<EthAddress>,
 ) {
     info!("Starting upgrade_part_2 test");
@@ -148,6 +152,7 @@ pub async fn upgrade_part_2(
         grpc_client.clone(),
         keys.clone(),
         gravity_address,
+        gravityerc721_address,
         erc20_addresses.clone(),
         metadata.clone(),
     )
@@ -160,6 +165,7 @@ pub async fn upgrade_part_2(
         keys.clone(),
         ibc_keys,
         gravity_address,
+        gravityerc721_address,
         erc20_addresses.clone(),
         true,
     )
@@ -222,6 +228,7 @@ pub async fn run_all_recoverable_tests(
     grpc_client: GravityQueryClient<Channel>,
     keys: Vec<ValidatorKeys>,
     gravity_address: EthAddress,
+    gravityerc721_address: EthAddress,
     erc20_addresses: Vec<EthAddress>,
     ibc_metadata: Metadata,
 ) {
@@ -232,6 +239,7 @@ pub async fn run_all_recoverable_tests(
         contact,
         keys.clone(),
         gravity_address,
+        gravityerc721_address,
         erc20_addresses[0],
         false,
     )
@@ -243,6 +251,7 @@ pub async fn run_all_recoverable_tests(
         contact,
         keys.clone(),
         gravity_address,
+        gravityerc721_address,
         false,
         Some(ibc_metadata),
     )
@@ -259,6 +268,7 @@ pub async fn run_upgrade_specific_tests(
     keys: Vec<ValidatorKeys>,
     ibc_keys: Vec<CosmosPrivateKey>,
     gravity_address: EthAddress,
+    gravityerc721_address: EthAddress,
     _erc20_addresses: Vec<EthAddress>,
     post_upgrade: bool,
 ) {
@@ -271,6 +281,7 @@ pub async fn run_upgrade_specific_tests(
             keys,
             ibc_keys,
             gravity_address,
+            gravityerc721_address,
         )
         .await;
     }

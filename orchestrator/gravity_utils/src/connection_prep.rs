@@ -8,6 +8,7 @@ use deep_space::Address as CosmosAddress;
 use deep_space::Contact;
 use deep_space::{client::ChainStatus, Coin};
 use gravity_proto::gravity::query_client::QueryClient as GravityQueryClient;
+use gravity_proto::gravitynft::query_client::QueryClient as GravityNftQueryClient;
 use gravity_proto::gravity::QueryDelegateKeysByEthAddress;
 use gravity_proto::gravity::QueryDelegateKeysByOrchestratorAddress;
 use std::process::exit;
@@ -23,6 +24,7 @@ use crate::get_with_retry::get_eth_balances_with_retry;
 pub struct Connections {
     pub web3: Option<Web3>,
     pub grpc: Option<GravityQueryClient<Channel>>,
+    pub grpc_nft: Option<GravityNftQueryClient<Channel>>,
     pub contact: Option<Contact>,
 }
 
@@ -37,6 +39,7 @@ pub async fn create_rpc_connections(
 ) -> Connections {
     let mut web3 = None;
     let mut grpc = None;
+    let mut grpc_nft = None;
     let mut contact = None;
     if let Some(grpc_url) = grpc_url {
         let url = Url::parse(&grpc_url)
@@ -103,6 +106,73 @@ pub async fn create_rpc_connections(
                             info!("Https upgrade succeeded, your cosmos gRPC url {} has been corrected to {}", grpc_url, https_on_443_url);
                             contact = Some(Contact::new(&https_on_443_url, timeout, &address_prefix).unwrap());
                             grpc = Some(v)
+                        },
+                        (Ok(_), Ok(_)) => panic!("This should never happen? Why didn't things work the first time?"),
+                        (Err(_), Err(_)) => panic!("Could not connect to Cosmos gRPC, are you sure it's running and on the specified port? {}", grpc_url)
+                    }
+                } else {
+                    panic!("Could not connect to Cosmos gRPC! please check your grpc url {} for errors {:?}", grpc_url, e)
+                }
+            }
+        }
+        // try the base url first.
+        let try_base_nft = GravityNftQueryClient::connect(cosmos_grpc_url.clone()).await;
+        match try_base_nft {
+            // it worked, lets go!
+            Ok(val) => {
+                grpc_nft = Some(val);
+            }
+            // did not work, now we check if it's localhost
+            Err(e) => {
+                warn!(
+                    "Failed to access Cosmos gRPC with {:?} trying fallback options",
+                    e
+                );
+                if grpc_url.to_lowercase().contains("localhost") {
+                    let port = url.port().unwrap_or(80);
+                    // this should be http or https
+                    let prefix = url.scheme();
+                    let ipv6_url = format!("{}://::1:{}", prefix, port);
+                    let ipv4_url = format!("{}://127.0.0.1:{}", prefix, port);
+                    let ipv6 = GravityNftQueryClient::connect(ipv6_url.clone()).await;
+                    let ipv4 = GravityNftQueryClient::connect(ipv4_url.clone()).await;
+                    warn!("Trying fallback urls {} {}", ipv6_url, ipv4_url);
+                    match (ipv4, ipv6) {
+                        (Ok(v), Err(_)) => {
+                            info!("Url fallback succeeded, your cosmos gRPC url {} has been corrected to {}", grpc_url, ipv4_url);
+                            contact = Some(Contact::new(&ipv4_url, timeout, &address_prefix).unwrap());
+                            grpc_nft = Some(v)
+                        },
+                        (Err(_), Ok(v)) => {
+                            info!("Url fallback succeeded, your cosmos gRPC url {} has been corrected to {}", grpc_url, ipv6_url);
+                            contact = Some(Contact::new(&ipv6_url, timeout, &address_prefix).unwrap());
+                            grpc_nft = Some(v)
+                        },
+                        (Ok(_), Ok(_)) => panic!("This should never happen? Why didn't things work the first time?"),
+                        (Err(_), Err(_)) => panic!("Could not connect to Cosmos gRPC, are you sure it's running and on the specified port? {}", grpc_url)
+                    }
+                } else if url.port().is_none() || url.scheme() == "http" {
+                    let body = url.host_str().unwrap_or_else(|| {
+                        panic!("Cosmos gRPC url contains no host? {}", grpc_url)
+                    });
+                    // transparently upgrade to https if available, we can't transparently downgrade for obvious security reasons
+                    let https_on_80_url = format!("https://{}:80", body);
+                    let https_on_443_url = format!("https://{}:443", body);
+                    let https_on_80 = GravityNftQueryClient::connect(https_on_80_url.clone()).await;
+                    let https_on_443 = GravityNftQueryClient::connect(https_on_443_url.clone()).await;
+                    warn!(
+                        "Trying fallback urls {} {}",
+                        https_on_443_url, https_on_80_url
+                    );
+                    match (https_on_80, https_on_443) {
+                        (Ok(v), Err(_)) => {
+                            info!("Https upgrade succeeded, your cosmos gRPC url {} has been corrected to {}", grpc_url, https_on_80_url);
+                            grpc_nft = Some(v)
+                        },
+                        (Err(_), Ok(v)) => {
+                            info!("Https upgrade succeeded, your cosmos gRPC url {} has been corrected to {}", grpc_url, https_on_443_url);
+                            contact = Some(Contact::new(&https_on_443_url, timeout, &address_prefix).unwrap());
+                            grpc_nft = Some(v)
                         },
                         (Ok(_), Ok(_)) => panic!("This should never happen? Why didn't things work the first time?"),
                         (Err(_), Err(_)) => panic!("Could not connect to Cosmos gRPC, are you sure it's running and on the specified port? {}", grpc_url)
@@ -189,6 +259,7 @@ pub async fn create_rpc_connections(
     Connections {
         web3,
         grpc,
+        grpc_nft,
         contact,
     }
 }

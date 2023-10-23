@@ -1,14 +1,14 @@
+import axios from "axios";
+import commandLineArgs from "command-line-args";
+import { ethers } from "ethers";
+import fs from "fs";
+import { exit } from "process";
 import { Gravity } from "./typechain/Gravity";
 import { GravityERC721 } from "./typechain/GravityERC721";
 import { TestERC20A } from "./typechain/TestERC20A";
 import { TestERC20B } from "./typechain/TestERC20B";
 import { TestERC20C } from "./typechain/TestERC20C";
 import { TestERC721A } from "./typechain/TestERC721A";
-import { ethers } from "ethers";
-import fs from "fs";
-import commandLineArgs from "command-line-args";
-import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from "axios";
-import { exit } from "process";
 
 const args = commandLineArgs([
   // the ethernum node used to deploy the contract
@@ -140,6 +140,11 @@ async function deploy() {
     const alt_location_2_c = "TestERC20C.json"
     const alt_location_2_721a = "TestERC721A.json"
 
+    const alt_location_3_a = "artifacts/contracts/TestERC20A.sol/TestERC20A.json"
+    const alt_location_3_b = "artifacts/contracts/TestERC20B.sol/TestERC20B.json"
+    const alt_location_3_c = "artifacts/contracts/TestERC20C.sol/TestERC20C.json"
+    const alt_location_3_721a = "artifacts/contracts/TestERC721A.sol/TestERC721A.json"
+
     if (fs.existsSync(main_location_a)) {
       erc20_a_path = main_location_a
       erc20_b_path = main_location_b
@@ -155,6 +160,11 @@ async function deploy() {
       erc20_b_path = alt_location_2_b
       erc20_c_path = alt_location_2_c
       erc721_a_path = alt_location_2_721a
+    } else if (fs.existsSync(alt_location_3_a)) {
+      erc20_a_path = alt_location_3_a
+      erc20_b_path = alt_location_3_b
+      erc20_c_path = alt_location_3_c
+      erc721_a_path = alt_location_3_721a
     } else {
       console.log("Test mode was enabled but the ERC20 contracts can't be found!")
       exit(1)
@@ -243,7 +253,8 @@ async function deploy() {
   const factoryERC721 = new ethers.ContractFactory(abiERC721, bytecodeERC721, wallet);
 
   const gravityERC721 = (await factoryERC721.deploy(
-    gravity.address
+    gravity.address,
+    gravityId
   ) as GravityERC721);
 
   await gravityERC721.deployed();
